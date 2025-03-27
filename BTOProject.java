@@ -6,6 +6,7 @@ public class BTOProject {
     private String projectName;
     private String neighborhood;
     private BTOFlats flats; // Stores types of flats and their count
+    private List<FlatType> flatTypes; // List of flat types in this project
     private LocalDate applicationOpenDate;
     private LocalDate applicationCloseDate;
     private HDBManager managerInCharge;
@@ -14,13 +15,14 @@ public class BTOProject {
 
     public BTOProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                       LocalDate applicationCloseDate, HDBManager managerInCharge, 
-                      int twoRoomFlats, int threeRoomFlats)
+                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats)
     {
         this.projectName = projectName;
         this.neighborhood = neighborhood;
         this.applicationOpenDate = applicationOpenDate;
         this.applicationCloseDate = applicationCloseDate;
         this.managerInCharge = managerInCharge;
+        this.flatTypes = flatTypes;
         this.flats = new BTOFlats(twoRoomFlats, threeRoomFlats);
         this.assignedOfficers = new ArrayList<>();
     }
@@ -28,12 +30,20 @@ public class BTOProject {
     public void displayProjectDetails() {
         System.out.println("Project Name: " + projectName);
         System.out.println("Neighborhood: " + neighborhood);
+        System.out.println("Flat Types Available: " + flatTypes);
         System.out.println("Application Open Date: " + applicationOpenDate);
         System.out.println("Application Close Date: " + applicationCloseDate);
         System.out.println("HDB Manager in Charge: " + managerInCharge.getName());
         System.out.println("Assigned Officers (" + assignedOfficers.size() + "/" + MAX_OFFICERS + "): " + assignedOfficers);
-        System.out.println("Total 2-Room Flats: " + flats.getTwoRoomFlats());
-        System.out.println("Total 3-Room Flats: " + flats.getThreeRoomFlats());
+        
+        // Display total flats based on available types
+        if (flatTypes.contains(FlatType.TWOROOM)) {
+            System.out.println("Total 2-Room Flats: " + flats.getTwoRoomFlats());
+        }
+        if (flatTypes.contains(FlatType.THREEROOM)) {
+            System.out.println("Total 3-Room Flats: " + flats.getThreeRoomFlats());
+        }
+
         flats.displayAvailableFlats();
     }
 
