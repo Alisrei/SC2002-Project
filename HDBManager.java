@@ -12,7 +12,6 @@ public class HDBManager extends User {
         this.projects = new ArrayList<>();
     }
 
-    // Create a new BTO project
     public void createProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                               LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats) {
         BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats);
@@ -20,7 +19,6 @@ public class HDBManager extends User {
         System.out.println("Project " + projectName + " created successfully.");
     }
 
-    // Edit an existing BTO project
     public void editProject(String projectName, String newNeighborhood, LocalDate newApplicationOpenDate,
                             LocalDate newApplicationCloseDate, List<FlatType> newFlatTypes, int newTwoRoomFlats, int newThreeRoomFlats) {
         for (BTOProject project : projects) {
@@ -37,14 +35,12 @@ public class HDBManager extends User {
         System.out.println("Project " + projectName + " not found.");
     }
 
-    // Delete an existing BTO project
     public void deleteProject(String projectName) {
         projects.removeIf(project -> project.getProjectName().equals(projectName));
         System.out.println("Project " + projectName + " deleted successfully.");
     }
 
-    // Approve or reject HDB Officer registration
-    public void approveOfficerRegistration(HDBOfficer officer, BTOProject project) {
+    public void approveHDBOfficer(HDBOfficer officer, BTOProject project) {
         if (project.addOfficer(officer)) {
             System.out.println("Officer " + officer.getName() + " approved for project " + project.getProjectName() + ".");
         } else {
@@ -52,8 +48,7 @@ public class HDBManager extends User {
         }
     }
 
-    // Approve or reject BTO application
-    public void approveBTOApplication(Application application, boolean isApproved) {
+    public void approveApplication(Application application, boolean isApproved) {
         if (isApproved) {
             application.setStatus(ApplicationStatus.SUCCESSFUL);
             System.out.println("Application " + application.getApplicationId() + " approved.");
@@ -63,7 +58,6 @@ public class HDBManager extends User {
         }
     }
 
-    // Generate report of applicants
     public void generateReport() {
         for (BTOProject project : projects) {
             System.out.println("Project: " + project.getProjectName());
