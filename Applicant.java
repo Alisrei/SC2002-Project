@@ -1,34 +1,35 @@
+package SC2002_Assignment;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Applicant extends User {
 
-    private BTOProject appliedProject;
-    private FlatType flatTypeBooked;
-    private ApplicationStatus applicationStatus;
+    //private BTOProject appliedProject;
+    //private FlatType flatTypeBooked;
+    private Application application;
+    //private ApplicationStatus applicationStatus;
     private List<Enquiry> enquiries;
 
     public Applicant(String nric, String name, String password, int age, boolean maritalStatus) {
         super(nric, name, password, age, maritalStatus);
-        this.applicationStatus = ApplicationStatus.NOT_APPLIED;
+        //this.applicationStatus = ApplicationStatus.NOT_APPLIED;
         this.enquiries = new ArrayList<>();
     }
 
-    public BTOProject getAppliedProject() {
-        return appliedProject;
-    }
+//    public BTOProject getAppliedProject() {
+//        return appliedProject;
+//    }
+    //public FlatType getFlatTypeBooked(){return this.flatTypeBooked;}
+    public Application getApplication(){return this.application;}
 
-    public FlatType getFlatTypeBooked() {
-        return flatTypeBooked;
-    }
-
-    public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
-    }
+//    public ApplicationStatus getApplicationStatus() {
+//        return applicationStatus;
+//    }
 
     public List<Enquiry> getEnquiries() {
-        return enquiries;
+        return this.enquiries;
     }
 
     public void viewProjects(List<BTOProject> allProjects) {
@@ -44,8 +45,8 @@ public class Applicant extends User {
     }
 
     private boolean projectVisibilityOn(BTOProject project) {
-        // need help
-    	return true;
+        project.getVisibility();
+        return true;
     }
 
     private boolean isEligibleForProject(BTOProject project) {
@@ -58,7 +59,7 @@ public class Applicant extends User {
     }
 
     public boolean applyForProject(BTOProject project) {
-        if (applicationStatus != ApplicationStatus.NOT_APPLIED) {
+        if (this.getApplication() != null && this.getApplication().getStatus() != ApplicationStatus.NOT_APPLIED) {
             System.out.println("You have already applied for a project.");
             return false;
         }
@@ -66,45 +67,47 @@ public class Applicant extends User {
             System.out.println("You do not meet the eligibility criteria for this project.");
             return false;
         }
-        this.appliedProject = project;
-        this.applicationStatus = ApplicationStatus.PENDING;
+        this.application = new Application(this.getName(), this, project);
+        //this.appliedProject = project;
+        //this.applicationStatus = ApplicationStatus.PENDING;
         System.out.println("Application submitted for project: " + project.getProjectName());
         return true;
     }
 
-    public void updateApplicationStatus(ApplicationStatus status) {
-        this.applicationStatus = status;
-        System.out.println("Your application status is now: " + status);
-    }
+//    public void updateApplicationStatus(ApplicationStatus status) {
+//        this.applicationStatus = status;
+//        System.out.println("Your application status is now: " + status);
+//    }
 
     public boolean withdrawApplication() {
-        if (applicationStatus == ApplicationStatus.NOT_APPLIED) {
+        if (this.application == null) {
             System.out.println("No application to withdraw.");
             return false;
         }
-        appliedProject = null;
-        applicationStatus = ApplicationStatus.NOT_APPLIED;
-        flatTypeBooked = null;
+        this.application.deleteApplication();
+        this.application = null;
+        //applicationStatus = ApplicationStatus.NOT_APPLIED;
         System.out.println("Application withdrawn successfully.");
         return true;
     }
 
     public boolean bookFlat(FlatType flatType) {
-        if (applicationStatus != ApplicationStatus.SUCCESSFUL) {
+        if (this.application.getStatus() != ApplicationStatus.SUCCESSFUL) {
             System.out.println("You are not eligible to book a flat.");
             return false;
         }
-        if (flatTypeBooked != null) {
+        if (this.getApplication().getFlatTypeBooking() != null) {
             System.out.println("You have already booked a flat.");
             return false;
         }
 
         boolean available = false;
-        if (flatType == FlatType.TWOROOM && appliedProject.getFlats().getTwoRoomFlats() > 0) {
-            appliedProject.getFlats().decreaseTwoRoomFlatCount();
+        if (flatType == FlatType.TWOROOM && this.application.getProject().getFlats().getTwoRoomFlats() > 0) {
+
+            //this.application.getProject().getFlats().decreaseTwoRoomFlatCount();
             available = true;
-        } else if (flatType == FlatType.THREEROOM && appliedProject.getFlats().getThreeRoomFlats() > 0) {
-            appliedProject.getFlats().decreaseThreeRoomFlatCount();
+        } else if (flatType == FlatType.THREEROOM && this.application.getProject().getFlats().getThreeRoomFlats() > 0) {
+            //this.application.getProject().getFlats().decreaseThreeRoomFlatCount();
             available = true;
         }
 
@@ -113,14 +116,13 @@ public class Applicant extends User {
             return false;
         }
 
-        this.flatTypeBooked = flatType;
-        this.applicationStatus = ApplicationStatus.BOOKED;
-        System.out.println("Successfully booked a " + flatType.getDescription());
+        this.getApplication().setFlatTypeBooking(flatType);
+        System.out.println("Successfully created booking for " + flatType.getDescription());
         return true;
     }
 
     public void submitEnquiry(String enquiryText) {
-        Enquiry newEnquiry = new Enquiry(enquiryText, appliedProject);
+        Enquiry newEnquiry = new Enquiry(enquiryText, this.getApplication().getProject());
         enquiries.add(newEnquiry);
         System.out.println("Enquiry submitted.");
     }

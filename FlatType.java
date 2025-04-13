@@ -1,3 +1,5 @@
+package SC2002_Assignment;
+
 public enum FlatType {
     TWOROOM(2, "Two Room Flat"),
     THREEROOM(3, "Three Room Flat");
@@ -18,4 +20,3 @@ public enum FlatType {
         return description;
     }
 }
-

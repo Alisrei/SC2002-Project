@@ -10,7 +10,9 @@ public abstract class User {
     private boolean martialStatus;
 
     public User(String nric, String name, String password, int age, boolean isMarried) {
-        if (!validateNric(nric))
+        if (!validateNric(nric)) {
+            throw new IllegalArgumentException("Invalid NRIC format: " + nric);
+        }
 
         this.nric = nric;
         this.name = name;
@@ -24,10 +26,11 @@ public abstract class User {
     }
 
     // Getters and setters
-    public String getNric() { return nric; }
-    public String getPassword() { return password; }
-    public int getAge() { return age; }
-    public boolean isMarried() { return martialStatus; }
+    public String getNric() {return nric;}
+    public String getName() {return name;}
+    public String getPassword() {return password;}
+    public int getAge() {return age;}
+    public boolean isMarried() {return martialStatus;}
 
     // user methods
     public void login(String IC,String Pass){
@@ -42,16 +45,28 @@ public abstract class User {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "nric='" + nric + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", martialStatus=" + martialStatus +
+                '}';
+    }
+
     public void changePassword(String CurrentPass){
         Scanner sc = new Scanner(System.in);
-        if (CurrentPass == this.password){
+        if (CurrentPass.equals(this.password)){
             Boolean changed = false;
             while(changed == false){
                 System.out.println("Enter new password:");
                 String newPass = sc.next();
                 System.out.println("Enter new password again for confirmation:");
                 String CFMPass = sc.next();
-                if (newPass == CFMPass) {
+                if (newPass.equals(CFMPass)) {
                     this.password = newPass;
                     changed = true;
                 }

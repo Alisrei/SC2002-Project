@@ -2,14 +2,39 @@ package SC2002_Assignment;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Scanner;
-public class testMain {
-    private static List<HDBManager> managers = new ArrayList<>();
-    private static List<HDBOfficer> officers = new ArrayList<>();
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
+public class testMain {
+    public static List<Applicant> applicants = new ArrayList<>();
+    public static List<HDBManager> managers = new ArrayList<>();
+    public static List<HDBOfficer> officers = new ArrayList<>();
+    public static List<BTOProject> projects = new ArrayList<>();
+    //load csvs into lists
+    private static void loadApplicants(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue; // Skip header
+                }
+                String[] data = line.split(",");
+                Applicant applicant = new Applicant(
+                        data[1], // NRIC
+                        data[0], // Name
+                        data[4], // Password
+                        Integer.parseInt(data[2]), // Age
+                        data[3].equalsIgnoreCase("Married") // Marital Status
+                );
+                applicants.add(applicant);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading applicants file: " + e.getMessage());
+        }
+    }
     private static void loadManagers(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -33,7 +58,6 @@ public class testMain {
             System.err.println("Error reading managers file: " + e.getMessage());
         }
     }
-
     private static void loadOfficers(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -55,6 +79,83 @@ public class testMain {
             }
         } catch (IOException e) {
             System.err.println("Error reading officers file: " + e.getMessage());
+        }
+    }
+    private static void loadProjects(String filename) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/M/yy");
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean firstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue; // Skip header
+                }
+
+                // Handle quoted fields (like officer names)
+                String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+                // Trim all values
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = data[i].trim().replace("\"", "");
+                }
+                // Parse flat types and counts
+                List<FlatType> flatTypes = new ArrayList<>();
+                int twoRoomFlats = 0;
+                int threeRoomFlats = 0;
+
+                if (data[2].equalsIgnoreCase("2-Room")) {
+                    flatTypes.add(FlatType.TWOROOM);
+                    twoRoomFlats = Integer.parseInt(data[3]);
+                }
+
+                if (data[5].equalsIgnoreCase("3-Room")) {
+                    flatTypes.add(FlatType.THREEROOM);
+                    threeRoomFlats = Integer.parseInt(data[6]);
+                }
+
+                // Parse dates
+                LocalDate openDate = LocalDate.parse(data[8], dateFormatter);
+                LocalDate closeDate = LocalDate.parse(data[9], dateFormatter);
+
+                // Find manager by name
+                HDBManager manager = null;
+                for (HDBManager m : managers) {
+                    if (m.getName().equalsIgnoreCase(data[10])) {
+                        manager = m;
+                        break;
+                    }
+                }
+
+                if (manager == null) {
+                    System.err.println("Manager not found: " + data[10]);
+                    continue;
+                }
+
+                // Create project
+                BTOProject project = new BTOProject(data[0], data[1], openDate, closeDate, manager, flatTypes, twoRoomFlats, threeRoomFlats, true);
+
+                // Assign officers
+                if (data.length > 12 && !data[12].isEmpty()) {
+                    String[] officerNames = data[12].split(",");
+                    for (String name : officerNames) {
+                        name = name.trim();
+                        for (HDBOfficer officer : officers) {
+                            if (officer.getName().equalsIgnoreCase(name)) {
+                                project.addOfficer(officer);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                projects.add(project);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading projects file: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error parsing project data: " + e.getMessage());
         }
     }
 
@@ -110,7 +211,7 @@ public class testMain {
 
     return combinedMap;
 }
-
+    //get applicant from list
     public static Applicant getApplicant(List<Applicant> applicants, String NRIC){
         Applicant X = null;
         for(Applicant applicant : applicants){
@@ -120,7 +221,7 @@ public class testMain {
         }
         return X;
     }
-
+    //get officer from list
     public static HDBOfficer getOfficer(List<HDBOfficer> officers, String NRIC){
         HDBOfficer X = null;
         for(HDBOfficer officer : officers){
@@ -130,7 +231,7 @@ public class testMain {
         }
         return X;
     }
-
+    //get manager from list
     public static HDBManager getManager(List<HDBManager> managers, String NRIC){
         HDBManager X = null;
         for(HDBManager manager : managers){
@@ -166,24 +267,27 @@ public class testMain {
                            "8. Exit" );
     }
     public static void managerMenu(){
-        System.out.println("1. Manage Projects" +
-                           "2. Manage Applications" +
-                           "3. Manage enquiries" +
-                           "4. Generate Report");
+        System.out.println("1. Manage Projects\n" +
+                           "2. Manage Applications\n" +
+                           "3. Manage enquiries\n" +
+                           "4. Generate Report\n");
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        loadManagers("ManagerList.csv");
-        loadOfficers("OfficerList.csv");
+        loadApplicants("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ApplicantList.csv");
+        loadManagers("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ManagerList.csv");
+        loadOfficers("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/OfficerList.csv");
+        loadProjects("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ProjectList.csv");
         //read csvs
         //create objs and add to lists
         System.out.println("Select user class to login");
-        System.out.println("1. Applicant/n 2. HDBOfficer/n 3. HDBManager");
+        System.out.println("1. Applicant\n2. HDBOfficer\n3. HDBManager");
         int choice = sc.nextInt();
+        sc.nextLine();
         switch (choice){
             case 1:
-                HashMap applicantMap = createApplicantMap(List<Applicant> applicants);
+                HashMap applicantMap = createApplicantMap(applicants);
                 System.out.println("enter your Nric");
                 String nricA = sc.nextLine();
                 System.out.println("enter your Password");

@@ -1,11 +1,11 @@
+package SC2002_Assignment;
 import java.util.ArrayList;
 import java.util.List;
-
-// BTOFlats class to manage the flat types and their counts
 public class BTOFlats {
     private int twoRoomFlats;
     private int threeRoomFlats;
     private List<String> availableFlats; // Stores unit numbers
+
 
     public BTOFlats(int twoRoomFlats, int threeRoomFlats) {
         this.twoRoomFlats = twoRoomFlats;
@@ -24,24 +24,31 @@ public class BTOFlats {
             availableFlats.add("3R-" + i);
         }
     }
+    //getters
+    public int getTwoRoomFlats() {return twoRoomFlats;}
+    public int getThreeRoomFlats() {return threeRoomFlats;}
+    public List<String> getAvailableFlats() {return availableFlats;}
+    //setters
+    public void setTwoRoomFlats(int twos){this.twoRoomFlats = twos;}
+    public void setThreeRoomFlats(int threes){this.threeRoomFlats = threes;}
 
-    public int getTwoRoomFlats() {
-        return twoRoomFlats;
-    }
 
-    public int getThreeRoomFlats() {
-        return threeRoomFlats;
-    }
-
-    public List<String> getAvailableFlats() {
-        return availableFlats;
-    }
 
     public boolean bookFlat(String unitNumber) {
-        return availableFlats.remove(unitNumber); // Returns true if successful
+        if(this.availableFlats.contains(unitNumber)){
+            if(unitNumber.substring(0,2).equals("2R")){
+                this.twoRoomFlats -= 1;
+            }
+            if(unitNumber.substring(0,2).equals("3R")){
+                this.threeRoomFlats -= 1;
+            }
+            return this.availableFlats.remove(unitNumber);
+        }
+        else{return false;}
     }
 
     public void displayAvailableFlats() {
         System.out.println("Available Flats: " + availableFlats);
     }
+
 }
