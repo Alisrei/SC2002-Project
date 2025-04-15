@@ -5,18 +5,22 @@ public class Enquiry {
     private String reply;
     private Boolean replied;
     private BTOProject project;
+    private Applicant applicant;
 
     //getters
     public String getMainEnq() {return mainEnq;}
     public String getReply() {return reply;}
     public Boolean getReplied() {return replied;}
     public BTOProject getProject(){return project;}
+    public Applicant getApplicant(){return applicant;}
 
-    public Enquiry(String m,BTOProject p){
+    public Enquiry(String m,BTOProject p,Applicant A){
         this.mainEnq = m;
         this.reply = "no reply yet";
         this.replied = false;
         this.project = p;
+        this.applicant = A;
+        p.addEnquiry(this);
     }
     public void editEnq(String e){
         if(this.replied == true){
@@ -44,7 +48,7 @@ public class Enquiry {
     public void viewEnq(){
         System.out.println("Enquiry:" + this.getMainEnq());
         System.out.println("Reply:" + this.getReply());
-        System.out.println("Project" + this.getProject());
+        System.out.println("Project" + this.getProject().getProjectName());
     }
 
     public void deleteEnq(){

@@ -32,7 +32,7 @@ public class Application {
 
     public void displayApplication(){
         System.out.println("ApplicantionID:" + this.getApplicationId() + "\n" +
-                           "Project of application:" + this.getProject() + "\n" +
+                           "Project of application:" + this.getProject().getProjectName() + "\n" +
                            "Booking choice:" + this.getFlatTypeBooking() + "\n" +
                            "Application status:" + this.getStatus());
     }

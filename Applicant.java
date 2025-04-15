@@ -2,14 +2,12 @@ package SC2002_Assignment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Applicant extends User {
 
-    //private BTOProject appliedProject;
-    //private FlatType flatTypeBooked;
     private Application application;
-    //private ApplicationStatus applicationStatus;
     private List<Enquiry> enquiries;
 
     public Applicant(String nric, String name, String password, int age, boolean maritalStatus) {
@@ -18,15 +16,7 @@ public class Applicant extends User {
         this.enquiries = new ArrayList<>();
     }
 
-//    public BTOProject getAppliedProject() {
-//        return appliedProject;
-//    }
-    //public FlatType getFlatTypeBooked(){return this.flatTypeBooked;}
     public Application getApplication(){return this.application;}
-
-//    public ApplicationStatus getApplicationStatus() {
-//        return applicationStatus;
-//    }
 
     public List<Enquiry> getEnquiries() {
         return this.enquiries;
@@ -34,19 +24,37 @@ public class Applicant extends User {
 
     public void viewProjects(List<BTOProject> allProjects) {
         System.out.println("******** Eligible BTO Projects ********");
+        int i = 1;
         for (BTOProject project : allProjects) {
-            if (project.isWithinApplicationPeriod(java.time.LocalDate.now())
-                    && project.getFlatTypes() != null
-                    && projectVisibilityOn(project)
+            if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
+                    //for debug
+                    project.getFlatTypes() != null
+                    && project.getVisibility()
                     && isEligibleForProject(project)) {
-                System.out.println("-> " + project.getProjectName());
+                System.out.println(i + "." + project.getProjectName());
+                i += 1;
             }
         }
     }
-
-    private boolean projectVisibilityOn(BTOProject project) {
-        project.getVisibility();
-        return true;
+    public BTOProject selectProject(List<BTOProject> allProjects){
+        Scanner sc = new Scanner(System.in);
+        List<BTOProject> temp = new ArrayList<>();
+        System.out.println("Select desired project based on number:");
+        int i = 1;
+        for (BTOProject project : allProjects) {
+            if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
+                //for debug
+                    project.getFlatTypes() != null
+                            && project.getVisibility()
+                            && isEligibleForProject(project)) {
+                System.out.println(i + "." + project.getProjectName());
+                temp.add(project);
+                i += 1;
+            }
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return temp.get(choice-1);
     }
 
     private boolean isEligibleForProject(BTOProject project) {
@@ -59,7 +67,7 @@ public class Applicant extends User {
     }
 
     public boolean applyForProject(BTOProject project) {
-        if (this.getApplication() != null && this.getApplication().getStatus() != ApplicationStatus.NOT_APPLIED) {
+        if (this.getApplication() != null ) {
             System.out.println("You have already applied for a project.");
             return false;
         }
@@ -68,16 +76,9 @@ public class Applicant extends User {
             return false;
         }
         this.application = new Application(this.getName(), this, project);
-        //this.appliedProject = project;
-        //this.applicationStatus = ApplicationStatus.PENDING;
         System.out.println("Application submitted for project: " + project.getProjectName());
         return true;
     }
-
-//    public void updateApplicationStatus(ApplicationStatus status) {
-//        this.applicationStatus = status;
-//        System.out.println("Your application status is now: " + status);
-//    }
 
     public boolean withdrawApplication() {
         if (this.application == null) {
@@ -91,7 +92,31 @@ public class Applicant extends User {
         return true;
     }
 
-    public boolean bookFlat(FlatType flatType) {
+    public FlatType selectFlatType(){
+        Scanner sc = new Scanner(System.in);
+        FlatType flatType = null;
+        if (this.isMarried()){
+            System.out.println("Select room type by entering either 1 0r 2:\n1.Two room\n2.Three room");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice){
+                case 1:
+                    flatType = FlatType.TWOROOM;
+                    System.out.println("Two room flat selected.");
+                    break;
+                case 2:
+                    flatType = FlatType.THREEROOM;
+                    System.out.println("Three room flat selected.");
+                    break;
+                default:
+                    System.out.println("invalid choice");
+            }
+        }
+        else{flatType = FlatType.TWOROOM;System.out.println("Two room flat assigned.");}
+        return flatType;
+    }
+
+    public boolean bookFlat() {
         if (this.application.getStatus() != ApplicationStatus.SUCCESSFUL) {
             System.out.println("You are not eligible to book a flat.");
             return false;
@@ -102,12 +127,11 @@ public class Applicant extends User {
         }
 
         boolean available = false;
+        FlatType flatType = selectFlatType();
         if (flatType == FlatType.TWOROOM && this.application.getProject().getFlats().getTwoRoomFlats() > 0) {
 
-            //this.application.getProject().getFlats().decreaseTwoRoomFlatCount();
             available = true;
         } else if (flatType == FlatType.THREEROOM && this.application.getProject().getFlats().getThreeRoomFlats() > 0) {
-            //this.application.getProject().getFlats().decreaseThreeRoomFlatCount();
             available = true;
         }
 
@@ -121,14 +145,28 @@ public class Applicant extends User {
         return true;
     }
 
-    public void submitEnquiry(String enquiryText) {
-        Enquiry newEnquiry = new Enquiry(enquiryText, this.getApplication().getProject());
+    public void submitEnquiry(String enquiryText,List<BTOProject> AP) {
+        Enquiry newEnquiry = new Enquiry(enquiryText, this.selectProject(AP),this);
         enquiries.add(newEnquiry);
         System.out.println("Enquiry submitted.");
     }
 
+    public int getEnquiryIndex(){
+        Scanner sc = new Scanner(System.in);
+        int i = 1;
+        System.out.println("Select enquiry based on number:");
+        for (Enquiry enquiry : this.enquiries) {
+            System.out.print(i+".");
+            enquiry.viewEnq();
+            i += 1;
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return choice-1;
+    }
+
     public void viewEnquiries() {
-        for (Enquiry enquiry : enquiries) {
+        for (Enquiry enquiry : this.enquiries) {
             enquiry.viewEnq();
         }
     }
@@ -147,5 +185,6 @@ public class Applicant extends User {
             return;
         }
         enquiries.get(index).deleteEnq();
+        this.enquiries.remove(index);
     }
 }

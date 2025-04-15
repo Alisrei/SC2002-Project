@@ -41,6 +41,10 @@ public class HDBManager extends User{
         System.out.println("Project " + projectName + " deleted successfully.");
     }
 
+    public void addProject(BTOProject p){
+        this.projects.add(p);
+    }
+
     public void viewAllProjects(List<BTOProject> projectsMaster){
         int i = 1;
         for (BTOProject P: projectsMaster){
@@ -63,7 +67,6 @@ public class HDBManager extends User{
         viewPersornalProjects();
         int choice = sc.nextInt();
         sc.nextLine();
-        sc.close();
         return projects.get(choice-1);
     }
 
@@ -78,7 +81,7 @@ public class HDBManager extends User{
     public void viewPendingApplications(BTOProject P){
         int i = 1;
         for (Application A: P.getApplications()){
-            if(A.getStatus() == ApplicationStatus.PENDING){
+            if(A.getStatus().equals(ApplicationStatus.PENDING)){
                 System.out.print(i+".");
                 System.out.println(A.getApplicationId());
                 i += 1;
@@ -91,7 +94,6 @@ public class HDBManager extends User{
         viewPendingApplications(P);
         int choice = sc.nextInt();
         sc.nextLine();
-        sc.close();
         return P.getApplications().get(choice-1);
     }
 
@@ -119,7 +121,6 @@ public class HDBManager extends User{
         viewUnacceptedRegistrations(P);
         int choice = sc.nextInt();
         sc.nextLine();
-        sc.close();
         return P.getRegistrations().get(choice-1);
     }
 
@@ -143,6 +144,40 @@ public class HDBManager extends User{
             A.setStatus(ApplicationStatus.UNSUCCESSFUL);
             System.out.println("Application " + A.getApplicationId() + " rejected.");
         }
+    }
+
+    public int getEnquiryIndex(){
+        Scanner sc = new Scanner(System.in);
+        int i = 1;
+        System.out.println("Select enquiry based on number:");
+        for (Enquiry enquiry : this.getProject().getEnquiries()) {
+            System.out.print(i+".");
+            enquiry.viewEnq();
+            i += 1;
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return choice-1;
+    }
+
+    public void viewAllEnquiries(List<Enquiry> AllEnquiries){
+        for (Enquiry enquiry : AllEnquiries) {
+            enquiry.viewEnq();
+        }
+    }
+
+    public void viewEnquiries() {
+        for (Enquiry enquiry : this.getProject().getEnquiries()) {
+            enquiry.viewEnq();
+        }
+    }
+
+    public void replyEnquiry(int index, String newText) {
+        if (index < 0 || index >= this.getProject().getEnquiries().size()) {
+            System.out.println("Invalid enquiry index.");
+            return;
+        }
+        this.getProject().getEnquiries().get(index).replyToEnq(newText);
     }
 
     public void generateReport() {

@@ -11,6 +11,7 @@ public class testMain {
     public static List<HDBManager> managers = new ArrayList<>();
     public static List<HDBOfficer> officers = new ArrayList<>();
     public static List<BTOProject> projects = new ArrayList<>();
+    public static List<Enquiry> enquiries = new ArrayList<>();
     //load csvs into lists
     private static void loadApplicants(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -135,7 +136,7 @@ public class testMain {
 
                 // Create project
                 BTOProject project = new BTOProject(data[0], data[1], openDate, closeDate, manager, flatTypes, twoRoomFlats, threeRoomFlats, true);
-
+                manager.addProject(project);
                 // Assign officers
                 if (data.length > 12 && !data[12].isEmpty()) {
                     String[] officerNames = data[12].split(",");
@@ -144,6 +145,7 @@ public class testMain {
                         for (HDBOfficer officer : officers) {
                             if (officer.getName().equalsIgnoreCase(name)) {
                                 project.addOfficer(officer);
+                                officer.setAssignedProject(project);
                                 break;
                             }
                         }
@@ -158,6 +160,7 @@ public class testMain {
             System.err.println("Error parsing project data: " + e.getMessage());
         }
     }
+//    private static void loadEnquiries(String filename){to be implemented}
 
     // Generate HashMap for Applicants
     public static HashMap<String, String> createApplicantMap(List<Applicant> applicants) {
@@ -253,25 +256,47 @@ public class testMain {
                            "2. Apply for project\n" +
                            "3. View applied project\n" +
                            "4. Request application withdrawal\n" +
-                           "5 manage enquiries\n" +
-                           "6. Exit");
+                           "5. Book flats\n" +
+                           "6. manage enquiries\n" +
+                           "7. Logout");
+    }
+    public static void applicantEnquiryMenu(){
+        System.out.println("1. Create enquiry\n" +
+                           "2. View enquiries\n" +
+                           "3. Edit enquiry\n" +
+                           "4. Delete enquiry\n" +
+                           "5. Exit");
     }
     public static void officerMenu(){
         System.out.println("1. Register for project team\n" +
                            "2. View current registration status\n" +
                            "3. View current project details\n" +
-                           "4. Update number of flats\n" +
-                           "5. Retrieve applicant BTO application\n" +  //into update status and profile
+                           "4. View Booking Applications\n" +
+                           "5. Book flat from Application\n" +  //into update status and profile
                            "6. Generate applicant booking receipt\n" +
                            "7. Manage project enquiries\n" +
-                           "8. Exit" );
+                           "8. Logout" );
+    }
+    public static void officerEnquiryMenu(){
+        System.out.println("1. View enquiries\n" +
+                           "2. reply to enquiry\n" +
+                           "3. Exit");
     }
     public static void managerMenu(){
-        System.out.println("1. Manage Projects\n" +
-                           "2. Manage Applications\n" +
-                           "3. Manage enquiries\n" +
-                           "4. Generate Report\n");
+        System.out.println("1. Manage projects\n" +
+                           "2. Manage applications\n" +
+                           "3. Manage registrations\n" +
+                           "4. Manage enquiries\n" +
+                           "5. Generate report\n" +
+                           "6. Logout");
     }
+    public static void managerEnquiryMenu() {
+        System.out.println("1. View all enquiries\n" +
+                          "2. View enquiries within managed projects" +
+                         "3. reply to enquiry within managed projects\n" +
+                         "4. Exit");
+    }
+
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -279,86 +304,240 @@ public class testMain {
         loadManagers("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ManagerList.csv");
         loadOfficers("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/OfficerList.csv");
         loadProjects("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ProjectList.csv");
-        //read csvs
-        //create objs and add to lists
-        System.out.println("Select user class to login");
-        System.out.println("1. Applicant\n2. HDBOfficer\n3. HDBManager");
-        int choice = sc.nextInt();
-        sc.nextLine();
-        switch (choice){
-            case 1:
-                HashMap applicantMap = createApplicantMap(applicants);
-                System.out.println("enter your Nric");
-                String nricA = sc.nextLine();
-                System.out.println("enter your Password");
-                String PasswordA = sc.nextLine();
-                Boolean loggedA = authenticate(nricA,PasswordA,applicantMap);
-                while(loggedA){
-                    Applicant currentApplicant = getApplicant(applicants,nricA);
-                    applicantMenu();
-                    int choiceA = sc.nextInt();
-                    switch (choiceA){
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                        default:
+        boolean ProgramOn = true;
+        while (ProgramOn) {
+            System.out.println("Select user class to login");
+            System.out.println("1. Applicant\n2. HDBOfficer\n3. HDBManager\n4. Exit program");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice) {
+                case 1:
+                    HashMap applicantMap = createApplicantMap(applicants);
+                    System.out.println("enter your Nric");
+                    String nricA = sc.nextLine();
+                    System.out.println("enter your Password");
+                    String PasswordA = sc.nextLine();
+                    Boolean loggedA = authenticate(nricA, PasswordA, applicantMap);
+                    Applicant currentApplicant = getApplicant(applicants, nricA);
+                    while (loggedA) {
+                        applicantMenu();
+                        int choiceA = sc.nextInt();
+                        sc.nextLine();
+                        switch (choiceA) {
+                            case 1:
+                                currentApplicant.viewProjects(projects);
+                                break;
+                            case 2:
+                                currentApplicant.applyForProject(currentApplicant.selectProject(projects));
+                                break;
+                            case 3:
+                                currentApplicant.getApplication().getProject().displayProjectDetails();
+                                break;
+                            case 4:
+                                currentApplicant.withdrawApplication();
+                                break;
+                            case 5:
+                                currentApplicant.bookFlat();
+                                break;
+                            case 6:
+                                System.out.println("Select choice by number:");
+                                applicantEnquiryMenu();
+                                int C = sc.nextInt();
+                                sc.nextLine();
+                                switch (C) {
+                                    case 1:
+                                        System.out.println("Enter your enquiry:");
+                                        String E = sc.nextLine();
+                                        currentApplicant.submitEnquiry(E, projects);
+                                        for (Enquiry Enq : currentApplicant.getEnquiries()){
+                                            if (!enquiries.contains(Enq)){
+                                                enquiries.add(Enq);
+                                            }
+                                        }//updates enquiries
+                                        break;
+                                    case 2:
+                                        currentApplicant.viewEnquiries();
+                                        break;
+                                    case 3:
+                                        int i = currentApplicant.getEnquiryIndex();
+                                        System.out.println("Enter your edited enquiry:");
+                                        String EE = sc.nextLine();
+                                        currentApplicant.editEnquiry(i, EE);
+                                        break;
+                                    case 4:
+                                        int Index = currentApplicant.getEnquiryIndex();
+                                        Enquiry ER = currentApplicant.getEnquiries().get(Index);
+                                        enquiries.remove(ER);
+                                        currentApplicant.deleteEnquiry(Index);
+                                        break;
+                                    case 5:
+                                        System.out.println("Exit successful");
+                                        break;
+                                    default:
+                                }
+                                break;
+                            case 7:
+                                loggedA = false;
+                                System.out.println("Successfully logged out.");
+                                break;
+                            default:
+                        }
                     }
-                }
-                break;
-            case 2:
-                HashMap officerMap = createOfficerMap(officers);
-                System.out.println("enter your Nric");
-                String nricO = sc.nextLine();
-                System.out.println("enter your Password");
-                String PasswordO = sc.nextLine();
-                Boolean loggedO = authenticate(nricO,PasswordO,officerMap);
-                while(loggedO) {
-                    HDBOfficer currentOfficer = getOfficer(officers, nricO);
-                    officerMenu();
-                    int choiceO = sc.nextInt();
-                    switch (choiceO){
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                        case 7:
-                        case 8:
-                        default:
+                    break;
+                case 2:
+                    HashMap officerMap = createOfficerMap(officers);
+                    System.out.println("enter your Nric");
+                    String nricO = sc.nextLine();
+                    System.out.println("enter your Password");
+                    String PasswordO = sc.nextLine();
+                    Boolean loggedO = authenticate(nricO, PasswordO, officerMap);
+                    while (loggedO) {
+                        HDBOfficer currentOfficer = getOfficer(officers, nricO);
+                        officerMenu();
+                        int choiceO = sc.nextInt();
+                        sc.nextLine();
+                        switch (choiceO) {
+                            case 1:
+                                currentOfficer.registerAsOfficer(currentOfficer.selectProjectforRegistration(projects));
+                                break;
+                            case 2:
+                                if(currentOfficer.getRegistration().getAccepted()){System.out.println("Registration accepted.");}
+                                else{System.out.println("registration not accepted yet.");}
+                                break;
+                            case 3:
+                                currentOfficer.viewAssignedProjectDetails();
+                                break;
+                            case 4:
+                                currentOfficer.viewAssignedProjectApplicationsForBooking();
+                                break;
+                            case 5:
+                                currentOfficer.handleFlatBooking();
+                                break;
+                            case 6:
+                                //booking receipt
+                            case 7:
+                                System.out.println("Select choice by number:");
+                                officerEnquiryMenu();
+                                int C = sc.nextInt();
+                                sc.nextLine();
+                                switch (C) {
+                                    case 1:
+                                        currentOfficer.viewEnquiries();
+                                        break;
+                                    case 2:
+                                        int i = currentOfficer.getEnquiryIndex();
+                                        System.out.println("Enter your reply to the enquiry:");
+                                        String R = sc.nextLine();
+                                        currentOfficer.replyEnquiry(i, R);
+                                        break;
+                                    case 3:
+                                        System.out.println("Exit successful");
+                                        break;
+                                    default:
+                                }
+                                break;
+
+                            case 8:
+                                loggedO = false;
+                                System.out.println("Successfully logged out.");
+                                break;
+                            default:
+                        }
                     }
-                }
-                break;
-            case 3:
-                HashMap managerMap = createManagerMap(managers);
-                System.out.println("enter your Nric");
-                String nricM = sc.nextLine();
-                System.out.println("enter your Password");
-                String PasswordM= sc.nextLine();
-                Boolean loggedM = authenticate(nricM,PasswordM,managerMap);
-                while(loggedM) {
-                    HDBManager currentManager = getManager(managers, nricM);
-                    managerMenu();
-                    int choiceM = sc.nextInt();
-                    switch (choiceM){
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        default:
+                    break;
+                case 3:
+                    HashMap managerMap = createManagerMap(managers);
+                    System.out.println("enter your Nric");
+                    String nricM = sc.nextLine();
+                    System.out.println("enter your Password");
+                    String PasswordM = sc.nextLine();
+                    Boolean loggedM = authenticate(nricM, PasswordM, managerMap);
+                    while (loggedM) {
+                        HDBManager currentManager = getManager(managers, nricM);
+                        managerMenu();
+                        int choiceM = sc.nextInt();
+                        sc.nextLine();
+                        switch (choiceM) {
+                            case 1:
+                                //project creation, editing, deletion
+                            case 2:
+                                System.out.println("Select choice by number:");
+                                System.out.println("1. View pending applications\n2. Approve pending applications\n3. Exit");
+                                int CA = sc.nextInt();
+                                sc.nextLine();
+                                switch (CA) {
+                                    case 1:
+                                        currentManager.viewPendingApplications(currentManager.getProject());
+                                        break;
+                                    case 2:
+                                        currentManager.approveApplication();
+                                        break;
+                                    case 3:
+                                        break;
+                                    default:
+                                }
+                                break;
+                            case 3:
+                                System.out.println("Select choice by number:");
+                                System.out.println("1. View unaccepted registrations\n2. Approve unaccepted registrations\n3. Exit");
+                                int CR = sc.nextInt();
+                                sc.nextLine();
+                                switch (CR) {
+                                    case 1:
+                                        currentManager.viewUnacceptedRegistrations(currentManager.getProject());
+                                        break;
+                                    case 2:
+                                        currentManager.approveRegistration();
+                                        break;
+                                    case 3:
+                                        break;
+                                    default:
+                                }
+                                break;
+                            case 4:
+                                System.out.println("Select choice by number:");
+                                managerEnquiryMenu();
+                                int C = sc.nextInt();
+                                sc.nextLine();
+                                switch (C) {
+                                    case 1:
+                                        currentManager.viewAllEnquiries(enquiries);
+                                        break;
+                                    case 2:
+                                        currentManager.viewEnquiries();
+                                        break;
+                                    case 3:
+                                        int i = currentManager.getEnquiryIndex();
+                                        System.out.println("Enter your reply to the enquiry:");
+                                        String R = sc.nextLine();
+                                        currentManager.replyEnquiry(i, R);
+                                        break;
+                                    case 4:
+                                        System.out.println("Exit successful");
+                                        break;
+                                    default:
+                                }
+                                break;
+                            case 5:
+                                //generate report
+                            case 6:
+                                loggedM = false;
+                                System.out.println("Successfully logged out.");
+                                break;
+                            default:
+                        }
                     }
-                }
-                break;
-            default:
-                System.out.println("invalid choice please try again");
-                break;
+                    break;
+                case 4:
+                    ProgramOn = false;
+                    System.out.println("Exiting program, Thank you for your Usage:)");
+                    break;
+                default:
+                    System.out.println("invalid choice please try again");
+                    break;
+            }
+
+
         }
-
-
-
     }
 }

@@ -1,7 +1,6 @@
 package SC2002_Assignment;
 
 public enum ApplicationStatus {
-    NOT_APPLIED,
     PENDING,
     SUCCESSFUL,
     UNSUCCESSFUL,

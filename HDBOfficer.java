@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class HDBOfficer extends User{
+public class HDBOfficer extends Applicant{
     private BTOProject assignedProject;
     private Registration registration;
     private boolean registrationApproved;
@@ -25,6 +25,10 @@ public class HDBOfficer extends User{
             System.out.println("You are already assigned to a project.");
             return false;
         }
+        else if(this.getApplication().getProject().equals(project)){
+            System.out.println("You are already applying for this project as an applicant.");
+            return false;
+        }
         else {
             this.registration = new Registration(this.getName(),this,project);
             project.addRegistration(this.registration);
@@ -32,6 +36,18 @@ public class HDBOfficer extends User{
             System.out.println("Registration request created");
             return true;
         }
+    }
+    public BTOProject selectProjectforRegistration(List<BTOProject> allprojects){
+        Scanner sc = new Scanner(System.in);
+        int i = 1;
+        for (BTOProject P :allprojects){
+            System.out.print(i + ".");
+            System.out.println(P.getProjectName());
+            i += 1;
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return allprojects.get(choice - 1);
     }
 
     public void viewAssignedProjectDetails() {
@@ -66,7 +82,6 @@ public class HDBOfficer extends User{
                     selection.add(A);
                 }
             }
-            sc.close();
             return selection.get(choice-1);
         }
         else {
@@ -75,18 +90,35 @@ public class HDBOfficer extends User{
         }
 
     }
-    public String selectunit(){
+    public String selectunit(Application A){
         if(assignedProject != null){
             Scanner sc = new Scanner(System.in);
-            int i = 1;
-            System.out.println("Select room based on number:");
-            for(String N : this.assignedProject.getFlats().getAvailableFlats()){
-                System.out.print(i+".");
-                System.out.println(N);
-                i += 1;
+            if(A.getApplicant().isMarried()){
+                int i = 1;
+                System.out.println("Select room based on number:");
+                for(String N : this.assignedProject.getFlats().getAvailableFlats()){
+                    System.out.print(i+".");
+                    System.out.println(N);
+                    i += 1;
+                }
+                int choice = sc.nextInt();
+                return this.assignedProject.getFlats().getAvailableFlats().get(choice-1);
             }
-            int choice = sc.nextInt();
-            return this.assignedProject.getFlats().getAvailableFlats().get(choice-1);
+            else {
+                List<String> tworooms = new ArrayList<>();
+                int i = 1;
+                System.out.println("Select room based on number:");
+                for(String N : this.assignedProject.getFlats().getAvailableFlats()) {
+                    if(N.substring(0,2).equals("2R")){
+                        System.out.print(i + ".");
+                        System.out.println(N);
+                        tworooms.add(N);
+                        i += 1;
+                    }
+                }
+                int choice = sc.nextInt();
+                return tworooms.get(choice-1);
+            }
 
         }
         else{
@@ -103,7 +135,7 @@ public class HDBOfficer extends User{
             return;
         }
         Application A = this.selectApplicationforBooking();
-        String unitNumber = this.selectunit();
+        String unitNumber = this.selectunit(A);
         boolean success = assignedProject.bookFlat(unitNumber);
         if (!success) {
             System.out.println("Booking failed. Please check the unit number.");
@@ -114,6 +146,33 @@ public class HDBOfficer extends User{
 
     }
 
+    public int getEnquiryIndex(){
+        Scanner sc = new Scanner(System.in);
+        int i = 1;
+        System.out.println("Select enquiry based on number:");
+        for (Enquiry enquiry : this.getAssignedProject().getEnquiries()) {
+            System.out.print(i+".");
+            enquiry.viewEnq();
+            i += 1;
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return choice-1;
+    }
+
+    public void viewEnquiries() {
+        for (Enquiry enquiry : this.getAssignedProject().getEnquiries()) {
+            enquiry.viewEnq();
+        }
+    }
+
+    public void replyEnquiry(int index, String newText) {
+        if (index < 0 || index >= this.getAssignedProject().getEnquiries().size()) {
+            System.out.println("Invalid enquiry index.");
+            return;
+        }
+        this.getAssignedProject().getEnquiries().get(index).replyToEnq(newText);
+    }
     public boolean isOfficerOfProject(BTOProject project) {
         return assignedProject != null && assignedProject.equals(project);
     }

@@ -13,6 +13,7 @@ public class BTOProject {
     private HDBManager managerInCharge;
     private List<Application> applications;
     private List<Registration> registrations;
+    private List<Enquiry> enquiries;
     private List<HDBOfficer> assignedOfficers; // List of HDB Officers
     private static final int MAX_OFFICERS = 10;
     private Boolean visibility;
@@ -43,6 +44,7 @@ public class BTOProject {
     public HDBManager getManagerInCharge(){return managerInCharge;}
     public List<Application> getApplications(){return applications;}
     public List<Registration> getRegistrations(){return registrations;}
+    public List<Enquiry> getEnquiries(){return enquiries;}
     public List<HDBOfficer> getAssignedOfficers(){return assignedOfficers;}
     public Boolean getVisibility(){return visibility;}
 
@@ -58,6 +60,7 @@ public class BTOProject {
     public void setVisibility(Boolean vis){this.visibility = vis;}
     public void addApplication(Application A){this.applications.add(A);}
     public void addRegistration(Registration R){this.registrations.add(R);}
+    public void addEnquiry(Enquiry E){this.enquiries.add(E);}
 
 
 
