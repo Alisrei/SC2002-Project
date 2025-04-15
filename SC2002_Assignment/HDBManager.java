@@ -88,6 +88,7 @@ public class HDBManager extends User{
             }
         }
     }
+
     public Application getApplication(BTOProject P){
         Scanner sc = new Scanner(System.in);
         System.out.println("Select the application based on number:");
@@ -95,6 +96,47 @@ public class HDBManager extends User{
         int choice = sc.nextInt();
         sc.nextLine();
         return P.getApplications().get(choice-1);
+    }
+
+    public void viewPendingWithdrawals(BTOProject P){
+        int i = 1;
+        for (Application A: P.getApplications()){
+            if(A.getStatus().equals(ApplicationStatus.WITHDRAWAL_REQUESTED)){
+                System.out.print(i+".");
+                System.out.println(A.getApplicationId());
+                i += 1;
+            }
+        }
+    }
+    public Application getWithdrawals(BTOProject P){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select the application based on number:");
+        viewPendingWithdrawals(P);
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return P.getApplications().get(choice-1);
+    }
+    public void  manageWithdrawals(){
+        Scanner sc = new Scanner(System.in);
+        Application W = this.getApplication(this.getProject());
+        System.out.println("select choice based on number:");
+        System.out.println("1. Approve withdrawal\n2. Reject withdrawal");
+        int choice = sc.nextInt();
+        switch (choice){
+            case 1:
+                W.setStatus(ApplicationStatus.WITHDRAWAL_APPROVED);
+                W.getApplicant().setApplication(null);
+                W.deleteApplication();
+                System.out.println("Withdrawal approved and deleted");
+                break;
+            case 2:
+                W.setStatus(ApplicationStatus.WITHDRAWAL_REJECTED);
+                System.out.println("Withdrawal denied");
+                break;
+            default:
+                System.out.println("invalid choice");
+                break;
+        }
     }
 
     public void viewRegistrations(BTOProject P){

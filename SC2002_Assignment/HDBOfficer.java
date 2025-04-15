@@ -146,6 +146,64 @@ public class HDBOfficer extends Applicant{
 
     }
 
+    //overwrite applicant methods to exclude assigned project
+    public void viewProjects(List<BTOProject> allProjects) {
+        System.out.println("******** Eligible BTO Projects ********");
+        int i = 1;
+        for (BTOProject project : allProjects) {
+            if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
+                //for debug
+                    project.getFlatTypes() != null
+                            && project.getVisibility()
+                            && isEligibleForProject(project)) {
+                System.out.println(i + "." + project.getProjectName());
+                i += 1;
+            }
+        }
+    }
+    public BTOProject selectProject(List<BTOProject> allProjects){
+        Scanner sc = new Scanner(System.in);
+        List<BTOProject> temp = new ArrayList<>();
+        System.out.println("Select desired project based on number:");
+        int i = 1;
+        for (BTOProject project : allProjects) {
+            if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
+                //for debug
+                    project.getFlatTypes() != null
+                            && project.getVisibility()
+                            && isEligibleForProject(project)) {
+                System.out.println(i + "." + project.getProjectName());
+                temp.add(project);
+                i += 1;
+            }
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return temp.get(choice-1);
+    }
+    private boolean isEligibleForProject(BTOProject project) {
+        if (getAge() < 21){ return false;}
+        if (!isMarried() && getAge() < 35){ return false;}
+        if (!isMarried() && getAge() >= 35 && !project.getFlatTypes().contains(FlatType.TWOROOM)) {
+            return false;
+        }
+        if(project.equals(this.assignedProject)){return false;}
+        return true;
+    }
+    public boolean applyForProject(BTOProject project) {
+        if (this.getApplication() != null ) {
+            System.out.println("You have already applied for a project.");
+            return false;
+        }
+        if (!isEligibleForProject(project)) {
+            System.out.println("You do not meet the eligibility criteria for this project.");
+            return false;
+        }
+        this.setApplication(new Application(this.getName(), this, project));
+        System.out.println("Application submitted for project: " + project.getProjectName());
+        return true;
+    }
+
     public int getEnquiryIndex(){
         Scanner sc = new Scanner(System.in);
         int i = 1;

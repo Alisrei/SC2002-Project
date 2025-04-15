@@ -1,3 +1,4 @@
+package SC2002_Assignment;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -190,10 +191,7 @@ public class testMain {
     }
 
     // Combined HashMap of all user types
-    public static HashMap<String, String> createCombinedMap(
-        List<Applicant> applicants,
-        List<HDBOfficer> officers,
-        List<HDBManager> managers) {
+    public static HashMap<String, String> createCombinedMap(List<Applicant> applicants, List<HDBOfficer> officers, List<HDBManager> managers) {
 
     HashMap<String, String> combinedMap = new HashMap<>();
 
@@ -215,6 +213,7 @@ public class testMain {
     return combinedMap;
 }
     //get applicant from list
+
     public static Applicant getApplicant(List<Applicant> applicants, String NRIC){
         Applicant X = null;
         for(Applicant applicant : applicants){
@@ -247,9 +246,19 @@ public class testMain {
 
     public static boolean authenticate(String NRIC, String Password, HashMap Database){
         // Check if NRIC exists in the map
-        if (!Database.containsKey(NRIC)) {return false;}
+        if (!Database.containsKey(NRIC)) {
+            System.out.println("Invalid NRIC, please try again.");
+            return false;
+        }
         // Compare passwords (use equals() for string comparison)
-        return Database.get(NRIC).equals(Password);
+        if(Database.get(NRIC).equals(Password)) {
+            System.out.println("Login successful.");
+            return true;
+        }
+        else {
+            System.out.println("Wrong password, please try again");
+            return false;
+        }
     }
     public static void applicantMenu(){
         System.out.println("1. View available projects\n" +
@@ -300,10 +309,10 @@ public class testMain {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        loadApplicants("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ApplicantList.csv");
-        loadManagers("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ManagerList.csv");
-        loadOfficers("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/OfficerList.csv");
-        loadProjects("/Users/Ruitao/eclipse-workspace/sce.cz2002.tkl.first/src/SC2002_Assignment/ProjectList.csv");
+        loadApplicants("ApplicantList.csv");
+        loadManagers("ManagerList.csv");
+        loadOfficers("OfficerList.csv");
+        loadProjects("ProjectList.csv");
         boolean ProgramOn = true;
         while (ProgramOn) {
             System.out.println("Select user class to login");
@@ -313,13 +322,16 @@ public class testMain {
             switch (choice) {
                 case 1:
                     HashMap applicantMap = createApplicantMap(applicants);
+                    HashMap OM = createOfficerMap(officers);
                     System.out.println("enter your Nric");
                     String nricA = sc.nextLine();
                     System.out.println("enter your Password");
                     String PasswordA = sc.nextLine();
                     Boolean loggedA = authenticate(nricA, PasswordA, applicantMap);
+                    Boolean loggedOA = authenticate(nricA, PasswordA, OM);
                     Applicant currentApplicant = getApplicant(applicants, nricA);
-                    while (loggedA) {
+                    if(loggedOA){currentApplicant = getOfficer(officers, nricA);}
+                    while (loggedA || loggedOA) {
                         applicantMenu();
                         int choiceA = sc.nextInt();
                         sc.nextLine();
@@ -328,8 +340,13 @@ public class testMain {
                                 currentApplicant.viewProjects(projects);
                                 break;
                             case 2:
-                                currentApplicant.applyForProject(currentApplicant.selectProject(projects));
-                                break;
+                                if (loggedA){
+                                    currentApplicant.applyForProject(currentApplicant.selectProject(projects));
+                                    break;
+                                }
+                                else{
+
+                                }
                             case 3:
                                 currentApplicant.getApplication().getProject().displayProjectDetails();
                                 break;
@@ -462,7 +479,7 @@ public class testMain {
                                 //project creation, editing, deletion
                             case 2:
                                 System.out.println("Select choice by number:");
-                                System.out.println("1. View pending applications\n2. Approve pending applications\n3. Exit");
+                                System.out.println("1. View pending applications\n2. Approve pending applications\n3. Manage application withdrawals\n4. Exit");
                                 int CA = sc.nextInt();
                                 sc.nextLine();
                                 switch (CA) {
@@ -473,6 +490,9 @@ public class testMain {
                                         currentManager.approveApplication();
                                         break;
                                     case 3:
+                                        currentManager.manageWithdrawals();
+                                        break;
+                                    case 4:
                                         break;
                                     default:
                                 }

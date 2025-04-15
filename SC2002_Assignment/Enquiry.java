@@ -1,5 +1,5 @@
 package SC2002_Assignment;
-import java.util.Scanner;
+
 public class Enquiry {
     private String mainEnq;
     private String reply;

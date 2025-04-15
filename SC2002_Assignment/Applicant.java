@@ -17,6 +17,8 @@ public class Applicant extends User {
     }
 
     public Application getApplication(){return this.application;}
+    public void setApplication(Application A){this.application = A;}
+
 
     public List<Enquiry> getEnquiries() {
         return this.enquiries;
@@ -58,8 +60,8 @@ public class Applicant extends User {
     }
 
     private boolean isEligibleForProject(BTOProject project) {
-        if (getAge() < 21) return false;
-        if (!isMarried() && getAge() < 35) return false;
+        if (getAge() < 21){ return false;}
+        if (!isMarried() && getAge() < 35){ return false;}
         if (!isMarried() && getAge() >= 35 && !project.getFlatTypes().contains(FlatType.TWOROOM)) {
             return false;
         }
@@ -85,10 +87,8 @@ public class Applicant extends User {
             System.out.println("No application to withdraw.");
             return false;
         }
-        this.application.deleteApplication();
-        this.application = null;
-        //applicationStatus = ApplicationStatus.NOT_APPLIED;
-        System.out.println("Application withdrawn successfully.");
+        this.application.setStatus(ApplicationStatus.WITHDRAWAL_REQUESTED);
+        System.out.println("Application withdrawal requested successfully.");
         return true;
     }
 

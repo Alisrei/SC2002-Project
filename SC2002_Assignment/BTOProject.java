@@ -2,6 +2,7 @@ package SC2002_Assignment;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BTOProject {
     private String projectName;
@@ -73,7 +74,13 @@ public class BTOProject {
         System.out.println("Application Close Date: " + this.applicationCloseDate);
         System.out.println("HDB Manager in Charge: " + this.managerInCharge.getName());
         System.out.println("Number of applications:" + this.applications.size());
-        System.out.println("Assigned Officers (" + this.assignedOfficers.size() + "/" + MAX_OFFICERS + "): " + this.assignedOfficers);
+        System.out.print("Assigned Officers (" + this.assignedOfficers.size() + "/" + MAX_OFFICERS + "): "); //+ this.assignedOfficers);
+        System.out.println(
+                this.assignedOfficers.stream()
+                        .map(HDBOfficer::getName)
+                        .collect(Collectors.joining(", "))
+        );
+
 
         // Display total flats based on available types
         if (this.flatTypes.contains(FlatType.TWOROOM)) {
