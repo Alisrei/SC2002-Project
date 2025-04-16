@@ -25,7 +25,7 @@ public class Applicant extends User {
     }
 
     public void viewProjects(List<BTOProject> allProjects) {
-        System.out.println("******** Eligible BTO Projects ********");
+        System.out.println("\n\n******** Eligible BTO Projects ********");
         int i = 1;
         for (BTOProject project : allProjects) {
             if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
