@@ -20,43 +20,46 @@ public class HDBManager extends User{
     }
     public void editProjectname(BTOProject project, String newName) {
         project.setProjectName(newName);
+        System.out.println("project name changed successfully");
         return;
         }
     public void editProject(BTOProject project, String newNeighborhood) {
         project.setNeighborhood(newNeighborhood);
+        System.out.println("project neighbourhood changed successfully");
         return;
         }
-    public void editProject(String projectName, LocalDate newApplicationOpenDate, LocalDate newApplicationCloseDate) {
-        for (BTOProject project : projects) {
-            if (project.getProjectName().equals(projectName)) {
-                project.setApplicationOpenDate(newApplicationOpenDate);
-                project.setApplicationCloseDate(newApplicationCloseDate);
-                return;
-            }
-        }
-        System.out.println("Project " + projectName + " not found.");
+    public void editProject(BTOProject project, LocalDate newApplicationOpenDate, LocalDate newApplicationCloseDate) {
+        project.setApplicationOpenDate(newApplicationOpenDate);
+        project.setApplicationCloseDate(newApplicationCloseDate);
+        System.out.println("application open and close dates changed successfully");
+        return;
     }
-    public void editProject(String projectName, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
-        for (BTOProject project : projects) {
-            if (project.getProjectName().equals(projectName)) {
-                project.setFlatTypes(newFlatTypes);
-                project.getFlats().setTwoRoomFlats(twoRoomFlats);
-                project.getFlats().setThreeRoomFlats(threeRoomFlats);
-                System.out.println("Project " + projectName + " updated successfully.");
-                return;
-            }
-        }
-        System.out.println("Project " + projectName + " not found.");
+
+    //do we need this?
+    public void editProject(BTOProject project, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
+        project.setFlatTypes(newFlatTypes);
+        project.getFlats().setTwoRoomFlats(twoRoomFlats);
+        project.getFlats().setThreeRoomFlats(threeRoomFlats);
+        System.out.println("Project flat types updated successfully.");
+        return;
     }
     public void editProject(BTOProject project, boolean v) {
         project.setVisibility(v);
+        System.out.print("Project visibility set to:");
+        if(v){
+            System.out.println("On");
+        }
+        else {
+            System.out.println("Off");
+        }
         return;
     }
 
     public void deleteProject(BTOProject project) {
         projects.remove(project);
+        project = null;
         System.out.println("Project " + project.getProjectName() + " deleted successfully.");
-    }
+    }//incomplete
 
     public void addProject(BTOProject p){
         this.projects.add(p);
