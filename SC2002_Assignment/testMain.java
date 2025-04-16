@@ -482,7 +482,6 @@ public class testMain {
                         sc.nextLine();
                         switch (choiceM) {
                             case 1:
-                                System.out.println();
                                 System.out.println("Select choice by number:");
                                 System.out.println("1. Create project\n2. Edit project\n3. Delete project\n4. Exit");
                                 int CP = sc.nextInt();
@@ -558,9 +557,10 @@ public class testMain {
                                             }
                                         currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,Vis);
                                     case 2:
+
                                     case 3:
+                                        currentManager.deleteProject(currentManager.getProject());
                                     case 4:
-                                        //currentManager.getProject().deleteProject();
                                     default:
                                 }
                                 //project creation, editing, deletion

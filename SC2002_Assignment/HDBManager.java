@@ -18,14 +18,27 @@ public class HDBManager extends User{
         projects.add(newProject);
         System.out.println("Project " + projectName + " created successfully.");
     }
-
-    public void editProject(String projectName, String newNeighborhood, LocalDate newApplicationOpenDate,
-                            LocalDate newApplicationCloseDate, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
+    public void editProjectname(BTOProject project, String newName) {
+        project.setProjectName(newName);
+        return;
+        }
+    public void editProject(BTOProject project, String newNeighborhood) {
+        project.setNeighborhood(newNeighborhood);
+        return;
+        }
+    public void editProject(String projectName, LocalDate newApplicationOpenDate, LocalDate newApplicationCloseDate) {
         for (BTOProject project : projects) {
             if (project.getProjectName().equals(projectName)) {
-                project.setNeighborhood(newNeighborhood);
                 project.setApplicationOpenDate(newApplicationOpenDate);
                 project.setApplicationCloseDate(newApplicationCloseDate);
+                return;
+            }
+        }
+        System.out.println("Project " + projectName + " not found.");
+    }
+    public void editProject(String projectName, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
+        for (BTOProject project : projects) {
+            if (project.getProjectName().equals(projectName)) {
                 project.setFlatTypes(newFlatTypes);
                 project.getFlats().setTwoRoomFlats(twoRoomFlats);
                 project.getFlats().setThreeRoomFlats(threeRoomFlats);
@@ -35,10 +48,14 @@ public class HDBManager extends User{
         }
         System.out.println("Project " + projectName + " not found.");
     }
+    public void editProject(BTOProject project, boolean v) {
+        project.setVisibility(v);
+        return;
+    }
 
-    public void deleteProject(String projectName) {
-        projects.removeIf(project -> project.getProjectName().equals(projectName));
-        System.out.println("Project " + projectName + " deleted successfully.");
+    public void deleteProject(BTOProject project) {
+        projects.remove(project);
+        System.out.println("Project " + project.getProjectName() + " deleted successfully.");
     }
 
     public void addProject(BTOProject p){
