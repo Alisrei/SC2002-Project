@@ -47,6 +47,10 @@ public class BTOFlats {
         else{return false;}
     }
 
+    public void addRoom(String F){
+        this.availableFlats.add(F);
+    }
+
     public void displayAvailableFlats() {
         System.out.println("Available Flats: " + availableFlats);
     }

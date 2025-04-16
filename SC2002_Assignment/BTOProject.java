@@ -33,6 +33,7 @@ public class BTOProject {
         this.assignedOfficers = new ArrayList<>();
         this.applications = new ArrayList<>();
         this.registrations = new ArrayList<>();
+        this.enquiries = new ArrayList<>();
         this.visibility = V;
     }
     //getters

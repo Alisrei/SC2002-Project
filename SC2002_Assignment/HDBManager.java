@@ -82,6 +82,10 @@ public class HDBManager extends User{
         }
     }
     public BTOProject getProject(){
+        if(this.projects.isEmpty()){
+            System.out.println("No managed projects");
+            return null;
+        }
         Scanner sc = new Scanner(System.in);
         System.out.println("Select the project based on number:");
         viewPersornalProjects();
@@ -99,13 +103,25 @@ public class HDBManager extends User{
         }
     }
     public void viewPendingApplications(BTOProject P){
+        if(P == null){
+            return;
+        }
         int i = 1;
+        if(getProject().getApplications().isEmpty()){
+            System.out.println("Project has no applications yet.");
+            return;
+        }
+        boolean found = false;
         for (Application A: P.getApplications()){
             if(A.getStatus().equals(ApplicationStatus.PENDING)){
                 System.out.print(i+".");
                 System.out.println(A.getApplicationId());
                 i += 1;
+                found = true;
             }
+        }
+        if (!found){
+            System.out.println("No pending applications in project");
         }
     }
 

@@ -5,6 +5,7 @@ public class Application {
     private Applicant applicant;
     private BTOProject project;
     private FlatType flatTypeBooking;
+    private String bookedUnit;
     private ApplicationStatus status;
 
     // Constructor, getters, setters
@@ -13,6 +14,7 @@ public class Application {
         this.applicant = applicant;
         this.project = project;
         this.flatTypeBooking = null;
+        this.bookedUnit = null;
         this.status = ApplicationStatus.PENDING;
         project.addApplication(this);
     }
@@ -22,12 +24,14 @@ public class Application {
     public Applicant getApplicant(){return this.applicant;}
     public BTOProject getProject(){return this.project;}
     public FlatType getFlatTypeBooking(){return this.flatTypeBooking;}
+    public String getBookedUnit() {return bookedUnit;}
     public ApplicationStatus getStatus(){return this.status;}
     //setters
     public void setApplicationId(String I){this.applicationId = I;}
     public void setApplicant(Applicant A){this.applicant = A;}
     public void setProject(BTOProject P){this.project = P;}
     public void setFlatTypeBooking(FlatType T){this.flatTypeBooking = T;}
+    public void setBookedUnit(String BU) {this.bookedUnit = BU;}
     public void setStatus(ApplicationStatus S){this.status = S;}
 
     public void displayApplication(){
@@ -38,10 +42,12 @@ public class Application {
     }
 
     public void deleteApplication(){
+        this.getProject().getFlats().addRoom(this.getBookedUnit());
         this.setApplicationId(null);
         this.setApplicant(null);
         this.setProject(null);
         this.setFlatTypeBooking(null);
+        this.setBookedUnit(null);
         this.setStatus(null);
         //System.out.println("deleted successfully");
     }

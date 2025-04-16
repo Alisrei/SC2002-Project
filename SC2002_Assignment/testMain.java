@@ -430,8 +430,13 @@ public class testMain {
                                 currentOfficer.registerAsOfficer(currentOfficer.selectProjectforRegistration(projects));
                                 break;
                             case 2:
-                                if(currentOfficer.getRegistration().getAccepted()){System.out.println("Registration accepted.");}
-                                else{System.out.println("registration not accepted yet.");}
+                                if(currentOfficer.getRegistration() != null){
+                                    if(currentOfficer.getRegistration().getAccepted()){System.out.println("Registration accepted.");}
+                                    else{System.out.println("registration not accepted yet.");}
+                                }
+                                else{
+                                    System.out.println("No registration submitted yet.");
+                                }
                                 break;
                             case 3:
                                 currentOfficer.viewAssignedProjectDetails();
@@ -730,6 +735,7 @@ public class testMain {
                                 }
                                 break;
                             case 5:
+                                break;
                                 //generate report
                             case 6:
                                 loggedM = false;

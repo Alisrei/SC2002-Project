@@ -59,36 +59,56 @@ public class HDBOfficer extends Applicant{
     }
     public void viewAssignedProjectApplicationsForBooking(){
         if (assignedProject != null) {
+            if(assignedProject.getApplications().size() == 0){
+                System.out.println("No applications");
+                return;
+            }
             int i = 1;
+            boolean found = false;
             for(Application A : assignedProject.getApplications()){
                 if(A.getStatus() == ApplicationStatus.SUCCESSFUL){
                     System.out.print(i+".");
                     A.displayApplication();
                     i += 1;
+                    found = true;
                 }
             }
+            if(!found){System.out.println("No available applications for booking");}
         }
         else {System.out.println("No assigned project.");}
     }
     public Application selectApplicationforBooking(){
-        if(assignedProject != null){
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Pick application based on number:");
-            this.viewAssignedProjectApplicationsForBooking();
-            int choice = sc.nextInt();
-            List<Application> selection = new ArrayList<>();
-            for(Application A : assignedProject.getApplications()){
-                if(A.getStatus() == ApplicationStatus.SUCCESSFUL){
-                    selection.add(A);
-                }
-            }
-            return selection.get(choice-1);
-        }
-        else {
+        if (assignedProject == null) {
             System.out.println("No assigned project");
             return null;
         }
 
+        // First, check if there are any SUCCESSFUL applications
+        List<Application> successfulApps = new ArrayList<>();
+        for (Application A : assignedProject.getApplications()) {
+            if (A.getStatus() == ApplicationStatus.SUCCESSFUL) {
+                successfulApps.add(A);
+            }
+        }
+
+        // If no successful apps, return null immediately
+        if (successfulApps.isEmpty()) {
+            System.out.println("No available applications for booking");
+            return null;
+        }
+
+        // If there are successful apps, proceed with selection
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Pick application based on number:");
+        this.viewAssignedProjectApplicationsForBooking(); // Display options
+
+        int choice = sc.nextInt();
+        if (choice < 1 || choice > successfulApps.size()) {
+            System.out.println("Invalid selection!");
+            return null;
+        }
+
+        return successfulApps.get(choice - 1);
     }
     public String selectunit(Application A){
         if(assignedProject != null){
@@ -135,6 +155,7 @@ public class HDBOfficer extends Applicant{
             return;
         }
         Application A = this.selectApplicationforBooking();
+        if(A == null){return;}
         String unitNumber = this.selectunit(A);
         boolean success = assignedProject.bookFlat(unitNumber);
         if (!success) {
@@ -142,6 +163,7 @@ public class HDBOfficer extends Applicant{
         }
         else{
             A.setStatus(ApplicationStatus.BOOKED);
+            A.setBookedUnit(unitNumber);
         }
 
     }
