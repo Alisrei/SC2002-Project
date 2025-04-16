@@ -25,7 +25,7 @@ public class HDBOfficer extends Applicant{
             System.out.println("You are already assigned to a project.");
             return false;
         }
-        else if(this.getApplication().getProject().equals(project)){
+        else if(this.getApplication() != null && this.getApplication().getProject().equals(project)){
             System.out.println("You are already applying for this project as an applicant.");
             return false;
         }

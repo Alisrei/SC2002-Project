@@ -377,12 +377,18 @@ public class testMain {
                                         break;
                                     case 3:
                                         int i = currentApplicant.getEnquiryIndex();
+                                        if(i == 0){
+                                            break;
+                                        }
                                         System.out.println("Enter your edited enquiry:");
                                         String EE = sc.nextLine();
                                         currentApplicant.editEnquiry(i, EE);
                                         break;
                                     case 4:
                                         int Index = currentApplicant.getEnquiryIndex();
+                                        if (Index == 0){
+                                            break;
+                                        }
                                         Enquiry ER = currentApplicant.getEnquiries().get(Index);
                                         enquiries.remove(ER);
                                         currentApplicant.deleteEnquiry(Index);
@@ -476,6 +482,87 @@ public class testMain {
                         sc.nextLine();
                         switch (choiceM) {
                             case 1:
+                                System.out.println();
+                                System.out.println("Select choice by number:");
+                                System.out.println("1. Create project\n2. Edit project\n3. Delete project\n4. Exit");
+                                int CP = sc.nextInt();
+                                sc.nextLine();
+                                switch (CP) {
+                                    case 1:
+                                        System.out.println("Enter project Name:");
+                                        String PN = sc.nextLine();
+                                        System.out.println("Enter project neighbourhood:");
+                                        String N = sc.nextLine();
+                                        System.out.print("Enter application start date (YYYY-MM-DD): ");
+                                        String SD = sc.nextLine();
+                                        LocalDate Sdate = LocalDate.parse(SD); // Parses ISO format
+                                        System.out.print("Enter application end date (YYYY-MM-DD): ");
+                                        String ED = sc.nextLine();
+                                        LocalDate Edate = LocalDate.parse(ED); // Parses ISO format
+                                        System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
+                                        int FC = sc.nextInt();
+                                        sc.nextLine();
+                                        List<FlatType> FT = new ArrayList<>();
+                                        boolean typed = true;
+                                        while(typed){
+                                            switch (FC){
+                                                case 1:
+                                                    FT.add(FlatType.TWOROOM);
+                                                    typed = false;
+                                                    break;
+                                                case 2:
+                                                    FT.add(FlatType.THREEROOM);
+                                                    typed = false;
+                                                    break;
+                                                case 3:
+                                                    FT.add(FlatType.TWOROOM);
+                                                    FT.add(FlatType.THREEROOM);
+                                                    typed = false;
+                                                default:
+                                                    System.out.println("invalid choice, try again");
+                                                    break;
+                                            }
+                                        }
+                                        System.out.println("Number of flats");
+                                        int TwoR = 0;
+                                        int ThreeR = 0;
+                                            if(FT.contains(FlatType.TWOROOM)){
+                                                System.out.println("Enter number of two room flats:");
+                                                TwoR = sc.nextInt();
+                                                sc.nextLine();
+                                            }
+                                            if(FT.contains(FlatType.THREEROOM)){
+                                                System.out.println("Enter number of three room flats:");
+                                                ThreeR = sc.nextInt();
+                                                sc.nextLine();
+                                            }
+                                        System.out.println("Select visibility:\n1. On\n2. Off");
+                                            int V = sc.nextInt();
+                                            sc.nextLine();
+                                            boolean Vis = true;
+                                            boolean x = true;
+                                            while (x){
+                                                switch (V){
+                                                    case 1:
+                                                        Vis = true;
+                                                        x = false;
+                                                        break;
+                                                    case 2:
+                                                        Vis = false;
+                                                        x = false;
+                                                        break;
+                                                    default:
+                                                        System.out.println("invalid choice please try again");
+                                                        break;
+                                                }
+                                            }
+                                        currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,Vis);
+                                    case 2:
+                                    case 3:
+                                    case 4:
+                                        //currentManager.getProject().deleteProject();
+                                    default:
+                                }
                                 //project creation, editing, deletion
                             case 2:
                                 System.out.println("Select choice by number:");

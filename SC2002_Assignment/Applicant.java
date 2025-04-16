@@ -117,6 +117,10 @@ public class Applicant extends User {
     }
 
     public boolean bookFlat() {
+        if (this.application == null){
+            System.out.println("You have not applied for a project.");
+            return false;
+        }
         if (this.application.getStatus() != ApplicationStatus.SUCCESSFUL) {
             System.out.println("You are not eligible to book a flat.");
             return false;
@@ -154,6 +158,10 @@ public class Applicant extends User {
     public int getEnquiryIndex(){
         Scanner sc = new Scanner(System.in);
         int i = 1;
+        if(enquiries.isEmpty()){
+            System.out.println("print no enquiry found");
+            return 0;
+        }
         System.out.println("Select enquiry based on number:");
         for (Enquiry enquiry : this.enquiries) {
             System.out.print(i+".");
@@ -166,12 +174,20 @@ public class Applicant extends User {
     }
 
     public void viewEnquiries() {
+        if(enquiries.isEmpty()) {
+            System.out.println("print no enquiry found");
+            return;
+        }
         for (Enquiry enquiry : this.enquiries) {
             enquiry.viewEnq();
         }
     }
 
     public void editEnquiry(int index, String newText) {
+        if(enquiries.isEmpty()) {
+            System.out.println("print no enquiry found");
+            return;
+        }
         if (index < 0 || index >= enquiries.size()) {
             System.out.println("Invalid enquiry index.");
             return;
@@ -180,6 +196,10 @@ public class Applicant extends User {
     }
 
     public void deleteEnquiry(int index) {
+        if(enquiries.isEmpty()) {
+            System.out.println("print no enquiry found");
+            return;
+        }
         if (index < 0 || index >= enquiries.size()) {
             System.out.println("Invalid enquiry index.");
             return;
