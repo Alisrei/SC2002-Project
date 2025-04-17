@@ -328,8 +328,10 @@ public class testMain {
                     System.out.println("enter your Password");
                     String PasswordA = sc.nextLine();
                     Boolean loggedA = authenticate(nricA, PasswordA, applicantMap);
-                    if (loggedA != null){
-                        Boolean loggedOA = authenticate(nricA, PasswordA, OM);
+                    Boolean loggedOA = authenticate(nricA, PasswordA, OM);
+                    if (loggedA == null && loggedOA == null) System.out.println("Invalid NRIC, please try again.");
+                    else {
+                        if (loggedA == null) {loggedA = false;}
                         if (loggedOA == null) {loggedOA = false;}
                         Applicant currentApplicant = getApplicant(applicants, nricA);
                         if(loggedOA){currentApplicant = getOfficer(officers, nricA);}
@@ -414,7 +416,6 @@ public class testMain {
                             }
                         }
                     }
-                    else System.out.println("Invalid NRIC, please try again.");
                     break;
                 case 2:
                     HashMap officerMap = createOfficerMap(officers);
