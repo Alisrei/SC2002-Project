@@ -417,69 +417,72 @@ public class testMain {
                         }
                     }
                     break;
-                case 2:
+                                case 2:
                     HashMap officerMap = createOfficerMap(officers);
                     System.out.println("enter your Nric");
                     String nricO = sc.nextLine();
                     System.out.println("enter your Password");
                     String PasswordO = sc.nextLine();
                     Boolean loggedO = authenticate(nricO, PasswordO, officerMap);
-                    while (loggedO) {
-                        HDBOfficer currentOfficer = getOfficer(officers, nricO);
-                        officerMenu();
-                        int choiceO = sc.nextInt();
-                        sc.nextLine();
-                        switch (choiceO) {
-                            case 1:
-                                currentOfficer.registerAsOfficer(currentOfficer.selectProjectforRegistration(projects));
-                                break;
-                            case 2:
-                                if(currentOfficer.getRegistration() != null){
-                                    if(currentOfficer.getRegistration().getAccepted()){System.out.println("Registration accepted.");}
-                                    else{System.out.println("registration not accepted yet.");}
-                                }
-                                else{
-                                    System.out.println("No registration submitted yet.");
-                                }
-                                break;
-                            case 3:
-                                currentOfficer.viewAssignedProjectDetails();
-                                break;
-                            case 4:
-                                currentOfficer.viewAssignedProjectApplicationsForBooking();
-                                break;
-                            case 5:
-                                currentOfficer.handleFlatBooking();
-                                break;
-                            case 6:
-                                //booking receipt
-                            case 7:
-                                System.out.println("Select choice by number:");
-                                officerEnquiryMenu();
-                                int C = sc.nextInt();
-                                sc.nextLine();
-                                switch (C) {
-                                    case 1:
-                                        currentOfficer.viewEnquiries();
-                                        break;
-                                    case 2:
-                                        int i = currentOfficer.getEnquiryIndex();
-                                        System.out.println("Enter your reply to the enquiry:");
-                                        String R = sc.nextLine();
-                                        currentOfficer.replyEnquiry(i, R);
-                                        break;
-                                    case 3:
-                                        System.out.println("Exit successful");
-                                        break;
-                                    default:
-                                }
-                                break;
+                    if (loggedO == null) System.out.println("Invalid NRIC, please try again.");
+                    else{
+                        while (loggedO) {
+                            HDBOfficer currentOfficer = getOfficer(officers, nricO);
+                            officerMenu();
+                            int choiceO = sc.nextInt();
+                            sc.nextLine();
+                            switch (choiceO) {
+                                case 1:
+                                    currentOfficer.registerAsOfficer(currentOfficer.selectProjectforRegistration(projects));
+                                    break;
+                                case 2:
+                                    if(currentOfficer.getRegistration() != null){
+                                        if(currentOfficer.getRegistration().getAccepted()){System.out.println("Registration accepted.");}
+                                        else{System.out.println("registration not accepted yet.");}
+                                    }
+                                    else{
+                                        System.out.println("No registration submitted yet.");
+                                    }
+                                    break;
+                                case 3:
+                                    currentOfficer.viewAssignedProjectDetails();
+                                    break;
+                                case 4:
+                                    currentOfficer.viewAssignedProjectApplicationsForBooking();
+                                    break;
+                                case 5:
+                                    currentOfficer.handleFlatBooking();
+                                    break;
+                                case 6:
+                                    //booking receipt
+                                case 7:
+                                    System.out.println("Select choice by number:");
+                                    officerEnquiryMenu();
+                                    int C = sc.nextInt();
+                                    sc.nextLine();
+                                    switch (C) {
+                                        case 1:
+                                            currentOfficer.viewEnquiries();
+                                            break;
+                                        case 2:
+                                            int i = currentOfficer.getEnquiryIndex();
+                                            System.out.println("Enter your reply to the enquiry:");
+                                            String R = sc.nextLine();
+                                            currentOfficer.replyEnquiry(i, R);
+                                            break;
+                                        case 3:
+                                            System.out.println("Exit successful");
+                                            break;
+                                        default:
+                                    }
+                                    break;
 
-                            case 8:
-                                loggedO = false;
-                                System.out.println("Successfully logged out.");
-                                break;
-                            default:
+                                case 8:
+                                    loggedO = false;
+                                    System.out.println("Successfully logged out.");
+                                    break;
+                                default:
+                            }
                         }
                     }
                     break;
@@ -490,262 +493,265 @@ public class testMain {
                     System.out.println("enter your Password");
                     String PasswordM = sc.nextLine();
                     Boolean loggedM = authenticate(nricM, PasswordM, managerMap);
-                    while (loggedM) {
-                        HDBManager currentManager = getManager(managers, nricM);
-                        managerMenu();
-                        int choiceM = sc.nextInt();
-                        sc.nextLine();
-                        switch (choiceM) {
-                            case 1:
-                                System.out.println("Select choice by number:");
-                                System.out.println("1. Create project\n2. Edit project\n3. Delete project\n4. Exit");
-                                int CP = sc.nextInt();
-                                sc.nextLine();
-                                switch (CP) {
-                                    case 1:
-                                        System.out.println("Enter project Name:");
-                                        String PN = sc.nextLine();
-                                        System.out.println("Enter project neighbourhood:");
-                                        String N = sc.nextLine();
-                                        System.out.print("Enter application start date (YYYY-MM-DD): ");
-                                        String SD = sc.nextLine();
-                                        LocalDate Sdate = LocalDate.parse(SD);
-                                        System.out.print("Enter application end date (YYYY-MM-DD): ");
-                                        String ED = sc.nextLine();
-                                        LocalDate Edate = LocalDate.parse(ED);
-                                        System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
-                                        int FC = sc.nextInt();
-                                        sc.nextLine();
-                                        List<FlatType> FT = new ArrayList<>();
-                                        boolean typed = true;
-                                        while(typed){
-                                            switch (FC){
-                                                case 1:
-                                                    FT.add(FlatType.TWOROOM);
-                                                    typed = false;
-                                                    break;
-                                                case 2:
-                                                    FT.add(FlatType.THREEROOM);
-                                                    typed = false;
-                                                    break;
-                                                case 3:
-                                                    FT.add(FlatType.TWOROOM);
-                                                    FT.add(FlatType.THREEROOM);
-                                                    typed = false;
-                                                    break;
-                                                default:
-                                                    System.out.println("invalid choice, try again");
-                                                    break;
-                                            }
-                                        }
-                                        int TwoR = 0;
-                                        int ThreeR = 0;
-                                            if(FT.contains(FlatType.TWOROOM)){
-                                                System.out.println("Enter number of two room flats:");
-                                                TwoR = sc.nextInt();
-                                                sc.nextLine();
-                                            }
-                                            if(FT.contains(FlatType.THREEROOM)){
-                                                System.out.println("Enter number of three room flats:");
-                                                ThreeR = sc.nextInt();
-                                                sc.nextLine();
-                                            }
-                                        System.out.println("Select visibility:\n1. On\n2. Off");
-                                            int V = sc.nextInt();
+                    if (loggedO == null) System.out.println("Invalid NRIC, please try again.");
+                    else{
+                        while (loggedM) {
+                            HDBManager currentManager = getManager(managers, nricM);
+                            managerMenu();
+                            int choiceM = sc.nextInt();
+                            sc.nextLine();
+                            switch (choiceM) {
+                                case 1:
+                                    System.out.println("Select choice by number:");
+                                    System.out.println("1. Create project\n2. Edit project\n3. Delete project\n4. Exit");
+                                    int CP = sc.nextInt();
+                                    sc.nextLine();
+                                    switch (CP) {
+                                        case 1:
+                                            System.out.println("Enter project Name:");
+                                            String PN = sc.nextLine();
+                                            System.out.println("Enter project neighbourhood:");
+                                            String N = sc.nextLine();
+                                            System.out.print("Enter application start date (YYYY-MM-DD): ");
+                                            String SD = sc.nextLine();
+                                            LocalDate Sdate = LocalDate.parse(SD);
+                                            System.out.print("Enter application end date (YYYY-MM-DD): ");
+                                            String ED = sc.nextLine();
+                                            LocalDate Edate = LocalDate.parse(ED);
+                                            System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
+                                            int FC = sc.nextInt();
                                             sc.nextLine();
-                                            boolean Vis = true;
-                                            boolean x = true;
-                                            while (x){
-                                                switch (V){
+                                            List<FlatType> FT = new ArrayList<>();
+                                            boolean typed = true;
+                                            while(typed){
+                                                switch (FC){
                                                     case 1:
-                                                        Vis = true;
-                                                        x = false;
+                                                        FT.add(FlatType.TWOROOM);
+                                                        typed = false;
                                                         break;
                                                     case 2:
-                                                        Vis = false;
-                                                        x = false;
+                                                        FT.add(FlatType.THREEROOM);
+                                                        typed = false;
+                                                        break;
+                                                    case 3:
+                                                        FT.add(FlatType.TWOROOM);
+                                                        FT.add(FlatType.THREEROOM);
+                                                        typed = false;
                                                         break;
                                                     default:
-                                                        System.out.println("invalid choice please try again");
+                                                        System.out.println("invalid choice, try again");
                                                         break;
                                                 }
                                             }
-                                        currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,Vis);
-                                        break;
-                                    case 2:
-                                        BTOProject P = currentManager.getProject();
-                                        System.out.println("Enter choice:");
-                                        System.out.println("1. Edit project name\n2. Edit neighbourhood\n3. Edit start and end dates\n4. Edit room types\n5. Set visibility\n6. Exit");
-                                        int EC = sc.nextInt();
-                                        sc.nextLine();
-                                        boolean editing = true;
-                                        while(editing){
-                                            switch (EC){
-                                                case 1:
-                                                    System.out.println("Enter new project name:");
-                                                    String newName = sc.nextLine();
-                                                    currentManager.editProjectname(P,newName);
-                                                case 2:
-                                                    System.out.println("Enter new neighbourhood:");
-                                                    String newNeighbourhood = sc.nextLine();
-                                                    currentManager.editProject(P,newNeighbourhood);
-                                                case 3:
-                                                    System.out.print("Enter application start date (YYYY-MM-DD): ");
-                                                    String NSD = sc.nextLine();
-                                                    LocalDate NSdate = LocalDate.parse(NSD); // Parses ISO format
-                                                    System.out.print("Enter application end date (YYYY-MM-DD): ");
-                                                    String NED = sc.nextLine();
-                                                    LocalDate NEdate = LocalDate.parse(NED); // Parses ISO format
-                                                    currentManager.editProject(P,NSdate,NEdate);
-                                                case 4:
-                                                    System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
-                                                    int NFC = sc.nextInt();
+                                            int TwoR = 0;
+                                            int ThreeR = 0;
+                                                if(FT.contains(FlatType.TWOROOM)){
+                                                    System.out.println("Enter number of two room flats:");
+                                                    TwoR = sc.nextInt();
                                                     sc.nextLine();
-                                                    List<FlatType> NFT = new ArrayList<>();
-                                                    boolean Ntyped = true;
-                                                    while(Ntyped){
-                                                        switch (NFC){
-                                                            case 1:
-                                                                NFT.add(FlatType.TWOROOM);
-                                                                Ntyped = false;
-                                                                break;
-                                                            case 2:
-                                                                NFT.add(FlatType.THREEROOM);
-                                                                Ntyped = false;
-                                                                break;
-                                                            case 3:
-                                                                NFT.add(FlatType.TWOROOM);
-                                                                NFT.add(FlatType.THREEROOM);
-                                                                Ntyped = false;
-                                                            default:
-                                                                System.out.println("invalid choice, try again");
-                                                                break;
-                                                        }
-                                                    }
-                                                    int NTwoR = 0;
-                                                    int NThreeR = 0;
-                                                    if(NFT.contains(FlatType.TWOROOM)){
-                                                        System.out.println("Enter number of two room flats:");
-                                                        NTwoR = sc.nextInt();
-                                                        sc.nextLine();
-                                                    }
-                                                    if(NFT.contains(FlatType.THREEROOM)){
-                                                        System.out.println("Enter number of three room flats:");
-                                                        NThreeR = sc.nextInt();
-                                                        sc.nextLine();
-                                                    }
-                                                    currentManager.editProject(P,NFT,NTwoR,NThreeR);
-                                                    //might not want to edit this
-                                                case 5:
-                                                    System.out.println("Select visibility option:\n1. On\n2. Off");
-                                                    int VC = sc.nextInt();
+                                                }
+                                                if(FT.contains(FlatType.THREEROOM)){
+                                                    System.out.println("Enter number of three room flats:");
+                                                    ThreeR = sc.nextInt();
                                                     sc.nextLine();
-                                                    boolean toggling = true;
-                                                    boolean v = true;
-                                                    while (toggling){
-                                                        switch (VC){
-                                                            case 1:
-                                                                v = true;
-                                                                toggling = false;
-                                                                break;
-                                                            case 2:
-                                                                v = false;
-                                                                toggling = false;
-                                                                break;
-                                                            default:
-                                                                System.out.println("invalid choice please try again");
-                                                                break;
-                                                        }
+                                                }
+                                            System.out.println("Select visibility:\n1. On\n2. Off");
+                                                int V = sc.nextInt();
+                                                sc.nextLine();
+                                                boolean Vis = true;
+                                                boolean x = true;
+                                                while (x){
+                                                    switch (V){
+                                                        case 1:
+                                                            Vis = true;
+                                                            x = false;
+                                                            break;
+                                                        case 2:
+                                                            Vis = false;
+                                                            x = false;
+                                                            break;
+                                                        default:
+                                                            System.out.println("invalid choice please try again");
+                                                            break;
                                                     }
-                                                    currentManager.editProject(P,v);
-                                                case 6:
-                                                    editing = false;
-                                                    System.out.println("Exit successful");
-                                                    break;
-                                                default:
+                                                }
+                                            currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,Vis);
+                                            break;
+                                        case 2:
+                                            BTOProject P = currentManager.getProject();
+                                            System.out.println("Enter choice:");
+                                            System.out.println("1. Edit project name\n2. Edit neighbourhood\n3. Edit start and end dates\n4. Edit room types\n5. Set visibility\n6. Exit");
+                                            int EC = sc.nextInt();
+                                            sc.nextLine();
+                                            boolean editing = true;
+                                            while(editing){
+                                                switch (EC){
+                                                    case 1:
+                                                        System.out.println("Enter new project name:");
+                                                        String newName = sc.nextLine();
+                                                        currentManager.editProjectname(P,newName);
+                                                    case 2:
+                                                        System.out.println("Enter new neighbourhood:");
+                                                        String newNeighbourhood = sc.nextLine();
+                                                        currentManager.editProject(P,newNeighbourhood);
+                                                    case 3:
+                                                        System.out.print("Enter application start date (YYYY-MM-DD): ");
+                                                        String NSD = sc.nextLine();
+                                                        LocalDate NSdate = LocalDate.parse(NSD); // Parses ISO format
+                                                        System.out.print("Enter application end date (YYYY-MM-DD): ");
+                                                        String NED = sc.nextLine();
+                                                        LocalDate NEdate = LocalDate.parse(NED); // Parses ISO format
+                                                        currentManager.editProject(P,NSdate,NEdate);
+                                                    case 4:
+                                                        System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
+                                                        int NFC = sc.nextInt();
+                                                        sc.nextLine();
+                                                        List<FlatType> NFT = new ArrayList<>();
+                                                        boolean Ntyped = true;
+                                                        while(Ntyped){
+                                                            switch (NFC){
+                                                                case 1:
+                                                                    NFT.add(FlatType.TWOROOM);
+                                                                    Ntyped = false;
+                                                                    break;
+                                                                case 2:
+                                                                    NFT.add(FlatType.THREEROOM);
+                                                                    Ntyped = false;
+                                                                    break;
+                                                                case 3:
+                                                                    NFT.add(FlatType.TWOROOM);
+                                                                    NFT.add(FlatType.THREEROOM);
+                                                                    Ntyped = false;
+                                                                default:
+                                                                    System.out.println("invalid choice, try again");
+                                                                    break;
+                                                            }
+                                                        }
+                                                        int NTwoR = 0;
+                                                        int NThreeR = 0;
+                                                        if(NFT.contains(FlatType.TWOROOM)){
+                                                            System.out.println("Enter number of two room flats:");
+                                                            NTwoR = sc.nextInt();
+                                                            sc.nextLine();
+                                                        }
+                                                        if(NFT.contains(FlatType.THREEROOM)){
+                                                            System.out.println("Enter number of three room flats:");
+                                                            NThreeR = sc.nextInt();
+                                                            sc.nextLine();
+                                                        }
+                                                        currentManager.editProject(P,NFT,NTwoR,NThreeR);
+                                                        //might not want to edit this
+                                                    case 5:
+                                                        System.out.println("Select visibility option:\n1. On\n2. Off");
+                                                        int VC = sc.nextInt();
+                                                        sc.nextLine();
+                                                        boolean toggling = true;
+                                                        boolean v = true;
+                                                        while (toggling){
+                                                            switch (VC){
+                                                                case 1:
+                                                                    v = true;
+                                                                    toggling = false;
+                                                                    break;
+                                                                case 2:
+                                                                    v = false;
+                                                                    toggling = false;
+                                                                    break;
+                                                                default:
+                                                                    System.out.println("invalid choice please try again");
+                                                                    break;
+                                                            }
+                                                        }
+                                                        currentManager.editProject(P,v);
+                                                    case 6:
+                                                        editing = false;
+                                                        System.out.println("Exit successful");
+                                                        break;
+                                                    default:
+                                                }
                                             }
-                                        }
-                                        break;
-                                    case 3:
-                                        currentManager.deleteProject(currentManager.getProject());
-                                        //abit sus ngl
-                                    case 4:
-                                        System.out.println("Exit successful.");
-                                        break;
-                                    default:
-                                }
-                                break;
-                                //project creation, editing, deletion
-                            case 2:
-                                System.out.println("Select choice by number:");
-                                System.out.println("1. View pending applications\n2. Approve pending applications\n3. Manage application withdrawals\n4. Exit");
-                                int CA = sc.nextInt();
-                                sc.nextLine();
-                                switch (CA) {
-                                    case 1:
-                                        currentManager.viewPendingApplications(currentManager.getProject());
-                                        break;
-                                    case 2:
-                                        currentManager.approveApplication();
-                                        break;
-                                    case 3:
-                                        currentManager.manageWithdrawals();
-                                        break;
-                                    case 4:
-                                        System.out.println("Exit successful.");
-                                        break;
-                                    default:
-                                }
-                                break;
-                            case 3:
-                                System.out.println("Select choice by number:");
-                                System.out.println("1. View unaccepted registrations\n2. Approve unaccepted registrations\n3. Exit");
-                                int CR = sc.nextInt();
-                                sc.nextLine();
-                                switch (CR) {
-                                    case 1:
-                                        currentManager.viewUnacceptedRegistrations(currentManager.getProject());
-                                        break;
-                                    case 2:
-                                        currentManager.approveRegistration();
-                                        break;
-                                    case 3:
-                                        break;
-                                    default:
-                                }
-                                break;
-                            case 4:
-                                System.out.println("Select choice by number:");
-                                managerEnquiryMenu();
-                                int C = sc.nextInt();
-                                sc.nextLine();
-                                switch (C) {
-                                    case 1:
-                                        currentManager.viewAllEnquiries(enquiries);
-                                        break;
-                                    case 2:
-                                        currentManager.viewEnquiries();
-                                        break;
-                                    case 3:
-                                        int i = currentManager.getEnquiryIndex();
-                                        System.out.println("Enter your reply to the enquiry:");
-                                        String R = sc.nextLine();
-                                        currentManager.replyEnquiry(i, R);
-                                        break;
-                                    case 4:
-                                        System.out.println("Exit successful");
-                                        break;
-                                    default:
-                                }
-                                break;
-                            case 5:
-                                break;
-                                //generate report
-                            case 6:
-                                loggedM = false;
-                                System.out.println("Successfully logged out.");
-                                break;
-                            default:
+                                            break;
+                                        case 3:
+                                            currentManager.deleteProject(currentManager.getProject());
+                                            //abit sus ngl
+                                        case 4:
+                                            System.out.println("Exit successful.");
+                                            break;
+                                        default:
+                                    }
+                                    break;
+                                    //project creation, editing, deletion
+                                case 2:
+                                    System.out.println("Select choice by number:");
+                                    System.out.println("1. View pending applications\n2. Approve pending applications\n3. Manage application withdrawals\n4. Exit");
+                                    int CA = sc.nextInt();
+                                    sc.nextLine();
+                                    switch (CA) {
+                                        case 1:
+                                            currentManager.viewPendingApplications(currentManager.getProject());
+                                            break;
+                                        case 2:
+                                            currentManager.approveApplication();
+                                            break;
+                                        case 3:
+                                            currentManager.manageWithdrawals();
+                                            break;
+                                        case 4:
+                                            System.out.println("Exit successful.");
+                                            break;
+                                        default:
+                                    }
+                                    break;
+                                case 3:
+                                    System.out.println("Select choice by number:");
+                                    System.out.println("1. View unaccepted registrations\n2. Approve unaccepted registrations\n3. Exit");
+                                    int CR = sc.nextInt();
+                                    sc.nextLine();
+                                    switch (CR) {
+                                        case 1:
+                                            currentManager.viewUnacceptedRegistrations(currentManager.getProject());
+                                            break;
+                                        case 2:
+                                            currentManager.approveRegistration();
+                                            break;
+                                        case 3:
+                                            break;
+                                        default:
+                                    }
+                                    break;
+                                case 4:
+                                    System.out.println("Select choice by number:");
+                                    managerEnquiryMenu();
+                                    int C = sc.nextInt();
+                                    sc.nextLine();
+                                    switch (C) {
+                                        case 1:
+                                            currentManager.viewAllEnquiries(enquiries);
+                                            break;
+                                        case 2:
+                                            currentManager.viewEnquiries();
+                                            break;
+                                        case 3:
+                                            int i = currentManager.getEnquiryIndex();
+                                            System.out.println("Enter your reply to the enquiry:");
+                                            String R = sc.nextLine();
+                                            currentManager.replyEnquiry(i, R);
+                                            break;
+                                        case 4:
+                                            System.out.println("Exit successful");
+                                            break;
+                                        default:
+                                    }
+                                    break;
+                                case 5:
+                                    break;
+                                    //generate report
+                                case 6:
+                                    loggedM = false;
+                                    System.out.println("Successfully logged out.");
+                                    break;
+                                default:
+                            }
                         }
                     }
                     break;
