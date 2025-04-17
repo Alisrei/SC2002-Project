@@ -263,11 +263,12 @@ public class testMain {
         System.out.println("\n\n1. View available projects\n" +
                            "2. Apply for project\n" +
                            "3. View applied project\n" +
-                           "4. Request application withdrawal\n" +
-                           "5. Book flats\n" +
-                           "6. manage enquiries\n" +
-                           "7. Change password\n" +
-                           "8. Logout");
+                           "4. View application\n" +
+                           "5. Request application withdrawal\n" +
+                           "6. Book flats\n" +
+                           "7. manage enquiries\n" +
+                           "8. Change password\n" +
+                           "9. Logout");
     }
     public static void applicantEnquiryMenu(){
         System.out.println("\n\n1. Create enquiry\n" +
@@ -365,12 +366,21 @@ public class testMain {
                                     }
                                     break;
                                 case 4:
+                                    if (currentApplicant.getApplication() == null){
+                                        System.out.println("no application submitted yet");
+                                        break;
+                                    }
+                                    else {
+                                        currentApplicant.getApplication().displayApplication();
+                                        break;
+                                    }
+                                case 5:
                                     currentApplicant.withdrawApplication();
                                     break;
-                                case 5:
+                                case 6:
                                     currentApplicant.bookFlat();
                                     break;
-                                case 6:
+                                case 7:
                                     System.out.println("Select choice by number:");
                                     applicantEnquiryMenu();
                                     int C = sc.nextInt();
@@ -412,10 +422,10 @@ public class testMain {
                                         default:
                                     }
                                     break;
-                                case 7 :
+                                case 8 :
                                     currentApplicant.changePassword();
                                     break;
-                                case 8:
+                                case 9:
                                     loggedA = false;
                                     loggedOA = false;
                                     System.out.println("Successfully logged out.");
@@ -442,8 +452,14 @@ public class testMain {
                             sc.nextLine();
                             switch (choiceO) {
                                 case 1:
-                                    currentOfficer.registerAsOfficer(currentOfficer.selectProjectforRegistration(projects));
-                                    break;
+                                    if (currentOfficer.getRegistration() == null) {
+                                        currentOfficer.registerAsOfficer(currentOfficer.selectProjectforRegistration(projects));
+                                        break;
+                                    }
+                                    else {
+                                        System.out.println("you are already assigned to a project");
+                                        break;
+                                    }
                                 case 2:
                                     if(currentOfficer.getRegistration() != null){
                                         if(currentOfficer.getRegistration().getAccepted()){System.out.println("Registration accepted.");}

@@ -107,7 +107,7 @@ public class HDBManager extends User{
             return;
         }
         int i = 1;
-        if(getProject().getApplications().isEmpty()){
+        if(P.getApplications().isEmpty()){
             System.out.println("Project has no applications yet.");
             return;
         }
@@ -218,7 +218,8 @@ public class HDBManager extends User{
         if (A.getProject().getFlats().getTwoRoomFlats() + A.getProject().getFlats().getThreeRoomFlats() > 0) {
             A.setStatus(ApplicationStatus.SUCCESSFUL);
             System.out.println("Application " + A.getApplicationId() + " approved.");
-        } else {
+        }
+        else {
             A.setStatus(ApplicationStatus.UNSUCCESSFUL);
             System.out.println("Application " + A.getApplicationId() + " rejected.");
         }

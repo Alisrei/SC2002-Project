@@ -38,7 +38,8 @@ public class Application {
         System.out.println("ApplicantionID:" + this.getApplicationId() + "\n" +
                            "Project of application:" + this.getProject().getProjectName() + "\n" +
                            "Booking choice:" + this.getFlatTypeBooking() + "\n" +
-                           "Application status:" + this.getStatus());
+                           "Application status:" + this.getStatus() + "\n" +
+                           "Booked unit:" + this.getBookedUnit());
     }
 
     public void deleteApplication(){

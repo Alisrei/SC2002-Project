@@ -21,11 +21,7 @@ public class HDBOfficer extends Applicant{
     public void setAssignedProject(BTOProject assignedProject) {this.assignedProject = assignedProject;}
 
     public boolean registerAsOfficer(BTOProject project) {
-        if (this.assignedProject != null) {
-            System.out.println("You are already assigned to a project.");
-            return false;
-        }
-        else if(this.getApplication() != null && this.getApplication().getProject().equals(project)){
+        if(this.getApplication() != null && this.getApplication().getProject().equals(project)){
             System.out.println("You are already applying for this project as an applicant.");
             return false;
         }
@@ -210,7 +206,7 @@ public class HDBOfficer extends Applicant{
             }
         }
         if(!found){
-            System.out.println("No available projects found.");
+            System.out.println("No available projects found");
             return null;
         }
         int choice = sc.nextInt();
