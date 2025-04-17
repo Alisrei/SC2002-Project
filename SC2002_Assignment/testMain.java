@@ -331,6 +331,7 @@ public class testMain {
                     Boolean loggedA = authenticate(nricA, PasswordA, applicantMap);
                     if (loggedA != null){
                         Boolean loggedOA = authenticate(nricA, PasswordA, OM);
+                        if (loggedOA == null) {loggedOA = false;}
                         Applicant currentApplicant = getApplicant(applicants, nricA);
                         if(loggedOA){currentApplicant = getOfficer(officers, nricA);}
                         while (loggedA || loggedOA) {
