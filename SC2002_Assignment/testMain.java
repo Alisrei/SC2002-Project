@@ -244,11 +244,11 @@ public class testMain {
         return X;
     }
 
-    public static boolean authenticate(String NRIC, String Password, HashMap Database){
+    public static Boolean authenticate(String NRIC, String Password, HashMap Database){
         // Check if NRIC exists in the map
         if (!Database.containsKey(NRIC)) {
             System.out.println("Invalid NRIC, please try again.");
-            return false;
+            return null;
         }
         // Compare passwords (use equals() for string comparison)
         if(Database.get(NRIC).equals(Password)) {
@@ -329,87 +329,89 @@ public class testMain {
                     System.out.println("enter your Password");
                     String PasswordA = sc.nextLine();
                     Boolean loggedA = authenticate(nricA, PasswordA, applicantMap);
-                    Boolean loggedOA = authenticate(nricA, PasswordA, OM);
-                    Applicant currentApplicant = getApplicant(applicants, nricA);
-                    if(loggedOA){currentApplicant = getOfficer(officers, nricA);}
-                    while (loggedA || loggedOA) {
-                        applicantMenu();
-                        int choiceA = sc.nextInt();
-                        sc.nextLine();
-                        switch (choiceA) {
-                            case 1:
-                                currentApplicant.viewProjects(projects);
-                                break;
-                            case 2:
-                                if (loggedA){
-                                    currentApplicant.applyForProject(currentApplicant.selectProject(projects));
+                    if (loggedA != null){
+                        Boolean loggedOA = authenticate(nricA, PasswordA, OM);
+                        Applicant currentApplicant = getApplicant(applicants, nricA);
+                        if(loggedOA){currentApplicant = getOfficer(officers, nricA);}
+                        while (loggedA || loggedOA) {
+                            applicantMenu();
+                            int choiceA = sc.nextInt();
+                            sc.nextLine();
+                            switch (choiceA) {
+                                case 1:
+                                    currentApplicant.viewProjects(projects);
                                     break;
-                                }
-                                else{
+                                case 2:
+                                    if (loggedA){
+                                        currentApplicant.applyForProject(currentApplicant.selectProject(projects));
+                                        break;
+                                    }
+                                    else{
 
-                                }
-                            case 3:
-                                if(currentApplicant.getApplication() != null){
-                                    currentApplicant.getApplication().getProject().displayProjectDetails();
-                                }
-                                else{
-                                    System.out.println("No project assigned yet");
-                                }
-                                break;
-                            case 4:
-                                currentApplicant.withdrawApplication();
-                                break;
-                            case 5:
-                                currentApplicant.bookFlat();
-                                break;
-                            case 6:
-                                System.out.println("Select choice by number:");
-                                applicantEnquiryMenu();
-                                int C = sc.nextInt();
-                                sc.nextLine();
-                                switch (C) {
-                                    case 1:
-                                        System.out.println("Enter your enquiry:");
-                                        String E = sc.nextLine();
-                                        currentApplicant.submitEnquiry(E, projects);
-                                        for (Enquiry Enq : currentApplicant.getEnquiries()){
-                                            if (!enquiries.contains(Enq)){
-                                                enquiries.add(Enq);
+                                    }
+                                case 3:
+                                    if(currentApplicant.getApplication() != null){
+                                        currentApplicant.getApplication().getProject().displayProjectDetails();
+                                    }
+                                    else{
+                                        System.out.println("No project assigned yet");
+                                    }
+                                    break;
+                                case 4:
+                                    currentApplicant.withdrawApplication();
+                                    break;
+                                case 5:
+                                    currentApplicant.bookFlat();
+                                    break;
+                                case 6:
+                                    System.out.println("Select choice by number:");
+                                    applicantEnquiryMenu();
+                                    int C = sc.nextInt();
+                                    sc.nextLine();
+                                    switch (C) {
+                                        case 1:
+                                            System.out.println("Enter your enquiry:");
+                                            String E = sc.nextLine();
+                                            currentApplicant.submitEnquiry(E, projects);
+                                            for (Enquiry Enq : currentApplicant.getEnquiries()){
+                                                if (!enquiries.contains(Enq)){
+                                                    enquiries.add(Enq);
+                                                }
+                                            }//updates enquiries
+                                            break;
+                                        case 2:
+                                            currentApplicant.viewEnquiries();
+                                            break;
+                                        case 3:
+                                            int i = currentApplicant.getEnquiryIndex();
+                                            if(i == 0){
+                                                break;
                                             }
-                                        }//updates enquiries
-                                        break;
-                                    case 2:
-                                        currentApplicant.viewEnquiries();
-                                        break;
-                                    case 3:
-                                        int i = currentApplicant.getEnquiryIndex();
-                                        if(i == 0){
+                                            System.out.println("Enter your edited enquiry:");
+                                            String EE = sc.nextLine();
+                                            currentApplicant.editEnquiry(i, EE);
                                             break;
-                                        }
-                                        System.out.println("Enter your edited enquiry:");
-                                        String EE = sc.nextLine();
-                                        currentApplicant.editEnquiry(i, EE);
-                                        break;
-                                    case 4:
-                                        int Index = currentApplicant.getEnquiryIndex();
-                                        if (Index == 0){
+                                        case 4:
+                                            int Index = currentApplicant.getEnquiryIndex();
+                                            if (Index == 0){
+                                                break;
+                                            }
+                                            Enquiry ER = currentApplicant.getEnquiries().get(Index);
+                                            enquiries.remove(ER);
+                                            currentApplicant.deleteEnquiry(Index);
                                             break;
-                                        }
-                                        Enquiry ER = currentApplicant.getEnquiries().get(Index);
-                                        enquiries.remove(ER);
-                                        currentApplicant.deleteEnquiry(Index);
-                                        break;
-                                    case 5:
-                                        System.out.println("Exit successful");
-                                        break;
-                                    default:
-                                }
-                                break;
-                            case 7:
-                                loggedA = false;
-                                System.out.println("Successfully logged out.");
-                                break;
-                            default:
+                                        case 5:
+                                            System.out.println("Exit successful");
+                                            break;
+                                        default:
+                                    }
+                                    break;
+                                case 7:
+                                    loggedA = false;
+                                    System.out.println("Successfully logged out.");
+                                    break;
+                                default:
+                            }
                         }
                     }
                     break;
