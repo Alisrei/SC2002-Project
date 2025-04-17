@@ -493,7 +493,7 @@ public class testMain {
                     System.out.println("enter your Password");
                     String PasswordM = sc.nextLine();
                     Boolean loggedM = authenticate(nricM, PasswordM, managerMap);
-                    if (loggedO == null) System.out.println("Invalid NRIC, please try again.");
+                    if (loggedM == null) System.out.println("Invalid NRIC, please try again.");
                     else{
                         while (loggedM) {
                             HDBManager currentManager = getManager(managers, nricM);
