@@ -266,7 +266,8 @@ public class testMain {
                            "4. Request application withdrawal\n" +
                            "5. Book flats\n" +
                            "6. manage enquiries\n" +
-                           "7. Logout");
+                           "7. Change password\n" +
+                           "8. Logout");
     }
     public static void applicantEnquiryMenu(){
         System.out.println("1. Create enquiry\n" +
@@ -283,7 +284,8 @@ public class testMain {
                            "5. Book flat from Application\n" +  //into update status and profile
                            "6. Generate applicant booking receipt\n" +
                            "7. Manage project enquiries\n" +
-                           "8. Logout" );
+                           "8. Change password\n" +
+                           "9. Logout" );
     }
     public static void officerEnquiryMenu(){
         System.out.println("1. View enquiries\n" +
@@ -296,7 +298,8 @@ public class testMain {
                            "3. Manage registrations\n" +
                            "4. Manage enquiries\n" +
                            "5. Generate report\n" +
-                           "6. Logout");
+                           "6. Change password\n" +
+                           "7. Logout");
     }
     public static void managerEnquiryMenu() {
         System.out.println("1. View all enquiries\n" +
@@ -335,6 +338,7 @@ public class testMain {
                         if (loggedOA == null) {loggedOA = false;}
                         Applicant currentApplicant = getApplicant(applicants, nricA);
                         if(loggedOA){currentApplicant = getOfficer(officers, nricA);}
+                        //if(PasswordA.equals("password")){currentApplicant.changePassword();}
                         while (loggedA || loggedOA) {
                             applicantMenu();
                             int choiceA = sc.nextInt();
@@ -408,7 +412,10 @@ public class testMain {
                                         default:
                                     }
                                     break;
-                                case 7:
+                                case 7 :
+                                    currentApplicant.changePassword();
+                                    break;
+                                case 8:
                                     loggedA = false;
                                     System.out.println("Successfully logged out.");
                                     break;
@@ -417,7 +424,7 @@ public class testMain {
                         }
                     }
                     break;
-                                case 2:
+                case 2:
                     HashMap officerMap = createOfficerMap(officers);
                     System.out.println("enter your Nric");
                     String nricO = sc.nextLine();
@@ -426,8 +433,9 @@ public class testMain {
                     Boolean loggedO = authenticate(nricO, PasswordO, officerMap);
                     if (loggedO == null) System.out.println("Invalid NRIC, please try again.");
                     else{
+                        HDBOfficer currentOfficer = getOfficer(officers, nricO);
+                        //if(PasswordO.equals("password")){currentOfficer.changePassword();}
                         while (loggedO) {
-                            HDBOfficer currentOfficer = getOfficer(officers, nricO);
                             officerMenu();
                             int choiceO = sc.nextInt();
                             sc.nextLine();
@@ -476,8 +484,10 @@ public class testMain {
                                         default:
                                     }
                                     break;
-
                                 case 8:
+                                    currentOfficer.changePassword();
+                                    break;
+                                case 9:
                                     loggedO = false;
                                     System.out.println("Successfully logged out.");
                                     break;
@@ -495,8 +505,9 @@ public class testMain {
                     Boolean loggedM = authenticate(nricM, PasswordM, managerMap);
                     if (loggedM == null) System.out.println("Invalid NRIC, please try again.");
                     else{
+                        HDBManager currentManager = getManager(managers, nricM);
+                        //if (PasswordM.equals("password")){currentManager.changePassword();}
                         while (loggedM) {
-                            HDBManager currentManager = getManager(managers, nricM);
                             managerMenu();
                             int choiceM = sc.nextInt();
                             sc.nextLine();
@@ -747,6 +758,9 @@ public class testMain {
                                     break;
                                     //generate report
                                 case 6:
+                                    currentManager.changePassword();
+                                    break;
+                                case 7:
                                     loggedM = false;
                                     System.out.println("Successfully logged out.");
                                     break;
