@@ -415,6 +415,7 @@ public class testMain {
                             }
                         }
                     }
+                    else System.out.println("Invalid NRIC, please try again.");
                     break;
                 case 2:
                     HashMap officerMap = createOfficerMap(officers);
