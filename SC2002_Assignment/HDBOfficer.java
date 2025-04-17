@@ -170,7 +170,9 @@ public class HDBOfficer extends Applicant{
 
     //overwrite applicant methods to exclude assigned project
     public void viewProjects(List<BTOProject> allProjects) {
-        System.out.println("******** Eligible BTO Projects ********");
+        if (allProjects.isEmpty()){System.out.println("No projects created yet");}
+        System.out.println("\n\n******** Eligible BTO Projects ********");
+        boolean found = false;
         int i = 1;
         for (BTOProject project : allProjects) {
             if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
@@ -180,14 +182,21 @@ public class HDBOfficer extends Applicant{
                             && isEligibleForProject(project)) {
                 System.out.println(i + "." + project.getProjectName());
                 i += 1;
+                found = true;
             }
         }
+        if(!found){System.out.println("No eligible projects");}
     }
     public BTOProject selectProject(List<BTOProject> allProjects){
+        if (allProjects.isEmpty()){
+            System.out.println("No projects created yet");
+            return null;
+        }
         Scanner sc = new Scanner(System.in);
         List<BTOProject> temp = new ArrayList<>();
         System.out.println("Select desired project based on number:");
         int i = 1;
+        boolean found = false;
         for (BTOProject project : allProjects) {
             if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
                 //for debug
@@ -197,7 +206,12 @@ public class HDBOfficer extends Applicant{
                 System.out.println(i + "." + project.getProjectName());
                 temp.add(project);
                 i += 1;
+                found = true;
             }
+        }
+        if(!found){
+            System.out.println("No available projects found.");
+            return null;
         }
         int choice = sc.nextInt();
         sc.nextLine();
@@ -215,6 +229,10 @@ public class HDBOfficer extends Applicant{
     public boolean applyForProject(BTOProject project) {
         if (this.getApplication() != null ) {
             System.out.println("You have already applied for a project.");
+            return false;
+        }
+        if(project == null){
+            System.out.println("Therefore no project to apply for.");
             return false;
         }
         if (!isEligibleForProject(project)) {

@@ -260,7 +260,7 @@ public class testMain {
         }
     }
     public static void applicantMenu(){
-        System.out.println("1. View available projects\n" +
+        System.out.println("\n\n1. View available projects\n" +
                            "2. Apply for project\n" +
                            "3. View applied project\n" +
                            "4. Request application withdrawal\n" +
@@ -270,14 +270,14 @@ public class testMain {
                            "8. Logout");
     }
     public static void applicantEnquiryMenu(){
-        System.out.println("1. Create enquiry\n" +
+        System.out.println("\n\n1. Create enquiry\n" +
                            "2. View enquiries\n" +
                            "3. Edit enquiry\n" +
                            "4. Delete enquiry\n" +
                            "5. Exit");
     }
     public static void officerMenu(){
-        System.out.println("1. Register for project team\n" +
+        System.out.println("\n\n1. Register for project team\n" +
                            "2. View current registration status\n" +
                            "3. View current project details\n" +
                            "4. View Booking Applications\n" +
@@ -288,12 +288,12 @@ public class testMain {
                            "9. Logout" );
     }
     public static void officerEnquiryMenu(){
-        System.out.println("1. View enquiries\n" +
+        System.out.println("\n\n1. View enquiries\n" +
                            "2. reply to enquiry\n" +
                            "3. Exit");
     }
     public static void managerMenu(){
-        System.out.println("1. Manage projects\n" +
+        System.out.println("\n\n1. Manage projects\n" +
                            "2. Manage applications\n" +
                            "3. Manage registrations\n" +
                            "4. Manage enquiries\n" +
@@ -302,7 +302,7 @@ public class testMain {
                            "7. Logout");
     }
     public static void managerEnquiryMenu() {
-        System.out.println("1. View all enquiries\n" +
+        System.out.println("\n\n1. View all enquiries\n" +
                           "2. View enquiries within managed projects" +
                          "3. reply to enquiry within managed projects\n" +
                          "4. Exit");
@@ -348,12 +348,13 @@ public class testMain {
                                     currentApplicant.viewProjects(projects);
                                     break;
                                 case 2:
-                                    if (loggedA){
+                                    if (currentApplicant.getApplication() == null) {
                                         currentApplicant.applyForProject(currentApplicant.selectProject(projects));
                                         break;
                                     }
-                                    else{
-
+                                    else {
+                                        System.out.println("you have already applied for a project");
+                                        break;
                                     }
                                 case 3:
                                     if(currentApplicant.getApplication() != null){
@@ -376,9 +377,8 @@ public class testMain {
                                     sc.nextLine();
                                     switch (C) {
                                         case 1:
-                                            System.out.println("Enter your enquiry:");
-                                            String E = sc.nextLine();
-                                            currentApplicant.submitEnquiry(E, projects);
+
+                                            currentApplicant.submitEnquiry(projects);
                                             for (Enquiry Enq : currentApplicant.getEnquiries()){
                                                 if (!enquiries.contains(Enq)){
                                                     enquiries.add(Enq);
@@ -417,6 +417,7 @@ public class testMain {
                                     break;
                                 case 8:
                                     loggedA = false;
+                                    loggedOA = false;
                                     System.out.println("Successfully logged out.");
                                     break;
                                 default:
@@ -434,7 +435,7 @@ public class testMain {
                     if (loggedO == null) System.out.println("Invalid NRIC, please try again.");
                     else{
                         HDBOfficer currentOfficer = getOfficer(officers, nricO);
-                        if(PasswordO.equals("password")){currentOfficer.changePassword();}
+                        //if(PasswordO.equals("password")){currentOfficer.changePassword();}
                         while (loggedO) {
                             officerMenu();
                             int choiceO = sc.nextInt();
@@ -506,7 +507,7 @@ public class testMain {
                     if (loggedM == null) System.out.println("Invalid NRIC, please try again.");
                     else{
                         HDBManager currentManager = getManager(managers, nricM);
-                        if (PasswordM.equals("password")){currentManager.changePassword();}
+                        //if (PasswordM.equals("password")){currentManager.changePassword();}
                         while (loggedM) {
                             managerMenu();
                             int choiceM = sc.nextInt();
@@ -590,21 +591,23 @@ public class testMain {
                                             break;
                                         case 2:
                                             BTOProject P = currentManager.getProject();
-                                            System.out.println("Enter choice:");
-                                            System.out.println("1. Edit project name\n2. Edit neighbourhood\n3. Edit start and end dates\n4. Edit room types\n5. Set visibility\n6. Exit");
-                                            int EC = sc.nextInt();
-                                            sc.nextLine();
                                             boolean editing = true;
                                             while(editing){
+                                                System.out.println("Enter choice:");
+                                                System.out.println("1. Edit project name\n2. Edit neighbourhood\n3. Edit start and end dates\n4. Edit room types\n5. Set visibility\n6. Exit");
+                                                int EC = sc.nextInt();
+                                                sc.nextLine();
                                                 switch (EC){
                                                     case 1:
                                                         System.out.println("Enter new project name:");
                                                         String newName = sc.nextLine();
                                                         currentManager.editProjectname(P,newName);
+                                                        break;
                                                     case 2:
                                                         System.out.println("Enter new neighbourhood:");
                                                         String newNeighbourhood = sc.nextLine();
                                                         currentManager.editProject(P,newNeighbourhood);
+                                                        break;
                                                     case 3:
                                                         System.out.print("Enter application start date (YYYY-MM-DD): ");
                                                         String NSD = sc.nextLine();
@@ -613,6 +616,7 @@ public class testMain {
                                                         String NED = sc.nextLine();
                                                         LocalDate NEdate = LocalDate.parse(NED); // Parses ISO format
                                                         currentManager.editProject(P,NSdate,NEdate);
+                                                        break;
                                                     case 4:
                                                         System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
                                                         int NFC = sc.nextInt();
@@ -651,6 +655,7 @@ public class testMain {
                                                             sc.nextLine();
                                                         }
                                                         currentManager.editProject(P,NFT,NTwoR,NThreeR);
+                                                        break;
                                                         //might not want to edit this
                                                     case 5:
                                                         System.out.println("Select visibility option:\n1. On\n2. Off");
@@ -674,6 +679,7 @@ public class testMain {
                                                             }
                                                         }
                                                         currentManager.editProject(P,v);
+                                                        break;
                                                     case 6:
                                                         editing = false;
                                                         System.out.println("Exit successful");
