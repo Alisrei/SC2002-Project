@@ -247,7 +247,6 @@ public class testMain {
     public static Boolean authenticate(String NRIC, String Password, HashMap Database){
         // Check if NRIC exists in the map
         if (!Database.containsKey(NRIC)) {
-            System.out.println("Invalid NRIC, please try again.");
             return null;
         }
         // Compare passwords (use equals() for string comparison)
