@@ -434,7 +434,7 @@ public class testMain {
                     if (loggedO == null) System.out.println("Invalid NRIC, please try again.");
                     else{
                         HDBOfficer currentOfficer = getOfficer(officers, nricO);
-                        //if(PasswordO.equals("password")){currentOfficer.changePassword();}
+                        if(PasswordO.equals("password")){currentOfficer.changePassword();}
                         while (loggedO) {
                             officerMenu();
                             int choiceO = sc.nextInt();
@@ -506,7 +506,7 @@ public class testMain {
                     if (loggedM == null) System.out.println("Invalid NRIC, please try again.");
                     else{
                         HDBManager currentManager = getManager(managers, nricM);
-                        //if (PasswordM.equals("password")){currentManager.changePassword();}
+                        if (PasswordM.equals("password")){currentManager.changePassword();}
                         while (loggedM) {
                             managerMenu();
                             int choiceM = sc.nextInt();

@@ -69,35 +69,41 @@ public abstract class User {
                 if (newPass.equals(CFMPass)) {
                     this.password = newPass;
                     changed = true;
-                }
-                else {
-                    System.out.println("Passwords do not match, please try again");
-                }
-                return;
-            }
-        }
-        System.out.println("Enter current password:");
-        String password = sc.nextLine();
-        if (password.equals(this.password)){
-            boolean changed = false;
-            while(!changed){
-                System.out.println("Enter new password:");
-                String newPass = sc.next();
-                System.out.println("Enter new password again for confirmation:");
-                String CFMPass = sc.next();
-                if (newPass.equals(CFMPass)) {
-                    this.password = newPass;
-                    changed = true;
+                    System.out.println("Password successfully changed");
                 }
                 else {
                     System.out.println("Passwords do not match, please try again");
                 }
             }
+            return;
         }
-        else{
-            System.out.println("Incorrect password, please try again.");
-            //loop for incorrect details to be implemented outside of this class
+        boolean correctPassword = false;
+        while(!correctPassword){
+            System.out.println("Enter current password:");
+            String password = sc.nextLine();
+            if (password.equals(this.password)){
+                correctPassword = true;
+                boolean changed = false;
+                while(!changed){
+                    System.out.println("Enter new password:");
+                    String newPass = sc.next();
+                    System.out.println("Enter new password again for confirmation:");
+                    String CFMPass = sc.next();
+                    if (newPass.equals(CFMPass)) {
+                        this.password = newPass;
+                        changed = true;
+                        System.out.println("Password successfully changed");
+                    }
+                    else {
+                        System.out.println("Passwords do not match, please try again");
+                    }
+                }
+            }
+            else{
+                System.out.println("Incorrect password, please try again.");
+            }
         }
+
     }
 }
 
