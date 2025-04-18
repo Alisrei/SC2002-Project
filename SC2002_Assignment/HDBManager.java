@@ -154,7 +154,7 @@ public class HDBManager extends User{
     }
     public void  manageWithdrawals(){
         Scanner sc = new Scanner(System.in);
-        Application W = this.getApplication(this.getProject());
+        Application W = this.getWithdrawals(this.getProject());
         System.out.println("select choice based on number:");
         System.out.println("1. Approve withdrawal\n2. Reject withdrawal");
         int choice = sc.nextInt();
