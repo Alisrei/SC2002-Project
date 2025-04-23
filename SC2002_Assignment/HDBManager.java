@@ -17,8 +17,19 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
 
     //project management
     public void createProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
-                              LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats, Boolean V) {
-        BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats, V);
+                              LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats) {
+        boolean inApplicationPeriod = false;
+        for(BTOProject P : this.projects){
+            LocalDate today = LocalDate.now();
+            if (!today.isBefore(P.getApplicationOpenDate()) && !today.isAfter(P.getApplicationCloseDate())){
+                inApplicationPeriod = true;
+            }
+        }
+        if(inApplicationPeriod){
+            System.out.println("currently in application period for another project, unable to create new project");
+            return;
+        }
+        BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats);
         projects.add(newProject);
         System.out.println("Project " + projectName + " created successfully.");
     }

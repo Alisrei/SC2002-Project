@@ -23,7 +23,7 @@ public class BTOProject {
     //constructor
     public BTOProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                       LocalDate applicationCloseDate, HDBManager managerInCharge,
-                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats, Boolean V)
+                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats)
     {
         this.projectName = projectName;
         this.neighborhood = neighborhood;
@@ -36,7 +36,13 @@ public class BTOProject {
         this.applications = new ArrayList<>();
         this.registrations = new ArrayList<>();
         this.enquiries = new ArrayList<>();
-        this.visibility = V;
+        LocalDate today = LocalDate.now();
+        if (today.isAfter(applicationOpenDate) && today.isBefore(applicationCloseDate)){
+            this.visibility = true;
+        }
+        else {
+            this.visibility = false;
+        }
     }
     //getters
     public String getProjectName(){return projectName;}

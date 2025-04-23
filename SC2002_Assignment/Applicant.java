@@ -30,8 +30,7 @@ public class Applicant extends User implements ViewProjects,EnquiryCreateEditDel
         boolean found = false;
         int i = 1;
         for (BTOProject project : allProjects) {
-            if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
-                    //for debug
+            if (project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
                     project.getFlatTypes() != null
                     && project.getVisibility()
                     && isEligibleForProject(project)) {

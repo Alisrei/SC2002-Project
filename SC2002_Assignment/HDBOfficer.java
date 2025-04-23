@@ -213,15 +213,6 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
         sc.nextLine();
         return temp.get(choice-1);
     }
-    private boolean isEligibleForProject(BTOProject project) {
-        if (getAge() < 21){ return false;}
-        if (!isMarried() && getAge() < 35){ return false;}
-        if (!isMarried() && getAge() >= 35 && !project.getFlatTypes().contains(FlatType.TWOROOM)) {
-            return false;
-        }
-        if(project.equals(this.assignedProject)){return false;}
-        return true;
-    }
     public void applyForProject(BTOProject project) {
         if (this.getApplication() != null ) {
             System.out.println("You have already applied for a project.");
@@ -237,6 +228,14 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
         }
         this.setApplication(new Application(this.getName(), this, project));
         System.out.println("Application submitted for project: " + project.getProjectName());
+    }
+    private boolean isEligibleForProject(BTOProject project) {
+        if (getAge() < 21){ return false;}
+        if (!isMarried() && getAge() < 35){ return false;}
+        if (!isMarried() && getAge() >= 35 && !project.getFlatTypes().contains(FlatType.TWOROOM)) {
+            return false;
+        }
+        return !project.equals(this.assignedProject);
     }
 
     //officer enquiry methods

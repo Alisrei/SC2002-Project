@@ -136,7 +136,7 @@ public class testMain {
                 }
 
                 // Create project
-                BTOProject project = new BTOProject(data[0], data[1], openDate, closeDate, manager, flatTypes, twoRoomFlats, threeRoomFlats, true);
+                BTOProject project = new BTOProject(data[0], data[1], openDate, closeDate, manager, flatTypes, twoRoomFlats, threeRoomFlats);
                 manager.addProject(project);
                 // Assign officers
                 if (data.length > 12 && !data[12].isEmpty()) {
@@ -603,7 +603,7 @@ public class testMain {
                                                             break;
                                                     }
                                                 }
-                                            currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,Vis);
+                                            currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR);
                                             break;
                                         case 3:
                                             BTOProject P = currentManager.getProject();
