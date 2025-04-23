@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Applicant extends User {
+public class Applicant extends User implements ViewProjects,EnquiryCreateEditDelete, EnquiryView{
 
     private Application application;
     private List<Enquiry> enquiries;

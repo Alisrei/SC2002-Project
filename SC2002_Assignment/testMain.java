@@ -490,7 +490,8 @@ public class testMain {
                                             break;
                                         case 2:
                                             int i = currentOfficer.getEnquiryIndex();
-                                            currentOfficer.replyEnquiry(i);
+                                            BTOProject P = currentOfficer.getAssignedProject();
+                                            currentOfficer.replyEnquiry(i,P);
                                             break;
                                         case 3:
                                             System.out.println("Exit successful");
@@ -533,7 +534,7 @@ public class testMain {
                                     sc.nextLine();
                                     switch (CP) {
                                         case 1:
-                                            currentManager.viewAllProjects(projects);
+                                            currentManager.viewProjects(projects);
                                         case 2:
                                             System.out.println("Enter project Name:");
                                             String PN = sc.nextLine();

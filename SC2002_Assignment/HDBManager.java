@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class HDBManager extends User{
+public class HDBManager extends User implements ViewProjects,EnquiryReply, EnquiryView{
     private List<BTOProject> projects;
 
     //constructor
@@ -12,6 +12,8 @@ public class HDBManager extends User{
         super(nric, name, password, age, isMarried);
         this.projects = new ArrayList<>();
     }
+
+
 
     //project management
     public void createProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
@@ -62,7 +64,21 @@ public class HDBManager extends User{
     public void addProject(BTOProject p){
         this.projects.add(p);
     }
-    public void viewAllProjects(List<BTOProject> projectsMaster){
+    public BTOProject getProject(){
+        if(this.projects.isEmpty()){
+            System.out.println("No managed projects");
+            return null;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select the project based on number:");
+        viewPersornalProjects();
+        int choice = sc.nextInt();
+        sc.nextLine();
+        return projects.get(choice-1);
+    }
+
+    //view projects
+    public void viewProjects(List<BTOProject> projectsMaster){
         if (projectsMaster.isEmpty()){
             System.out.println("no projects yet");
             return;
@@ -84,18 +100,7 @@ public class HDBManager extends User{
     }
 
 
-    public BTOProject getProject(){
-        if(this.projects.isEmpty()){
-            System.out.println("No managed projects");
-            return null;
-        }
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Select the project based on number:");
-        viewPersornalProjects();
-        int choice = sc.nextInt();
-        sc.nextLine();
-        return projects.get(choice-1);
-    }
+
 
     //applications func
     public void viewApplications(BTOProject P){

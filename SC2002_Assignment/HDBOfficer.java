@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class HDBOfficer extends Applicant{
+public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, EnquiryView{
     private BTOProject assignedProject;
     private Registration registration;
 
@@ -258,19 +258,19 @@ public class HDBOfficer extends Applicant{
             enquiry.viewEnq();
         }
     }
-    public void replyEnquiry(int index) {
-        if (index < 0 || index >= this.getAssignedProject().getEnquiries().size()) {
+    public void replyEnquiry(int index, BTOProject P) {
+        if (index < 0 || index >= P.getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
             return;
         }
-        if(this.getAssignedProject().getEnquiries().get(index).getReplied()){
+        if(P.getEnquiries().get(index).getReplied()){
             System.out.println("Enquiry has already been replied to");
             return;
         }
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your reply to the enquiry:");
         String R = sc.nextLine();
-        this.getAssignedProject().getEnquiries().get(index).replyToEnq(R);
+        P.getEnquiries().get(index).replyToEnq(R);
 
     }
 
