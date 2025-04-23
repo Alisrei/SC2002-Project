@@ -10,20 +10,20 @@ public class Applicant extends User {
     private Application application;
     private List<Enquiry> enquiries;
 
+    //constructor
     public Applicant(String nric, String name, String password, int age, boolean maritalStatus) {
         super(nric, name, password, age, maritalStatus);
         //this.applicationStatus = ApplicationStatus.NOT_APPLIED;
         this.enquiries = new ArrayList<>();
     }
 
+    //getters
     public Application getApplication(){return this.application;}
+    public List<Enquiry> getEnquiries() {return this.enquiries;}
+    //setters
     public void setApplication(Application A){this.application = A;}
 
-
-    public List<Enquiry> getEnquiries() {
-        return this.enquiries;
-    }
-
+    //Applicant project methods
     public void viewProjects(List<BTOProject> allProjects) {
         if (allProjects.isEmpty()){System.out.println("No projects created yet");}
         System.out.println("\n\n******** Eligible BTO Projects ********");
@@ -72,64 +72,35 @@ public class Applicant extends User {
         sc.nextLine();
         return temp.get(choice-1);
     }
-
     private boolean isEligibleForProject(BTOProject project) {
         if (getAge() < 21){ return false;}
         if (!isMarried() && getAge() < 35){ return false;}
-        if (!isMarried() && getAge() >= 35 && !project.getFlatTypes().contains(FlatType.TWOROOM)) {
-            return false;
-        }
-        return true;
+        return isMarried() || getAge() < 35 || project.getFlatTypes().contains(FlatType.TWOROOM);
     }
 
-    public boolean applyForProject(BTOProject project) {
+    //project application & withdrawal
+    public void applyForProject(BTOProject project) {
         if(project == null){
             System.out.println("Therefore no project to apply for.");
-            return false;
+            return;
         }
         if (!isEligibleForProject(project)) {
             System.out.println("You do not meet the eligibility criteria for this project.");
-            return false;
+            return;
         }
         this.application = new Application(this.getName(), this, project);
         System.out.println("Application submitted for project: " + project.getProjectName());
-        return true;
     }
-
-    public boolean withdrawApplication() {
+    public void withdrawApplication() {
         if (this.application == null) {
             System.out.println("No application to withdraw.");
-            return false;
+            return;
         }
-        this.application.setStatus(ApplicationStatus.WITHDRAWAL_REQUESTED);
+        this.application.setWithdrawalRequested(true);
         System.out.println("Application withdrawal requested successfully.");
-        return true;
     }
 
-    public FlatType selectFlatType(){
-        Scanner sc = new Scanner(System.in);
-        FlatType flatType = null;
-        if (this.isMarried()){
-            System.out.println("Select room type by entering either 1 0r 2:\n1.Two room\n2.Three room");
-            int choice = sc.nextInt();
-            sc.nextLine();
-            switch (choice){
-                case 1:
-                    flatType = FlatType.TWOROOM;
-                    System.out.println("Two room flat selected.");
-                    break;
-                case 2:
-                    flatType = FlatType.THREEROOM;
-                    System.out.println("Three room flat selected.");
-                    break;
-                default:
-                    System.out.println("invalid choice");
-            }
-        }
-        else{flatType = FlatType.TWOROOM;System.out.println("Two room flat assigned.");}
-        return flatType;
-    }
-
+    //flat booking methods
     public boolean bookFlat() {
         if (this.application == null){
             System.out.println("You have not applied for a project.");
@@ -162,7 +133,31 @@ public class Applicant extends User {
         System.out.println("Successfully created booking for " + flatType.getDescription());
         return true;
     }
+    public FlatType selectFlatType(){
+        Scanner sc = new Scanner(System.in);
+        FlatType flatType = null;
+        if (this.isMarried()){
+            System.out.println("Select room type by entering either 1 0r 2:\n1.Two room\n2.Three room");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice){
+                case 1:
+                    flatType = FlatType.TWOROOM;
+                    System.out.println("Two room flat selected.");
+                    break;
+                case 2:
+                    flatType = FlatType.THREEROOM;
+                    System.out.println("Three room flat selected.");
+                    break;
+                default:
+                    System.out.println("invalid choice");
+            }
+        }
+        else{flatType = FlatType.TWOROOM;System.out.println("Two room flat assigned.");}
+        return flatType;
+    }
 
+    //enquiry methods
     public void submitEnquiry(List<BTOProject> AP) {
         Scanner sc = new Scanner(System.in);
         BTOProject P = this.selectProject(AP);
@@ -175,7 +170,6 @@ public class Applicant extends User {
         enquiries.add(newEnquiry);
         System.out.println("Enquiry submitted.");
     }
-
     public int getEnquiryIndex(){
         Scanner sc = new Scanner(System.in);
         int i = 1;
@@ -193,7 +187,6 @@ public class Applicant extends User {
         sc.nextLine();
         return choice-1;
     }
-
     public void viewEnquiries() {
         if(enquiries.isEmpty()) {
             System.out.println("print no enquiry found");
@@ -203,7 +196,6 @@ public class Applicant extends User {
             enquiry.viewEnq();
         }
     }
-
     public void editEnquiry(int index, String newText) {
         if(enquiries.isEmpty()) {
             System.out.println("print no enquiry found");
@@ -215,7 +207,6 @@ public class Applicant extends User {
         }
         enquiries.get(index).editEnq(newText);
     }
-
     public void deleteEnquiry(int index) {
         if(enquiries.isEmpty()) {
             System.out.println("print no enquiry found");

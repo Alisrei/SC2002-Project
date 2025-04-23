@@ -530,11 +530,13 @@ public class testMain {
                             switch (choiceM) {
                                 case 1:
                                     System.out.println("Select choice by number:");
-                                    System.out.println("1. Create project\n2. Edit project\n3. Delete project\n4. Exit");
+                                    System.out.println("1.View all projects\n2. Create project\n3. Edit project\n4. Delete project\n5. Exit");
                                     int CP = sc.nextInt();
                                     sc.nextLine();
                                     switch (CP) {
                                         case 1:
+                                            currentManager.viewAllProjects(projects);
+                                        case 2:
                                             System.out.println("Enter project Name:");
                                             String PN = sc.nextLine();
                                             System.out.println("Enter project neighbourhood:");
@@ -604,7 +606,7 @@ public class testMain {
                                                 }
                                             currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,Vis);
                                             break;
-                                        case 2:
+                                        case 3:
                                             BTOProject P = currentManager.getProject();
                                             boolean editing = true;
                                             while(editing){
@@ -703,10 +705,10 @@ public class testMain {
                                                 }
                                             }
                                             break;
-                                        case 3:
+                                        case 4:
                                             currentManager.deleteProject(currentManager.getProject());
                                             //abit sus ngl
-                                        case 4:
+                                        case 5:
                                             System.out.println("Exit successful.");
                                             break;
                                         default:
@@ -715,20 +717,22 @@ public class testMain {
                                     //project creation, editing, deletion
                                 case 2:
                                     System.out.println("Select choice by number:");
-                                    System.out.println("1. View pending applications\n2. Approve pending applications\n3. Manage application withdrawals\n4. Exit");
+                                    System.out.println("1.View all applications for a project\n2. View pending applications\n3. Approve pending applications\n4. Manage application withdrawals\n5. Exit");
                                     int CA = sc.nextInt();
                                     sc.nextLine();
                                     switch (CA) {
                                         case 1:
+                                            currentManager.viewApplications(currentManager.getProject());
+                                        case 2:
                                             currentManager.viewPendingApplications(currentManager.getProject());
                                             break;
-                                        case 2:
+                                        case 3:
                                             currentManager.approveApplication();
                                             break;
-                                        case 3:
+                                        case 4:
                                             currentManager.manageWithdrawals();
                                             break;
-                                        case 4:
+                                        case 5:
                                             System.out.println("Exit successful.");
                                             break;
                                         default:
@@ -736,17 +740,19 @@ public class testMain {
                                     break;
                                 case 3:
                                     System.out.println("Select choice by number:");
-                                    System.out.println("1. View unaccepted registrations\n2. Approve unaccepted registrations\n3. Exit");
+                                    System.out.println("1.View all registrations for a project\n2. View unaccepted registrations\n3. Approve unaccepted registrations\n4. Exit");
                                     int CR = sc.nextInt();
                                     sc.nextLine();
                                     switch (CR) {
                                         case 1:
+                                            currentManager.viewRegistrations((currentManager.getProject()));
+                                        case 2:
                                             currentManager.viewUnacceptedRegistrations(currentManager.getProject());
                                             break;
-                                        case 2:
+                                        case 3:
                                             currentManager.approveRegistration();
                                             break;
-                                        case 3:
+                                        case 4:
                                             break;
                                         default:
                                     }

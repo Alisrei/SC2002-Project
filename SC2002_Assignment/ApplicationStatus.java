@@ -5,9 +5,4 @@ public enum ApplicationStatus {
     SUCCESSFUL,
     UNSUCCESSFUL,
     BOOKED,
-    WITHDRAWAL_REQUESTED,
-    WITHDRAWAL_APPROVED,
-    WITHDRAWAL_REJECTED;
-
-
 }

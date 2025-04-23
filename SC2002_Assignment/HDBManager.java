@@ -7,11 +7,13 @@ import java.util.Scanner;
 public class HDBManager extends User{
     private List<BTOProject> projects;
 
+    //constructor
     public HDBManager(String nric, String name, String password, int age, boolean isMarried) {
         super(nric, name, password, age, isMarried);
         this.projects = new ArrayList<>();
     }
 
+    //project management
     public void createProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                               LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats, Boolean V) {
         BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats, V);
@@ -34,15 +36,13 @@ public class HDBManager extends User{
         System.out.println("application open and close dates changed successfully");
         return;
     }
-
-    //do we need this?
     public void editProject(BTOProject project, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
         project.setFlatTypes(newFlatTypes);
         project.getFlats().setTwoRoomFlats(twoRoomFlats);
         project.getFlats().setThreeRoomFlats(threeRoomFlats);
         System.out.println("Project flat types updated successfully.");
         return;
-    }
+    }//do we need this?
     public void editProject(BTOProject project, boolean v) {
         project.setVisibility(v);
         System.out.print("Project visibility set to:");
@@ -54,18 +54,19 @@ public class HDBManager extends User{
         }
         return;
     }
-
     public void deleteProject(BTOProject project) {
         projects.remove(project);
         project = null;
         System.out.println("Project " + project.getProjectName() + " deleted successfully.");
     }//incomplete
-
     public void addProject(BTOProject p){
         this.projects.add(p);
     }
-
     public void viewAllProjects(List<BTOProject> projectsMaster){
+        if (projectsMaster.isEmpty()){
+            System.out.println("no projects yet");
+            return;
+        }
         int i = 1;
         for (BTOProject P: projectsMaster){
             System.out.print(i+".");
@@ -81,6 +82,8 @@ public class HDBManager extends User{
             i += 1;
         }
     }
+
+
     public BTOProject getProject(){
         if(this.projects.isEmpty()){
             System.out.println("No managed projects");
@@ -94,7 +97,15 @@ public class HDBManager extends User{
         return projects.get(choice-1);
     }
 
+    //applications func
     public void viewApplications(BTOProject P){
+        if(P == null){
+            return;
+        }
+        if(P.getApplications().isEmpty()){
+            System.out.println("Project has no applications yet.");
+            return;
+        }
         int i = 1;
         for (Application A: P.getApplications()){
             System.out.print(i+".");
@@ -106,11 +117,11 @@ public class HDBManager extends User{
         if(P == null){
             return null;
         }
-        int i = 1;
         if(P.getApplications().isEmpty()){
             System.out.println("Project has no applications yet.");
             return null;
         }
+        int i = 1;
         boolean found = false;
         List<Application> PA = new ArrayList<>();
         for (Application A: P.getApplications()){
@@ -128,7 +139,6 @@ public class HDBManager extends User{
         }
         return PA;
     }
-
     public Application getApplication(BTOProject P){
         if(P.getApplications().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
@@ -138,7 +148,23 @@ public class HDBManager extends User{
         sc.nextLine();
         return PA.get(choice-1);
     }
+    public void approveApplication() {
+        Application A = this.getApplication(this.getProject());
+        if(A == null){
+            System.out.println("no applications for the project available");
+            return;
+        }
+        if (A.getProject().getFlats().getTwoRoomFlats() + A.getProject().getFlats().getThreeRoomFlats() > 0) {
+            A.setStatus(ApplicationStatus.SUCCESSFUL);
+            System.out.println("Application " + A.getApplicationId() + " approved.");
+        }
+        else {
+            A.setStatus(ApplicationStatus.UNSUCCESSFUL);
+            System.out.println("Application " + A.getApplicationId() + " rejected.");
+        }
+    }
 
+    //withdrawals func
     public List<Application> viewPendingWithdrawals(BTOProject P){
         if(P == null){
             return null;
@@ -151,7 +177,7 @@ public class HDBManager extends User{
         List<Application> PW = new ArrayList<>();
         int i = 1;
         for (Application A: P.getApplications()){
-            if(A.getStatus().equals(ApplicationStatus.WITHDRAWAL_REQUESTED)){
+            if(A.getWithdrawalRequested()){
                 System.out.print(i+".");
                 System.out.println(A.getApplicationId());
                 PW.add(A);
@@ -185,13 +211,12 @@ public class HDBManager extends User{
         int choice = sc.nextInt();
         switch (choice){
             case 1:
-                W.setStatus(ApplicationStatus.WITHDRAWAL_APPROVED);
                 W.getApplicant().setApplication(null);
                 W.deleteApplication();
                 System.out.println("Withdrawal approved and deleted");
                 break;
             case 2:
-                W.setStatus(ApplicationStatus.WITHDRAWAL_REJECTED);
+                W.setWithdrawalRequested(false);
                 System.out.println("Withdrawal denied");
                 break;
             default:
@@ -200,7 +225,15 @@ public class HDBManager extends User{
         }
     }
 
+    //Registration func
     public void viewRegistrations(BTOProject P){
+        if(P == null){
+            return;
+        }
+        if(P.getRegistrations().isEmpty()){
+            System.out.println("Project has no Registrations yet.");
+            return;
+        }
         int i = 1;
         for (Registration R: P.getRegistrations()){
             System.out.print(i+".");
@@ -243,7 +276,6 @@ public class HDBManager extends User{
         sc.nextLine();
         return P.getRegistrations().get(choice-1);
     }
-
     public void approveRegistration() {
         Registration R = this.getRegistrations(this.getProject());
         if(R == null){
@@ -259,22 +291,8 @@ public class HDBManager extends User{
         }
     }
 
-    public void approveApplication() {
-        Application A = this.getApplication(this.getProject());
-        if(A == null){
-            System.out.println("no applications for the project available");
-            return;
-        }
-        if (A.getProject().getFlats().getTwoRoomFlats() + A.getProject().getFlats().getThreeRoomFlats() > 0) {
-            A.setStatus(ApplicationStatus.SUCCESSFUL);
-            System.out.println("Application " + A.getApplicationId() + " approved.");
-        }
-        else {
-            A.setStatus(ApplicationStatus.UNSUCCESSFUL);
-            System.out.println("Application " + A.getApplicationId() + " rejected.");
-        }
-    }
 
+    //enq func
     public int getEnquiryIndex(){
         Scanner sc = new Scanner(System.in);
         int i = 1;
@@ -288,19 +306,16 @@ public class HDBManager extends User{
         sc.nextLine();
         return choice-1;
     }
-
     public void viewAllEnquiries(List<Enquiry> AllEnquiries){
         for (Enquiry enquiry : AllEnquiries) {
             enquiry.viewEnq();
         }
     }
-
     public void viewEnquiries() {
         for (Enquiry enquiry : this.getProject().getEnquiries()) {
             enquiry.viewEnq();
         }
     }
-
     public void replyEnquiry(int index, String newText) {
         if (index < 0 || index >= this.getProject().getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
@@ -309,6 +324,7 @@ public class HDBManager extends User{
         this.getProject().getEnquiries().get(index).replyToEnq(newText);
     }
 
+    //report
     public void generateReport() {
         for (BTOProject project : projects) {
             System.out.println("Project: " + project.getProjectName());

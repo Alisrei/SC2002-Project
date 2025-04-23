@@ -7,9 +7,8 @@ import java.util.Scanner;
 public class HDBOfficer extends Applicant{
     private BTOProject assignedProject;
     private Registration registration;
-    private boolean registrationApproved;
 
-
+    //constructor
     public HDBOfficer(String nric, String name, String password, int age, boolean isMarried) {
         super(nric, name, password, age, isMarried); // calls the user constructor
     }
@@ -20,17 +19,17 @@ public class HDBOfficer extends Applicant{
     //setters
     public void setAssignedProject(BTOProject assignedProject) {this.assignedProject = assignedProject;}
 
-    public boolean registerAsOfficer(BTOProject project) {
+
+    //officer project duties
+    public void registerAsOfficer(BTOProject project) {
         if(this.getApplication() != null && this.getApplication().getProject().equals(project)){
             System.out.println("You are already applying for this project as an applicant.");
-            return false;
         }
         else {
             this.registration = new Registration(this.getName(),this,project);
             project.addRegistration(this.registration);
             this.setAssignedProject(project);
             System.out.println("Registration request created");
-            return true;
         }
     }
     public BTOProject selectProjectforRegistration(List<BTOProject> allprojects){
@@ -45,7 +44,6 @@ public class HDBOfficer extends Applicant{
         sc.nextLine();
         return allprojects.get(choice - 1);
     }
-
     public void viewAssignedProjectDetails() {
         if (assignedProject != null) {
             assignedProject.displayProjectDetails();
@@ -53,6 +51,9 @@ public class HDBOfficer extends Applicant{
             System.out.println("No assigned project.");
         }
     }
+
+
+    //officer application handling
     public void viewAssignedProjectApplicationsForBooking(){
         if (assignedProject != null) {
             if(assignedProject.getApplications().size() == 0){
@@ -144,7 +145,6 @@ public class HDBOfficer extends Applicant{
 
 
     }
-
     public void handleFlatBooking() {
         if (assignedProject == null) {
             System.out.println("You are not assigned to any project.");
@@ -153,7 +153,7 @@ public class HDBOfficer extends Applicant{
         Application A = this.selectApplicationforBooking();
         if(A == null){return;}
         String unitNumber = this.selectunit(A);
-        boolean success = assignedProject.bookFlat(unitNumber);
+        boolean success = assignedProject.getFlats().bookFlat(unitNumber);
         if (!success) {
             System.out.println("Booking failed. Please check the unit number.");
         }
@@ -222,24 +222,24 @@ public class HDBOfficer extends Applicant{
         if(project.equals(this.assignedProject)){return false;}
         return true;
     }
-    public boolean applyForProject(BTOProject project) {
+    public void applyForProject(BTOProject project) {
         if (this.getApplication() != null ) {
             System.out.println("You have already applied for a project.");
-            return false;
+            return;
         }
         if(project == null){
             System.out.println("Therefore no project to apply for.");
-            return false;
+            return;
         }
         if (!isEligibleForProject(project)) {
             System.out.println("You do not meet the eligibility criteria for this project.");
-            return false;
+            return;
         }
         this.setApplication(new Application(this.getName(), this, project));
         System.out.println("Application submitted for project: " + project.getProjectName());
-        return true;
     }
 
+    //officer enquiry methods
     public int getEnquiryIndex(){
         Scanner sc = new Scanner(System.in);
         int i = 1;
@@ -253,13 +253,11 @@ public class HDBOfficer extends Applicant{
         sc.nextLine();
         return choice-1;
     }
-
     public void viewEnquiries() {
         for (Enquiry enquiry : this.getAssignedProject().getEnquiries()) {
             enquiry.viewEnq();
         }
     }
-
     public void replyEnquiry(int index, String newText) {
         if (index < 0 || index >= this.getAssignedProject().getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
@@ -267,15 +265,11 @@ public class HDBOfficer extends Applicant{
         }
         this.getAssignedProject().getEnquiries().get(index).replyToEnq(newText);
     }
+
+
+
     public boolean isOfficerOfProject(BTOProject project) {
         return assignedProject != null && assignedProject.equals(project);
     }
-
-
-
-    //@Override
-    //public String toString() {
-    //    return getName() + " (" + getNRIC() + ")";
-    //}
 
 }
