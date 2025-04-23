@@ -12,6 +12,8 @@ public class testMain {
     public static List<HDBManager> managers = new ArrayList<>();
     public static List<HDBOfficer> officers = new ArrayList<>();
     public static List<BTOProject> projects = new ArrayList<>();
+    public static List<Application> applications = new ArrayList<>();
+    public static List<Registration> registrations = new ArrayList<>();
     public static List<Enquiry> enquiries = new ArrayList<>();
     //load csvs into lists
     private static void loadApplicants(String filename) {
@@ -161,7 +163,9 @@ public class testMain {
             System.err.println("Error parsing project data: " + e.getMessage());
         }
     }
-//    private static void loadEnquiries(String filename){to be implemented}
+    private static void loadApplications(String filename){}
+    private static void loadRegistrations(String filename){}
+//  private static void loadEnquiries(String filename){to be implemented}
 
     // Generate HashMap for Applicants
     public static HashMap<String, String> createApplicantMap(List<Applicant> applicants) {
