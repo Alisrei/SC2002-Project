@@ -102,59 +102,84 @@ public class HDBManager extends User{
             i += 1;
         }
     }
-    public void viewPendingApplications(BTOProject P){
+    public List<Application> viewPendingApplications(BTOProject P){
         if(P == null){
-            return;
+            return null;
         }
         int i = 1;
         if(P.getApplications().isEmpty()){
             System.out.println("Project has no applications yet.");
-            return;
+            return null;
         }
         boolean found = false;
+        List<Application> PA = new ArrayList<>();
         for (Application A: P.getApplications()){
             if(A.getStatus().equals(ApplicationStatus.PENDING)){
                 System.out.print(i+".");
                 System.out.println(A.getApplicationId());
+                PA.add(A);
                 i += 1;
                 found = true;
             }
         }
         if (!found){
-            System.out.println("No pending applications in project");
+            System.out.println("1. No pending applications in project");
+            return null;
         }
+        return PA;
     }
 
     public Application getApplication(BTOProject P){
+        if(P.getApplications().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
         System.out.println("Select the application based on number:");
-        viewPendingApplications(P);
+        List<Application> PA = viewPendingApplications(P);
         int choice = sc.nextInt();
         sc.nextLine();
-        return P.getApplications().get(choice-1);
+        return PA.get(choice-1);
     }
 
-    public void viewPendingWithdrawals(BTOProject P){
+    public List<Application> viewPendingWithdrawals(BTOProject P){
+        if(P == null){
+            return null;
+        }
+        if(P.getApplications().isEmpty()){
+            System.out.println("Project has no applications yet.");
+            return null;
+        }
+        boolean found = false;
+        List<Application> PW = new ArrayList<>();
         int i = 1;
         for (Application A: P.getApplications()){
             if(A.getStatus().equals(ApplicationStatus.WITHDRAWAL_REQUESTED)){
                 System.out.print(i+".");
                 System.out.println(A.getApplicationId());
+                PW.add(A);
                 i += 1;
             }
         }
+        if (!found){
+            System.out.println("1. No pending Withdrawals in project");
+            return null;
+        }
+        return PW;
     }
     public Application getWithdrawals(BTOProject P){
+        if(P.getApplications().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
         System.out.println("Select the application based on number:");
-        viewPendingWithdrawals(P);
+        List<Application> PW = viewPendingWithdrawals(P);
         int choice = sc.nextInt();
         sc.nextLine();
-        return P.getApplications().get(choice-1);
+        return PW.get(choice-1);
     }
     public void  manageWithdrawals(){
         Scanner sc = new Scanner(System.in);
         Application W = this.getWithdrawals(this.getProject());
+        if(W == null){
+            System.out.println("No withdrawals for the project available");
+            return;
+        }
         System.out.println("select choice based on number:");
         System.out.println("1. Approve withdrawal\n2. Reject withdrawal");
         int choice = sc.nextInt();
@@ -183,17 +208,34 @@ public class HDBManager extends User{
             i += 1;
         }
     }
-    public void viewUnacceptedRegistrations(BTOProject P){
+    public List<Registration> viewUnacceptedRegistrations(BTOProject P){
+        if(P == null){
+            return null;
+        }
+        if(P.getRegistrations().isEmpty()){
+            System.out.println("Project has no Registrations yet.");
+            return null;
+        }
+        boolean found = false;
+        List<Registration> UR = new ArrayList<>();
         int i = 1;
         for (Registration R: P.getRegistrations()){
             if(R.getAccepted() == Boolean.FALSE){
                 System.out.print(i+".");
                 System.out.println(R.getRegId());
+                UR.add(R);
                 i += 1;
+                found = true;
             }
         }
+        if (!found){
+            System.out.println("1. No pending Withdrawals in project");
+            return null;
+        }
+        return UR;
     }
     public Registration getRegistrations(BTOProject P){
+        if(P.getRegistrations().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
         System.out.println("Select the Registration based on number:");
         viewUnacceptedRegistrations(P);
@@ -204,6 +246,10 @@ public class HDBManager extends User{
 
     public void approveRegistration() {
         Registration R = this.getRegistrations(this.getProject());
+        if(R == null){
+            System.out.println("No registrations for the project available");
+            return;
+        }
         if(R.getProject().addOfficer(R.getOfficer())){
             R.setAccepted(Boolean.TRUE);
             System.out.println("Officer " + R.getOfficer().getName() + " approved for project " + R.getProject().getProjectName() + ".");
@@ -215,6 +261,10 @@ public class HDBManager extends User{
 
     public void approveApplication() {
         Application A = this.getApplication(this.getProject());
+        if(A == null){
+            System.out.println("no applications for the project available");
+            return;
+        }
         if (A.getProject().getFlats().getTwoRoomFlats() + A.getProject().getFlats().getThreeRoomFlats() > 0) {
             A.setStatus(ApplicationStatus.SUCCESSFUL);
             System.out.println("Application " + A.getApplicationId() + " approved.");

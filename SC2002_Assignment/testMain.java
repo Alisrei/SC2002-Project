@@ -309,7 +309,6 @@ public class testMain {
                          "4. Exit");
     }
 
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         loadApplicants("ApplicantList.csv");
