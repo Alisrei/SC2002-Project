@@ -9,6 +9,7 @@ public abstract class User {
     private int age;
     private boolean martialStatus;
 
+    //constructor
     public User(String nric, String name, String password, int age, boolean isMarried) {
         if (!validateNric(nric)) {
             throw new IllegalArgumentException("Invalid NRIC format: " + nric);
@@ -20,43 +21,19 @@ public abstract class User {
         this.age = age;
         this.martialStatus = isMarried;
     }
-
     private boolean validateNric(String nric) {
         return nric.matches("[ST]\\d{7}[A-Z]");
     }
 
-    // Getters and setters
+
+    // Getters
     public String getNric() {return nric;}
     public String getName() {return name;}
     public String getPassword() {return password;}
     public int getAge() {return age;}
     public boolean isMarried() {return martialStatus;}
 
-    // user methods
-    public void login(String IC,String Pass){
-        if(IC == this.nric && Pass == this.password){
-            System.out.println("Login succesful");
-        } else if (IC == this.nric && Pass != this.password) {
-            System.out.println("Incorrect Password, please try again.");
-        }
-        else {
-            System.out.println("Incorrect Password or username, please try again.");
-            //loop for incorrect details to be implemented outside of this class
-        }
-
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "nric='" + nric + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
-                ", martialStatus=" + martialStatus +
-                '}';
-    }
-
+    //change PW
     public void changePassword(){
         Scanner sc = new Scanner(System.in);
         if(this.password.equals("password")){
@@ -104,6 +81,18 @@ public abstract class User {
             }
         }
 
+    }
+
+    //to str
+    @Override
+    public String toString() {
+        return "User{" +
+                "nric='" + nric + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", martialStatus=" + martialStatus +
+                '}';
     }
 }
 
