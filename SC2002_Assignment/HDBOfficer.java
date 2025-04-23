@@ -258,12 +258,20 @@ public class HDBOfficer extends Applicant{
             enquiry.viewEnq();
         }
     }
-    public void replyEnquiry(int index, String newText) {
+    public void replyEnquiry(int index) {
         if (index < 0 || index >= this.getAssignedProject().getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
             return;
         }
-        this.getAssignedProject().getEnquiries().get(index).replyToEnq(newText);
+        if(this.getAssignedProject().getEnquiries().get(index).getReplied()){
+            System.out.println("Enquiry has already been replied to");
+            return;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter your reply to the enquiry:");
+        String R = sc.nextLine();
+        this.getAssignedProject().getEnquiries().get(index).replyToEnq(R);
+
     }
 
 

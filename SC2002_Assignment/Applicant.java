@@ -175,7 +175,7 @@ public class Applicant extends User {
         int i = 1;
         if(enquiries.isEmpty()){
             System.out.println("print no enquiry found");
-            return 0;
+            return -1;
         }
         System.out.println("Select enquiry based on number:");
         for (Enquiry enquiry : this.enquiries) {
@@ -189,7 +189,7 @@ public class Applicant extends User {
     }
     public void viewEnquiries() {
         if(enquiries.isEmpty()) {
-            System.out.println("print no enquiry found");
+            System.out.println("No enquiry found");
             return;
         }
         for (Enquiry enquiry : this.enquiries) {
@@ -216,7 +216,9 @@ public class Applicant extends User {
             System.out.println("Invalid enquiry index.");
             return;
         }
-        enquiries.get(index).deleteEnq();
-        this.enquiries.remove(index);
+        if(enquiries.get(index).deleteEnq()){
+            this.enquiries.remove(index);
+        }
+
     }
 }

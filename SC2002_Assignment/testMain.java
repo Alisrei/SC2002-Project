@@ -304,7 +304,7 @@ public class testMain {
     }
     public static void managerEnquiryMenu() {
         System.out.println("\n\n1. View all enquiries\n" +
-                          "2. View enquiries within managed projects" +
+                          "2. View enquiries within managed projects\n" +
                          "3. reply to enquiry within managed projects\n" +
                          "4. Exit");
     }
@@ -399,7 +399,7 @@ public class testMain {
                                             break;
                                         case 3:
                                             int i = currentApplicant.getEnquiryIndex();
-                                            if(i == 0){
+                                            if(i == -1){
                                                 break;
                                             }
                                             System.out.println("Enter your edited enquiry:");
@@ -408,7 +408,7 @@ public class testMain {
                                             break;
                                         case 4:
                                             int Index = currentApplicant.getEnquiryIndex();
-                                            if (Index == 0){
+                                            if (Index == -1){
                                                 break;
                                             }
                                             Enquiry ER = currentApplicant.getEnquiries().get(Index);
@@ -490,9 +490,7 @@ public class testMain {
                                             break;
                                         case 2:
                                             int i = currentOfficer.getEnquiryIndex();
-                                            System.out.println("Enter your reply to the enquiry:");
-                                            String R = sc.nextLine();
-                                            currentOfficer.replyEnquiry(i, R);
+                                            currentOfficer.replyEnquiry(i);
                                             break;
                                         case 3:
                                             System.out.println("Exit successful");
@@ -770,10 +768,9 @@ public class testMain {
                                             currentManager.viewEnquiries();
                                             break;
                                         case 3:
-                                            int i = currentManager.getEnquiryIndex();
-                                            System.out.println("Enter your reply to the enquiry:");
-                                            String R = sc.nextLine();
-                                            currentManager.replyEnquiry(i, R);
+                                            BTOProject P = currentManager.getProject();
+                                            int i = currentManager.getEnquiryIndex(P);
+                                            currentManager.replyEnquiry(i, P);
                                             break;
                                         case 4:
                                             System.out.println("Exit successful");

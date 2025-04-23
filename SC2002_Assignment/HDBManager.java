@@ -293,11 +293,11 @@ public class HDBManager extends User{
 
 
     //enq func
-    public int getEnquiryIndex(){
+    public int getEnquiryIndex(BTOProject P){
         Scanner sc = new Scanner(System.in);
         int i = 1;
         System.out.println("Select enquiry based on number:");
-        for (Enquiry enquiry : this.getProject().getEnquiries()) {
+        for (Enquiry enquiry : P.getEnquiries()) {
             System.out.print(i+".");
             enquiry.viewEnq();
             i += 1;
@@ -316,12 +316,19 @@ public class HDBManager extends User{
             enquiry.viewEnq();
         }
     }
-    public void replyEnquiry(int index, String newText) {
-        if (index < 0 || index >= this.getProject().getEnquiries().size()) {
+    public void replyEnquiry(int index,BTOProject P) {
+        if (index < 0 || index >= P.getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
             return;
         }
-        this.getProject().getEnquiries().get(index).replyToEnq(newText);
+        if(P.getEnquiries().get(index).getReplied()){
+            System.out.println("Enquiry has already been replied to");
+            return;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter your reply to the enquiry:");
+        String R = sc.nextLine();
+        P.getEnquiries().get(index).replyToEnq(R);
     }
 
     //report
