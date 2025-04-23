@@ -20,10 +20,7 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
                               LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats) {
         boolean inApplicationPeriod = false;
         for(BTOProject P : this.projects){
-            LocalDate today = LocalDate.now();
-            if (!today.isBefore(P.getApplicationOpenDate()) && !today.isAfter(P.getApplicationCloseDate())){
-                inApplicationPeriod = true;
-            }
+            inApplicationPeriod = P.isWithinApplicationPeriod(LocalDate.now());
         }
         if(inApplicationPeriod){
             System.out.println("currently in application period for another project, unable to create new project");
