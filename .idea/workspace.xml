@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ab2704b-4043-4a2a-bf85-608246f1a853" name="Changes" comment="solved some bugs and added manage projects" />
+    <list default="true" id="9ab2704b-4043-4a2a-bf85-608246f1a853" name="Changes" comment="solved some bugs and added manage projects">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/BTOProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/BTOProject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/HDBManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/HDBManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/HDBOfficer.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/HDBOfficer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/testMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/testMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/Applicant.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/Applicant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/Enquiry.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/Enquiry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/HDBManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/HDBManager.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

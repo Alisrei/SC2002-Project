@@ -907,6 +907,14 @@ public class testMain {
                                             currentManager.viewProjects(projects);
                                             break;
                                         case 2:
+                                            boolean inApplicationPeriod = false;
+                                            for(BTOProject P : currentManager.getProjects()){
+                                                inApplicationPeriod = P.isWithinApplicationPeriod(LocalDate.now());
+                                            }
+                                            if(inApplicationPeriod){
+                                                System.out.println("currently in application period for another project, unable to create new project");
+                                                break;
+                                            }
                                             System.out.println("Enter project Name:");
                                             String PN = sc.nextLine();
                                             System.out.println("Enter project neighbourhood:");

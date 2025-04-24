@@ -156,6 +156,7 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
             System.out.println("Booking failed. Please check the unit number.");
         }
         else{
+            A.setBookedUnit(unitNumber);
             A.setStatus(ApplicationStatus.BOOKED);
         }
 

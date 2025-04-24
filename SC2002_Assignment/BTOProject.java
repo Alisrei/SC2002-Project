@@ -66,7 +66,7 @@ public class BTOProject {
     public void setApplicationOpenDate(LocalDate Open){this.applicationOpenDate = Open;}
     public void setApplicationCloseDate(LocalDate Close){this.applicationCloseDate = Close;}
     public void setManagerInCharge(HDBManager M){this.managerInCharge = M;}
-    public void setAssignedOfficers(Object o){}
+    public void setAssignedOfficers(List<HDBOfficer> o){this.assignedOfficers = o;}
     public void setVisibility(Boolean vis){this.visibility = vis;}
     public void addApplication(Application A){this.applications.add(A);}
     public void addRegistration(Registration R){this.registrations.add(R);}
