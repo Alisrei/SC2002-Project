@@ -1,16 +1,80 @@
-To design our BTO Management System, we began by identifying the three main user roles - Applicant, HDB Officer and HDB Manager. Using Object-Oriented thinking, we modeled each role as a separate class that inherits from a common User superclass to enforce the shared attributes such as NRIC, name, password, age and marital status to promote encapsulation. 
-Initial Breakdown of Logical Components:
-User Management: Handles authentication, password change, user type identification
-BTO Project Management: Managed by HDBManager & contains attributes like project name, flat types, availability and application period
-Application Handling: Applicant can apply and withdraw applications, while HDBManager reviews them
-Enquiries: Applicant can ask questions, and HDBOfficer or HDBManager can respond
-Flat Booking: Post-approval actions can be handled by HDBOfficer
-We managed to incorporate a few Object-Oriented (OO) Thinking principles into our code logic when we were thinking of the different components of the project. 
-OO Principles Used:
-Encapsulation: Each class manages its own internal data and exposes methods
-Inheritance: Applicant, HDBOfficer, and HDBManager inherit from User
-Polymorphism: Officers act as both officers and applicants – our method design has some overridden methods to allow for certain methods to behave differently depending on the object’s role context.
-We mapped real-world user cases like “Applicant applies for a flat” or “HDB Manager approves the application” to the classes we created. We did this for most of the test cases and roles that the guidelines stated, and this helped us to align each feature to a specific class and limit scope overlap. As for early visual models, we created flowcharts to help us plan the logic behind user login and role recognition of users, project visibility and filtering, as well as for the application and flat booking logic. These flowcharts ensured clarity before translating logic into code and helped spot potential logical pitfalls. 
+BTO Management System
+Overview
+This BTO (Build-To-Order) Management System is designed to simulate the real-world operations of HDB's flat application process in Singapore. The system supports three main user roles: Applicant, HDB Officer, and HDB Manager, each with distinct responsibilities and access levels.
 
-2.2 Reflection on design trade-off
-We debated whether to use separate methods for each user type’s functions or design polymorphic behaviour using method overriding. In the end, we prioritised clarity and simplicity over full-blown extensibility for this assignment scope. There was also discussion within my group on whether or not we should combine the classes of Applicant and HDBOfficer since HDB Officers inherit applicant capabilities. In the end, we opted to separate them for clearer responsibility segregation even if it meant duplicating some access logic. For this project, although using a database would have made user data management way easier, the requirement forced us to implement file reading and writing from CSVs and text files, both of which added more complexity for us. However, we felt like that requirement pushed us to think more and design better code, which helped us more in the end.
+Built with an Object-Oriented Programming (OOP) approach, the system encapsulates shared behavior and attributes through a hierarchical class structure while promoting code clarity, role segregation, and logical consistency.
+
+Key Features
+User Management
+Handles user authentication, password changes, and user-type recognition.
+
+All users inherit from a base User class which contains shared attributes: NRIC, name, password, age, and marital status.
+
+BTO Project Management
+Managed by HDBManager
+
+Each project has attributes like project name, flat types, availability, and application period.
+
+Application Handling
+Applicants can apply for or withdraw from BTO projects.
+
+HDB Managers can review and process applications.
+
+Enquiries
+Applicants can submit questions or inquiries.
+
+HDB Officers and Managers can respond to inquiries.
+
+Flat Booking
+Post-application, HDB Officers manage flat bookings for successful applicants.
+
+Object-Oriented Design Principles
+Encapsulation
+Each class is responsible for its own internal data and behavior. External access is provided only through well-defined methods.
+
+Inheritance
+The Applicant, HDBOfficer, and HDBManager classes inherit from a common User superclass, which contains shared attributes and methods.
+
+Polymorphism
+Some methods are overridden to exhibit different behaviors depending on the user's role. For example, HDB Officers can perform both applicant and officer actions due to their dual role capabilities.
+
+We applied the Object-Oriented principles we learnt to improve clarity and maintainability.
+
+Single Responsibility Principle (SRP)
+We implemented this in our Application class, as it focuses solely on managing an applicant’s BTO application. This helped us to avoid mixing up logic with the user interface or the flat details – making the application class easier to test and debug.
+
+Open/Closed Principle (OCP)
+We used this when we implemented our User superclass with polymorphic behaviour in Applicant, HDBOfficer and HDBManager class. This allows us to add new user roles, but we do not have to modify the existing code. However, this required careful monitoring when coding the shared methods and overriding behaviours, but made extending this code in the future easier.
+
+Liskov Substitution Principle (LSP)
+This can be seen in our code where any User reference can be safely substituted by an Applicant, HDB Officer, or HDB Manager, with the code running without any hitches. This follows LSP by ensuring that role-based polymorphism works without breaking logic. 
+
+Interface Segregation Principle (ISP)
+Our code contains multiple interfaces that allow the subclasses to only make use of methods they are in need of. 
+
+Dependency Inversion Principle (DIP)
+Our code implemented this Principle by separating the input and output logic from the core code. The application and project code do not rely directly on how the file is formatted, which makes future enhancements very easy. 
+
+Data Handling: A database would have made user data management more efficient. However, due to assignment constraints, we implemented file handling via CSVs and text files. While challenging, this requirement ultimately improved our problem-solving and design skills.
+
+File Structure (Example)
+bash
+Copy
+Edit
+/bto-management-system
+│
+├── user.py               # Base User class and derived roles
+├── bto_project.py        # Project creation and management
+├── application.py        # Application submission and processing
+├── enquiry.py            # Enquiry and response logic
+├── booking.py            # Flat booking system
+├── utils.py              # File I/O utilities
+├── main.py               # Entry point and UI routing
+├── data/
+│   ├── users.csv
+│   ├── projects.csv
+│   └── applications.txt
+└── README.md
+Final Thoughts
+This project challenged us to translate abstract OOP concepts into a realistic simulation of a public housing system. Despite design challenges and constraints like file-based storage, the experience reinforced good design practices, such as modularization, role-based access, and planning-before-coding.
+
