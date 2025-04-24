@@ -6,7 +6,7 @@ public class BTOFlats {
     private int threeRoomFlats;
     private List<String> availableFlats; // Stores unit numbers
 
-
+    //constructor
     public BTOFlats(int twoRoomFlats, int threeRoomFlats) {
         this.twoRoomFlats = twoRoomFlats;
         this.threeRoomFlats = threeRoomFlats;
@@ -15,7 +15,6 @@ public class BTOFlats {
         // Automatically generate unit numbers
         generateUnitNumbers();
     }
-
     private void generateUnitNumbers() {
         for (int i = 1; i <= twoRoomFlats; i++) {
             availableFlats.add("2R-" + i);
@@ -24,6 +23,7 @@ public class BTOFlats {
             availableFlats.add("3R-" + i);
         }
     }
+
     //getters
     public int getTwoRoomFlats() {return twoRoomFlats;}
     public int getThreeRoomFlats() {return threeRoomFlats;}
@@ -33,7 +33,7 @@ public class BTOFlats {
     public void setThreeRoomFlats(int threes){this.threeRoomFlats = threes;}
 
 
-
+    //flat booking
     public boolean bookFlat(String unitNumber) {
         if(this.availableFlats.contains(unitNumber)){
             if(unitNumber.substring(0,2).equals("2R")){
@@ -42,15 +42,19 @@ public class BTOFlats {
             if(unitNumber.substring(0,2).equals("3R")){
                 this.threeRoomFlats -= 1;
             }
-            return this.availableFlats.remove(unitNumber);
+            if(this.availableFlats.remove(unitNumber)){
+                System.out.println("Flat " + unitNumber + " successfully booked.");
+                return true;
+            }
         }
-        else{return false;}
+        System.out.println("Flat " + unitNumber + " is unavailable or does not exist.");
+        return false;
     }
-
     public void addRoom(String F){
         this.availableFlats.add(F);
     }
 
+    //view rooms
     public void displayAvailableFlats() {
         System.out.println("Available Flats: " + availableFlats);
     }

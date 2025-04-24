@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class HDBOfficer extends Applicant{
+public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, EnquiryView{
     private BTOProject assignedProject;
     private Registration registration;
-    private boolean registrationApproved;
 
-
+    //constructor
     public HDBOfficer(String nric, String name, String password, int age, boolean isMarried) {
         super(nric, name, password, age, isMarried); // calls the user constructor
     }
@@ -19,22 +18,18 @@ public class HDBOfficer extends Applicant{
     public Registration getRegistration(){return this.registration;}
     //setters
     public void setAssignedProject(BTOProject assignedProject) {this.assignedProject = assignedProject;}
+    public void setRegistration(Registration Registration){this.registration = Registration;}
 
-    public boolean registerAsOfficer(BTOProject project) {
-        if (this.assignedProject != null) {
-            System.out.println("You are already assigned to a project.");
-            return false;
-        }
-        else if(this.getApplication().getProject().equals(project)){
+    //officer project duties
+    public void registerAsOfficer(BTOProject project) {
+        if(this.getApplication() != null && this.getApplication().getProject().equals(project)){
             System.out.println("You are already applying for this project as an applicant.");
-            return false;
         }
         else {
             this.registration = new Registration(this.getName(),this,project);
             project.addRegistration(this.registration);
             this.setAssignedProject(project);
             System.out.println("Registration request created");
-            return true;
         }
     }
     public BTOProject selectProjectforRegistration(List<BTOProject> allprojects){
@@ -49,7 +44,6 @@ public class HDBOfficer extends Applicant{
         sc.nextLine();
         return allprojects.get(choice - 1);
     }
-
     public void viewAssignedProjectDetails() {
         if (assignedProject != null) {
             assignedProject.displayProjectDetails();
@@ -57,8 +51,15 @@ public class HDBOfficer extends Applicant{
             System.out.println("No assigned project.");
         }
     }
+
+
+    //officer application handling
     public void viewAssignedProjectApplicationsForBooking(){
         if (assignedProject != null) {
+            if(assignedProject.getApplications().isEmpty()){
+                System.out.println("No applications");
+                return;
+            }
             int i = 1;
             for(Application A : assignedProject.getApplications()){
                 if(A.getStatus() == ApplicationStatus.SUCCESSFUL){
@@ -128,7 +129,6 @@ public class HDBOfficer extends Applicant{
 
 
     }
-
     public void handleFlatBooking() {
         if (assignedProject == null) {
             System.out.println("You are not assigned to any project.");
@@ -136,7 +136,7 @@ public class HDBOfficer extends Applicant{
         }
         Application A = this.selectApplicationforBooking();
         String unitNumber = this.selectunit(A);
-        boolean success = assignedProject.bookFlat(unitNumber);
+        boolean success = assignedProject.getFlats().bookFlat(unitNumber);
         if (!success) {
             System.out.println("Booking failed. Please check the unit number.");
         }
@@ -148,7 +148,9 @@ public class HDBOfficer extends Applicant{
 
     //overwrite applicant methods to exclude assigned project
     public void viewProjects(List<BTOProject> allProjects) {
-        System.out.println("******** Eligible BTO Projects ********");
+        if (allProjects.isEmpty()){System.out.println("No projects created yet");}
+        System.out.println("\n\n******** Eligible BTO Projects ********");
+        boolean found = false;
         int i = 1;
         for (BTOProject project : allProjects) {
             if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
@@ -158,14 +160,21 @@ public class HDBOfficer extends Applicant{
                             && isEligibleForProject(project)) {
                 System.out.println(i + "." + project.getProjectName());
                 i += 1;
+                found = true;
             }
         }
+        if(!found){System.out.println("No eligible projects");}
     }
     public BTOProject selectProject(List<BTOProject> allProjects){
+        if (allProjects.isEmpty()){
+            System.out.println("No projects created yet");
+            return null;
+        }
         Scanner sc = new Scanner(System.in);
         List<BTOProject> temp = new ArrayList<>();
         System.out.println("Select desired project based on number:");
         int i = 1;
+        boolean found = false;
         for (BTOProject project : allProjects) {
             if (//project.isWithinApplicationPeriod(java.time.LocalDate.now()) &&
                 //for debug
@@ -175,11 +184,32 @@ public class HDBOfficer extends Applicant{
                 System.out.println(i + "." + project.getProjectName());
                 temp.add(project);
                 i += 1;
+                found = true;
             }
+        }
+        if(!found){
+            System.out.println("No available projects found");
+            return null;
         }
         int choice = sc.nextInt();
         sc.nextLine();
         return temp.get(choice-1);
+    }
+    public void applyForProject(BTOProject project) {
+        if (this.getApplication() != null ) {
+            System.out.println("You have already applied for a project.");
+            return;
+        }
+        if(project == null){
+            System.out.println("Therefore no project to apply for.");
+            return;
+        }
+        if (!isEligibleForProject(project)) {
+            System.out.println("You do not meet the eligibility criteria for this project.");
+            return;
+        }
+        this.setApplication(new Application(this.getName(), this, project));
+        System.out.println("Application submitted for project: " + project.getProjectName());
     }
     private boolean isEligibleForProject(BTOProject project) {
         if (getAge() < 21){ return false;}
@@ -187,23 +217,10 @@ public class HDBOfficer extends Applicant{
         if (!isMarried() && getAge() >= 35 && !project.getFlatTypes().contains(FlatType.TWOROOM)) {
             return false;
         }
-        if(project.equals(this.assignedProject)){return false;}
-        return true;
-    }
-    public boolean applyForProject(BTOProject project) {
-        if (this.getApplication() != null ) {
-            System.out.println("You have already applied for a project.");
-            return false;
-        }
-        if (!isEligibleForProject(project)) {
-            System.out.println("You do not meet the eligibility criteria for this project.");
-            return false;
-        }
-        this.setApplication(new Application(this.getName(), this, project));
-        System.out.println("Application submitted for project: " + project.getProjectName());
-        return true;
+        return !project.equals(this.assignedProject);
     }
 
+    //officer enquiry methods
     public int getEnquiryIndex(){
         Scanner sc = new Scanner(System.in);
         int i = 1;
@@ -217,20 +234,29 @@ public class HDBOfficer extends Applicant{
         sc.nextLine();
         return choice-1;
     }
-
     public void viewEnquiries() {
         for (Enquiry enquiry : this.getAssignedProject().getEnquiries()) {
             enquiry.viewEnq();
         }
     }
-
-    public void replyEnquiry(int index, String newText) {
-        if (index < 0 || index >= this.getAssignedProject().getEnquiries().size()) {
+    public void replyEnquiry(int index, BTOProject P) {
+        if (index < 0 || index >= P.getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
             return;
         }
-        this.getAssignedProject().getEnquiries().get(index).replyToEnq(newText);
+        if(P.getEnquiries().get(index).getReplied()){
+            System.out.println("Enquiry has already been replied to");
+            return;
+        }
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter your reply to the enquiry:");
+        String R = sc.nextLine();
+        P.getEnquiries().get(index).replyToEnq(R);
+
     }
+
+
+
     public boolean isOfficerOfProject(BTOProject project) {
         return assignedProject != null && assignedProject.equals(project);
     }

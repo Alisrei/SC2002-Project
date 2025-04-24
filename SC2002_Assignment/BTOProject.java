@@ -19,9 +19,11 @@ public class BTOProject {
     private static final int MAX_OFFICERS = 10;
     private Boolean visibility;
 
+
+    //constructor
     public BTOProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                       LocalDate applicationCloseDate, HDBManager managerInCharge,
-                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats, Boolean V)
+                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats)
     {
         this.projectName = projectName;
         this.neighborhood = neighborhood;
@@ -34,7 +36,13 @@ public class BTOProject {
         this.applications = new ArrayList<>();
         this.registrations = new ArrayList<>();
         this.enquiries = new ArrayList<>();
-        this.visibility = V;
+        LocalDate today = LocalDate.now();
+        if (today.isAfter(applicationOpenDate) && today.isBefore(applicationCloseDate)){
+            this.visibility = true;
+        }
+        else {
+            this.visibility = false;
+        }
     }
     //getters
     public String getProjectName(){return projectName;}
@@ -58,15 +66,22 @@ public class BTOProject {
     public void setApplicationOpenDate(LocalDate Open){this.applicationOpenDate = Open;}
     public void setApplicationCloseDate(LocalDate Close){this.applicationCloseDate = Close;}
     public void setManagerInCharge(HDBManager M){this.managerInCharge = M;}
-    public void setAssignedOfficers(){}
+    public void setAssignedOfficers(Object o){}
     public void setVisibility(Boolean vis){this.visibility = vis;}
     public void addApplication(Application A){this.applications.add(A);}
     public void addRegistration(Registration R){this.registrations.add(R);}
     public void addEnquiry(Enquiry E){this.enquiries.add(E);}
+    public boolean addOfficer(HDBOfficer officer) {
+        if (assignedOfficers.size() < MAX_OFFICERS) {
+            assignedOfficers.add(officer);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
-
-
+    //view proj
     public void displayProjectDetails() {
         System.out.println("Project Name: " + this.projectName);
         System.out.println("Neighborhood: " + this.neighborhood);
@@ -94,31 +109,17 @@ public class BTOProject {
         flats.displayAvailableFlats();
     }
 
-    public boolean bookFlat(String unitNumber) {
-        if (flats.bookFlat(unitNumber)) {
-            System.out.println("Flat " + unitNumber + " successfully booked.");
-            return true;
-        } else {
-            System.out.println("Flat " + unitNumber + " is unavailable or does not exist.");
-            return false;
-        }
-    }
-
     // Checks if within application period
     public boolean isWithinApplicationPeriod(LocalDate date) {
         return (date.isEqual(applicationOpenDate) || date.isAfter(applicationOpenDate)) &&
                 (date.isEqual(applicationCloseDate) || date.isBefore(applicationCloseDate));
     }
 
-    // Adds an officer if the max limit is not exceeded
-    public boolean addOfficer(HDBOfficer officer) {
-        if (assignedOfficers.size() < MAX_OFFICERS) {
-            assignedOfficers.add(officer);
-            return true;
-        } else {
-            return false;
-        }
+    //check if deletable
+    public boolean deletable(){
+        return this.applications.isEmpty() && this.getRegistrations().isEmpty() && this.enquiries.isEmpty() && this.assignedOfficers.isEmpty();
     }
+
 
     // Removes an officer by ID
     public boolean removeOfficer(String officerNric) {

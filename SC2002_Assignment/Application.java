@@ -7,8 +7,9 @@ public class Application {
     private FlatType flatTypeBooking;
     private String bookedUnit;
     private ApplicationStatus status;
+    private boolean withdrawalRequested;
 
-    // Constructor, getters, setters
+    // Constructor
     public Application(String applicationId, Applicant applicant, BTOProject project) {
         this.applicationId = applicationId;
         this.applicant = applicant;
@@ -26,6 +27,7 @@ public class Application {
     public FlatType getFlatTypeBooking(){return this.flatTypeBooking;}
     public String getBookedUnit() {return bookedUnit;}
     public ApplicationStatus getStatus(){return this.status;}
+    public boolean getWithdrawalRequested(){return this.withdrawalRequested;}
     //setters
     public void setApplicationId(String I){this.applicationId = I;}
     public void setApplicant(Applicant A){this.applicant = A;}
@@ -33,14 +35,17 @@ public class Application {
     public void setFlatTypeBooking(FlatType T){this.flatTypeBooking = T;}
     public void setBookedUnit(String BU) {this.bookedUnit = BU;}
     public void setStatus(ApplicationStatus S){this.status = S;}
+    public void setWithdrawalRequested(boolean W) {this.withdrawalRequested = W;}
 
+
+    // application methods
     public void displayApplication(){
         System.out.println("ApplicantionID:" + this.getApplicationId() + "\n" +
                            "Project of application:" + this.getProject().getProjectName() + "\n" +
                            "Booking choice:" + this.getFlatTypeBooking() + "\n" +
-                           "Application status:" + this.getStatus());
+                           "Application status:" + this.getStatus() + "\n" +
+                           "Booked unit:" + this.getBookedUnit());
     }
-
     public void deleteApplication(){
         this.getProject().getFlats().addRoom(this.getBookedUnit());
         this.setApplicationId(null);
