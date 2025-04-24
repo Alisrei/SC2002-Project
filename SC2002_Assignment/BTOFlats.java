@@ -53,7 +53,7 @@ public class BTOFlats {
     public void addRoom(String F){
         this.availableFlats.add(F);
     }
-    
+
     //view rooms
     public void displayAvailableFlats() {
         System.out.println("Available Flats: " + availableFlats);

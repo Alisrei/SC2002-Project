@@ -371,33 +371,45 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
 
     public List<BTOProject> filterMyProjects(String filterType, String value) {
         List<BTOProject> filteredProjects = new ArrayList<>();
-        
-        Collection<BTOProject> myProjects;
+
+        // Assuming 'myProjects' is a method or a field that retrieves all the projects
+        Collection<BTOProject> myProjects =this.projects; // Replace this with your actual source
+
+        if (myProjects == null) {
+            return filteredProjects; // Return empty list if source is null
+        }
+
         switch (filterType.toLowerCase()) {
             case "name":
                 filteredProjects = myProjects.stream()
-                    .filter(p -> p.getProjectName().toLowerCase().contains(value.toLowerCase()))
-                    .collect(Collectors.toList());
+                        .filter(p -> p.getProjectName() != null &&
+                                p.getProjectName().toLowerCase().contains(value.toLowerCase()))
+                        .collect(Collectors.toList());
                 break;
+
             case "neighborhood":
                 filteredProjects = myProjects.stream()
-                    .filter(p -> p.getNeighborhood().toLowerCase().contains(value.toLowerCase()))
-                    .collect(Collectors.toList());
+                        .filter(p -> p.getNeighborhood() != null &&
+                                p.getNeighborhood().toLowerCase().contains(value.toLowerCase()))
+                        .collect(Collectors.toList());
                 break;
+
             case "open":
-                // Filter projects that are currently open for application
                 LocalDate now = LocalDate.now();
                 filteredProjects = myProjects.stream()
-                    .filter(p -> now.isAfter(p.getApplicationOpenDate()) && now.isBefore(p.getApplicationCloseDate()))
-                    .collect(Collectors.toList());
+                        .filter(p -> p.getApplicationOpenDate() != null && p.getApplicationCloseDate() != null &&
+                                (now.isEqual(p.getApplicationOpenDate()) || now.isAfter(p.getApplicationOpenDate())) &&
+                                (now.isBefore(p.getApplicationCloseDate()) || now.isEqual(p.getApplicationCloseDate())))
+                        .collect(Collectors.toList());
                 break;
+
             default:
-                return myProjects;
+                filteredProjects = new ArrayList<>(myProjects); // If no valid filter, return all
         }
-        
+
         return filteredProjects;
     }
-    
+
     /**
      * Display filtered projects with a menu interface
      */
@@ -639,49 +651,5 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         
         System.out.println("Report exported successfully.");
     }
-    
-    
-    public void managerMenu() {
-        Scanner sc = new Scanner(System.in);
-        int choice;
-        
-        do {
-            System.out.println("\n=== HDB Manager Menu ===");
-            System.out.println("1. View all projects");
-            System.out.println("2. View my projects");
-            System.out.println("3. Filter my projects");
-            System.out.println("4. Generate applicant report");
-            System.out.println("5. Create new project");
-            System.out.println("0. Logout");
-            
-            System.out.print("Enter your choice: ");
-            choice = sc.nextInt();
-            sc.nextLine(); // Clear buffer
-            
-            switch (choice) {
-                case 1:
-                    // Using the existing method from the original code
-                    viewAllProjects(projects);
-                    break;
-                case 2:
-                    viewMyProjects();
-                    break;
-                case 3:
-                    displayFilteredProjects();
-                    break;
-                case 4:
-                    generateFilteredReport();
-                    break;
-                case 5:
-                    // Would call the createProject method
-                    System.out.println("Create project functionality");
-                    break;
-                case 0:
-                    System.out.println("Logging out...");
-                    break;
-                default:
-                    System.out.println("Invalid choice!");
-            }
-        } while (choice != 0);
-    }
+
 }
