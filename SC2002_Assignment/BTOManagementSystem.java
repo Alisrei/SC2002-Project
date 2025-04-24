@@ -7,7 +7,12 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * BTOManagementSystem is a system for managing the data related to BTO (Build-To-Order) projects, applications, 
+ * registrations, and other related entities like applicants, officers, managers, and enquiries. This class handles 
+ * the loading and saving of data from and to CSV files and manages the relationships between various entities in the 
+ * system.
+ */
 public class BTOManagementSystem {
     public static List<Applicant> applicants = new ArrayList<>();
     public static List<HDBManager> managers = new ArrayList<>();
