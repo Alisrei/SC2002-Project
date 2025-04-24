@@ -312,7 +312,6 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         if(R.getProject().addOfficer(officer)){
             R.setAccepted(Boolean.TRUE);
             System.out.println("Officer " + R.getOfficer().getName() + " approved for project " + R.getProject().getProjectName() + ".");
-            R.getProject().removeOfficer(officer);
             R.getProject().getRegistrations().remove(R);
         }
         else{
