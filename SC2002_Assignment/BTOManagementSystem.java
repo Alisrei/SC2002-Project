@@ -1,14 +1,13 @@
 package SC2002_Assignment;
 
 import java.io.*;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class testMain {
+public class BTOManagementSystem {
     public static List<Applicant> applicants = new ArrayList<>();
     public static List<HDBManager> managers = new ArrayList<>();
     public static List<HDBOfficer> officers = new ArrayList<>();
