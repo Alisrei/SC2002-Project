@@ -17,13 +17,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/Enquiries.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="/ManagerList.csv">
           <value>
             <Attribute>
