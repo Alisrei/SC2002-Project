@@ -3,6 +3,7 @@ package SC2002_Assignment;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -907,24 +908,30 @@ public class testMain {
                                             currentManager.viewProjects(projects);
                                             break;
                                         case 2:
-                                            boolean inApplicationPeriod = false;
-                                            for(BTOProject P : currentManager.getProjects()){
-                                                inApplicationPeriod = P.isWithinApplicationPeriod(LocalDate.now());
-                                            }
-                                            if(inApplicationPeriod){
-                                                System.out.println("currently in application period for another project, unable to create new project");
-                                                break;
-                                            }
+                                            LocalDate Sdate = null;
+                                            LocalDate Edate = null;
                                             System.out.println("Enter project Name:");
                                             String PN = sc.nextLine();
                                             System.out.println("Enter project neighbourhood:");
                                             String N = sc.nextLine();
-                                            System.out.print("Enter application start date (YYYY-MM-DD): ");
-                                            String SD = sc.nextLine();
-                                            LocalDate Sdate = LocalDate.parse(SD);
-                                            System.out.print("Enter application end date (YYYY-MM-DD): ");
-                                            String ED = sc.nextLine();
-                                            LocalDate Edate = LocalDate.parse(ED);
+                                            while (Sdate == null) {
+                                                System.out.print("Enter application start date (YYYY-MM-DD): ");
+                                                String SD = sc.nextLine();
+                                                try {
+                                                    Sdate = LocalDate.parse(SD);
+                                                } catch (DateTimeParseException e) {
+                                                    System.out.println("Invalid date format. Please enter the date in the format YYYY-MM-DD.");
+                                                }
+                                            }
+                                            while (Edate == null) {
+                                                System.out.print("Enter application end date (YYYY-MM-DD): ");
+                                                String ED = sc.nextLine();
+                                                try {
+                                                    Edate = LocalDate.parse(ED);
+                                                } catch (DateTimeParseException e) {
+                                                    System.out.println("Invalid date format. Please enter the date in the format YYYY-MM-DD.");
+                                                }
+                                            }
                                             System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
                                             int FC = sc.nextInt();
                                             sc.nextLine();
@@ -993,12 +1000,26 @@ public class testMain {
                                                         currentManager.editProject(P,newNeighbourhood);
                                                         break;
                                                     case 3:
-                                                        System.out.print("Enter application start date (YYYY-MM-DD): ");
-                                                        String NSD = sc.nextLine();
-                                                        LocalDate NSdate = LocalDate.parse(NSD); // Parses ISO format
-                                                        System.out.print("Enter application end date (YYYY-MM-DD): ");
-                                                        String NED = sc.nextLine();
-                                                        LocalDate NEdate = LocalDate.parse(NED); // Parses ISO format
+                                                        LocalDate NSdate = null;
+                                                        LocalDate NEdate = null;
+                                                        while (NSdate == null) {
+                                                            System.out.print("Enter application start date (YYYY-MM-DD): ");
+                                                            String NSD = sc.nextLine();
+                                                            try {
+                                                                NSdate = LocalDate.parse(NSD); // Parses ISO format
+                                                            } catch (DateTimeParseException e) {
+                                                                System.out.println("Invalid date format. Please enter the date in the format YYYY-MM-DD.");
+                                                            }
+                                                        }
+                                                        while (NEdate == null) {
+                                                            System.out.print("Enter application end date (YYYY-MM-DD): ");
+                                                            String NED = sc.nextLine();
+                                                            try {
+                                                                NEdate = LocalDate.parse(NED); // Parses ISO format
+                                                            } catch (DateTimeParseException e) {
+                                                                System.out.println("Invalid date format. Please enter the date in the format YYYY-MM-DD.");
+                                                            }
+                                                        }
                                                         currentManager.editProject(P,NSdate,NEdate);
                                                         break;
                                                     case 4:
