@@ -359,7 +359,6 @@ public class BTOProject {
     public boolean deletable() {
         return this.applications.isEmpty() && this.registrations.isEmpty() && this.enquiries.isEmpty() && this.assignedOfficers.isEmpty();
     }
-}
 
     /**
      * Removes an officer from the list of assigned officers using their NRIC.
