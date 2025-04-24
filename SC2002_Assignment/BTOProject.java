@@ -66,7 +66,7 @@ public class BTOProject {
     public void setApplicationOpenDate(LocalDate Open){this.applicationOpenDate = Open;}
     public void setApplicationCloseDate(LocalDate Close){this.applicationCloseDate = Close;}
     public void setManagerInCharge(HDBManager M){this.managerInCharge = M;}
-    public void setAssignedOfficers(){}
+    public void setAssignedOfficers(Object o){}
     public void setVisibility(Boolean vis){this.visibility = vis;}
     public void addApplication(Application A){this.applications.add(A);}
     public void addRegistration(Registration R){this.registrations.add(R);}
@@ -113,6 +113,11 @@ public class BTOProject {
     public boolean isWithinApplicationPeriod(LocalDate date) {
         return (date.isEqual(applicationOpenDate) || date.isAfter(applicationOpenDate)) &&
                 (date.isEqual(applicationCloseDate) || date.isBefore(applicationCloseDate));
+    }
+
+    //check if deletable
+    public boolean deletable(){
+        return this.applications.isEmpty() && this.getRegistrations().isEmpty() && this.enquiries.isEmpty() && this.assignedOfficers.isEmpty();
     }
 
 

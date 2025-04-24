@@ -33,25 +33,22 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
     public void editProjectname(BTOProject project, String newName) {
         project.setProjectName(newName);
         System.out.println("project name changed successfully");
-        return;
         }
     public void editProject(BTOProject project, String newNeighborhood) {
         project.setNeighborhood(newNeighborhood);
         System.out.println("project neighbourhood changed successfully");
-        return;
         }
     public void editProject(BTOProject project, LocalDate newApplicationOpenDate, LocalDate newApplicationCloseDate) {
         project.setApplicationOpenDate(newApplicationOpenDate);
         project.setApplicationCloseDate(newApplicationCloseDate);
         System.out.println("application open and close dates changed successfully");
-        return;
+
     }
     public void editProject(BTOProject project, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
         project.setFlatTypes(newFlatTypes);
         project.getFlats().setTwoRoomFlats(twoRoomFlats);
         project.getFlats().setThreeRoomFlats(threeRoomFlats);
         System.out.println("Project flat types updated successfully.");
-        return;
     }//do we need this?
     public void editProject(BTOProject project, boolean v) {
         project.setVisibility(v);
@@ -62,16 +59,27 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         else {
             System.out.println("Off");
         }
-        return;
     }
     public void deleteProject(BTOProject project) {
-        projects.remove(project);
-        project = null;
-        System.out.println("Project " + project.getProjectName() + " deleted successfully.");
-    }//incomplete
+        if(project.deletable()){
+            projects.remove(project);
+            project.setVisibility(null);
+            project.setFlats(null);
+            project.setNeighborhood(null);
+            project.setFlatTypes(null);
+            project.setApplicationCloseDate(null);
+            project.setApplicationOpenDate(null);
+            project.setAssignedOfficers(null);
+            project.setManagerInCharge(null);
+            System.out.println("Project " + project.getProjectName() + " deleted successfully.");
+            project.setProjectName(null);
+        }
+
+    }
     public void addProject(BTOProject p){
         this.projects.add(p);
     }
+    public List<BTOProject> getProjects(){return this.projects;}
     public BTOProject getProject(){
         if(this.projects.isEmpty()){
             System.out.println("No managed projects");
@@ -254,13 +262,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             i += 1;
         }
     }
-    public List<Registration> viewUnacceptedRegistrations(BTOProject P){
+    public void viewUnacceptedRegistrations(BTOProject P){
         if(P == null){
-            return null;
+            return;
         }
         if(P.getRegistrations().isEmpty()){
             System.out.println("Project has no Registrations yet.");
-            return null;
+            return;
         }
         boolean found = false;
         List<Registration> UR = new ArrayList<>();
@@ -276,9 +284,7 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
         if (!found){
             System.out.println("1. No pending Withdrawals in project");
-            return null;
         }
-        return UR;
     }
     public Registration getRegistrations(BTOProject P){
         if(P.getRegistrations().isEmpty()){return null;}

@@ -100,18 +100,18 @@ public class Applicant extends User implements ViewProjects,EnquiryCreateEditDel
     }
 
     //flat booking methods
-    public boolean bookFlat() {
+    public void bookFlat() {
         if (this.application == null){
             System.out.println("You have not applied for a project.");
-            return false;
+            return;
         }
         if (this.application.getStatus() != ApplicationStatus.SUCCESSFUL) {
             System.out.println("You are not eligible to book a flat.");
-            return false;
+            return;
         }
         if (this.getApplication().getFlatTypeBooking() != null) {
             System.out.println("You have already booked a flat.");
-            return false;
+            return;
         }
 
         boolean available = false;
@@ -125,12 +125,11 @@ public class Applicant extends User implements ViewProjects,EnquiryCreateEditDel
 
         if (!available) {
             System.out.println("Selected flat type is unavailable.");
-            return false;
+            return;
         }
 
         this.getApplication().setFlatTypeBooking(flatType);
         System.out.println("Successfully created booking for " + flatType.getDescription());
-        return true;
     }
     public FlatType selectFlatType(){
         Scanner sc = new Scanner(System.in);

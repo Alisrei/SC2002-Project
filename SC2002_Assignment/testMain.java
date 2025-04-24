@@ -162,8 +162,7 @@ public class testMain {
             System.err.println("Error parsing project data: " + e.getMessage());
         }
     }
-    private static void loadApplications(String filename){DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/M/yy");
-
+    private static void loadApplications(String filename){
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             boolean firstLine = true;
@@ -271,7 +270,6 @@ public class testMain {
 
                 // If accepted, link officer to project
                 if (registration.getAccepted()) {
-                    project.addOfficer(officer);
                     officer.setAssignedProject(project);
                     officer.setRegistration(registration);
                 }
@@ -326,7 +324,6 @@ public class testMain {
                 // Link to applicant and project
                 applicant.getEnquiries().add(enquiry);
                 enquiries.add(enquiry);
-                project.addEnquiry(enquiry); // Ensure project also gets the enquiry
             }
         } catch (IOException e) {
             System.err.println("Error reading enquiries file: " + e.getMessage());
@@ -536,30 +533,7 @@ public class testMain {
         return map;
     }
 
-    // Combined HashMap of all user types
-    public static HashMap<String, String> createCombinedMap(List<Applicant> applicants, List<HDBOfficer> officers, List<HDBManager> managers) {
-
-    HashMap<String, String> combinedMap = new HashMap<>();
-
-    // Add all applicants
-    for (Applicant applicant : applicants) {
-        combinedMap.put(applicant.getNric(), applicant.getPassword());
-    }
-
-    // Add all officers
-    for (HDBOfficer officer : officers) {
-        combinedMap.put(officer.getNric(), officer.getPassword());
-    }
-
-    // Add all managers
-    for (HDBManager manager : managers) {
-        combinedMap.put(manager.getNric(), manager.getPassword());
-    }
-
-    return combinedMap;
-}
     //get applicant from list
-
     public static Applicant getApplicant(List<Applicant> applicants, String NRIC){
         Applicant X = null;
         for(Applicant applicant : applicants){
@@ -606,22 +580,28 @@ public class testMain {
         }
     }
     public static void applicantMenu(){
-        System.out.println("\n\n1. View available projects\n" +
-                           "2. Apply for project\n" +
-                           "3. View applied project\n" +
-                           "4. View application\n" +
-                           "5. Request application withdrawal\n" +
-                           "6. Book flats\n" +
-                           "7. manage enquiries\n" +
-                           "8. Change password\n" +
-                           "9. Logout");
+        System.out.println("""
+                
+                
+                1. View available projects
+                2. Apply for project
+                3. View applied project
+                4. View application
+                5. Request application withdrawal
+                6. Book flats
+                7. manage enquiries
+                8. Change password
+                9. Logout""");
     }
     public static void applicantEnquiryMenu(){
-        System.out.println("\n\n1. Create enquiry\n" +
-                           "2. View enquiries\n" +
-                           "3. Edit enquiry\n" +
-                           "4. Delete enquiry\n" +
-                           "5. Exit");
+        System.out.println("""
+                
+                
+                1. Create enquiry
+                2. View enquiries
+                3. Edit enquiry
+                4. Delete enquiry
+                5. Exit""");
     }
     public static void officerMenu(){
         System.out.println("\n\n1. Register for project team\n" +
@@ -635,24 +615,33 @@ public class testMain {
                            "9. Logout" );
     }
     public static void officerEnquiryMenu(){
-        System.out.println("\n\n1. View enquiries\n" +
-                           "2. reply to enquiry\n" +
-                           "3. Exit");
+        System.out.println("""
+                
+                
+                1. View enquiries
+                2. reply to enquiry
+                3. Exit""");
     }
     public static void managerMenu(){
-        System.out.println("\n\n1. Manage projects\n" +
-                           "2. Manage applications\n" +
-                           "3. Manage registrations\n" +
-                           "4. Manage enquiries\n" +
-                           "5. Generate report\n" +
-                           "6. Change password\n" +
-                           "7. Logout");
+        System.out.println("""
+                
+                
+                1. Manage projects
+                2. Manage applications
+                3. Manage registrations
+                4. Manage enquiries
+                5. Generate report
+                6. Change password
+                7. Logout""");
     }
     public static void managerEnquiryMenu() {
-        System.out.println("\n\n1. View all enquiries\n" +
-                          "2. View enquiries within managed projects\n" +
-                         "3. reply to enquiry within managed projects\n" +
-                         "4. Exit");
+        System.out.println("""
+                
+                
+                1. View all enquiries
+                2. View enquiries within managed projects
+                3. reply to enquiry within managed projects
+                4. Exit""");
     }
 
     public static void main(String[] args) {
@@ -668,7 +657,7 @@ public class testMain {
         boolean ProgramOn = true;
         while (ProgramOn) {
             System.out.println("Select user class to login");
-            System.out.println("1. Applicant\n2. HDBOfficer\n3. HDBManager\n4. Exit program");
+            System.out.println("\n1. Applicant\n2. HDBOfficer\n3. HDBManager\n4. Exit program");
             int choice = sc.nextInt();
             sc.nextLine();
             switch (choice) {
@@ -878,12 +867,13 @@ public class testMain {
                             switch (choiceM) {
                                 case 1:
                                     System.out.println("Select choice by number:");
-                                    System.out.println("1.View all projects\n2. Create project\n3. Edit project\n4. Delete project\n5. Exit");
+                                    System.out.println("1. View all projects\n2. Create project\n3. Edit project\n4. Delete project\n5. Exit");
                                     int CP = sc.nextInt();
                                     sc.nextLine();
                                     switch (CP) {
                                         case 1:
                                             currentManager.viewProjects(projects);
+                                            break;
                                         case 2:
                                             System.out.println("Enter project Name:");
                                             String PN = sc.nextLine();
@@ -932,27 +922,8 @@ public class testMain {
                                                     ThreeR = sc.nextInt();
                                                     sc.nextLine();
                                                 }
-                                            System.out.println("Select visibility:\n1. On\n2. Off");
-                                                int V = sc.nextInt();
-                                                sc.nextLine();
-                                                boolean Vis = true;
-                                                boolean x = true;
-                                                while (x){
-                                                    switch (V){
-                                                        case 1:
-                                                            Vis = true;
-                                                            x = false;
-                                                            break;
-                                                        case 2:
-                                                            Vis = false;
-                                                            x = false;
-                                                            break;
-                                                        default:
-                                                            System.out.println("invalid choice please try again");
-                                                            break;
-                                                    }
-                                                }
                                             currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR);
+                                            projects.add(currentManager.getProjects().get(currentManager.getProjects().size()-1));
                                             break;
                                         case 3:
                                             BTOProject P = currentManager.getProject();
@@ -1054,8 +1025,29 @@ public class testMain {
                                             }
                                             break;
                                         case 4:
-                                            currentManager.deleteProject(currentManager.getProject());
-                                            //abit sus ngl
+                                            BTOProject p = currentManager.getProject();
+                                            if (p.deletable()){
+                                                System.out.println("Please confirm to delete this project\n1. Confirm\n2. Reject");
+                                                int DC = sc.nextInt();
+                                                switch (DC){
+                                                    case 1:
+                                                        projects.remove(p);
+                                                        currentManager.deleteProject(p);
+                                                        break;
+                                                    case 2:
+                                                        System.out.println("Deletion cancelled");
+                                                        break;
+                                                    default:
+                                                        System.out.println("invalid choice");
+                                                        break;
+                                                }
+                                                break;
+                                            }
+                                            else {
+                                                System.out.println("cannot delete project due to dependencies");
+                                                break;
+                                            }
+
                                         case 5:
                                             System.out.println("Exit successful.");
                                             break;
@@ -1065,7 +1057,7 @@ public class testMain {
                                     //project creation, editing, deletion
                                 case 2:
                                     System.out.println("Select choice by number:");
-                                    System.out.println("1.View all applications for a project\n2. View pending applications\n3. Approve pending applications\n4. Manage application withdrawals\n5. Exit");
+                                    System.out.println("1. View all applications for a project\n2. View pending applications\n3. Approve pending applications\n4. Manage application withdrawals\n5. Exit");
                                     int CA = sc.nextInt();
                                     sc.nextLine();
                                     switch (CA) {

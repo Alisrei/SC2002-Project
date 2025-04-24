@@ -56,7 +56,7 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
     //officer application handling
     public void viewAssignedProjectApplicationsForBooking(){
         if (assignedProject != null) {
-            if(assignedProject.getApplications().size() == 0){
+            if(assignedProject.getApplications().isEmpty()){
                 System.out.println("No applications");
                 return;
             }
