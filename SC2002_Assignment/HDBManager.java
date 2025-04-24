@@ -308,9 +308,12 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             System.out.println("No registrations for the project available");
             return;
         }
-        if(R.getProject().addOfficer(R.getOfficer())){
+        HDBOfficer officer = R.getOfficer();
+        if(R.getProject().addOfficer(officer)){
             R.setAccepted(Boolean.TRUE);
             System.out.println("Officer " + R.getOfficer().getName() + " approved for project " + R.getProject().getProjectName() + ".");
+            R.getProject().removeOfficer(officer);
+            R.getProject().getRegistrations().remove(R);
         }
         else{
             System.out.println("Officer " + R.getOfficer().getName() + " could not be approved for project " + R.getProject().getProjectName() + ".");
