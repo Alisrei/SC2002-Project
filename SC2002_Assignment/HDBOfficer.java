@@ -40,9 +40,23 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
             System.out.println(P.getProjectName());
             i += 1;
         }
-        int choice = sc.nextInt();
-        sc.nextLine();
-        return allprojects.get(choice - 1);
+        BTOProject selectedProject = null;
+        while (selectedProject == null) {
+            System.out.print("Enter your choice (1 to " + allprojects.size() + "): ");
+            try {
+                int choice = sc.nextInt();
+                sc.nextLine();
+                if (choice < 1 || choice > allprojects.size()) {
+                    System.out.println("Invalid choice. Please select a number between 1 and " + allprojects.size() + ".");
+                } else {
+                    selectedProject = allprojects.get(choice - 1);
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                sc.nextLine();
+            }
+        }
+        return selectedProject;
     }
     public void viewAssignedProjectDetails() {
         if (assignedProject != null) {
