@@ -57,10 +57,8 @@ Our code implemented this Principle by separating the input and output logic fro
 
 Data Handling: A database would have made user data management more efficient. However, due to assignment constraints, we implemented file handling via CSVs and text files. While challenging, this requirement ultimately improved our problem-solving and design skills.
 
-File Structure (Example)
-bash
-Copy
-Edit
+File Structure
+<pre> ``` 
 /bto-management-system
 │
 ├── user.py               # Base User class and derived roles
@@ -74,7 +72,7 @@ Edit
 │   ├── users.csv
 │   ├── projects.csv
 │   └── applications.txt
-└── README.md
+└── README.md<pre> ``` 
 Final Thoughts
 This project challenged us to translate abstract OOP concepts into a realistic simulation of a public housing system. Despite design challenges and constraints like file-based storage, the experience reinforced good design practices, such as modularization, role-based access, and planning-before-coding.
 
