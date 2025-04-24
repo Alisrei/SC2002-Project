@@ -675,8 +675,22 @@ public class testMain {
         while (ProgramOn) {
             System.out.println("Select user class to login");
             System.out.println("\n1. Applicant\n2. HDBOfficer\n3. HDBManager\n4. Exit program");
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = -1;
+            boolean validInput = false;
+            while (!validInput) {
+                try{
+                    choice = sc.nextInt();
+                    sc.nextLine();
+                    if (choice >= 1 && choice <= 4) {
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid choice. Please select a valid option (1-4).");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    sc.nextLine();
+                }
+            }
             switch (choice) {
                 case 1:
                     HashMap applicantMap = createApplicantMap(applicants);
