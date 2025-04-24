@@ -530,32 +530,72 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         
         switch (filterChoice) {
             case 1:
-                System.out.print("Enter flat type (TWO_ROOM/THREE_ROOM/etc.): ");
-                String flatTypeStr = sc.nextLine();
-                FlatType flatType = FlatType.valueOf(flatTypeStr.toUpperCase());
+                FlatType flatType = null;
 
+                while (flatType == null) {
+                    System.out.print("Enter flat type (TWO_ROOM/THREE_ROOM): ");
+                    String flatTypeStr = sc.nextLine();
+                    try {
+                        flatType = FlatType.valueOf(flatTypeStr.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid flat type. Try again.");
+                    }
+                }
+
+                FlatType finalFlatType = flatType;
                 filteredApplications = allApplications.stream()
-                        .filter(app -> app.getFlatTypeBooking() == flatType)
+                        .filter(app -> app.getFlatTypeBooking() == finalFlatType)
                         .collect(Collectors.toList());
+
+                System.out.println("Filtered " + filteredApplications.size() + " applications.");
+
                 break;
             case 2:
-                System.out.print("Show married applicants? (true/false): ");
-                boolean isMarried = sc.nextBoolean();
+                boolean isMarried = false;
+                boolean validInput = false;
+                while (!validInput) {
+                    try {
+                        System.out.print("Show married applicants? (true/false): ");
+                        isMarried = Boolean.parseBoolean(sc.nextLine().trim().toLowerCase());
+                        validInput = true;
+                    } catch (Exception e) {
+                        System.out.println("Invalid input. Please enter 'true' or 'false'.");
+                    }
+                }
 
+                boolean finalIsMarried = isMarried;
                 filteredApplications = allApplications.stream()
-                    .filter(app -> app.getApplicant().isMarried() == isMarried)
-                    .collect(Collectors.toList());
+                        .filter(app -> app.getApplicant().isMarried() == finalIsMarried)
+                        .collect(Collectors.toList());
                 break;
             case 3:
-                System.out.print("Enter minimum age: ");
-                int minAge = sc.nextInt();
-                System.out.print("Enter maximum age: ");
-                int maxAge = sc.nextInt();
-                sc.nextLine(); // Clear buffer
-                
+                int minAge = 0, maxAge = 0;
+                while (true) {
+                    try {
+                        System.out.print("Enter minimum age: ");
+                        minAge = Integer.parseInt(sc.nextLine().trim());
+
+                        System.out.print("Enter maximum age: ");
+                        maxAge = Integer.parseInt(sc.nextLine().trim());
+
+                        if (minAge > maxAge) {
+                            System.out.println("Minimum age can't be greater than maximum age. Try again.");
+                            continue;
+                        }
+                        break; // Valid input
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter valid integers for age.");
+                    }
+                }
+
+                int finalMinAge = minAge;
+                int finalMaxAge = maxAge;
                 filteredApplications = allApplications.stream()
-                    .filter(app -> app.getApplicant().getAge() >= minAge && app.getApplicant().getAge() <= maxAge)
-                    .collect(Collectors.toList());
+                        .filter(app -> {
+                            int age = app.getApplicant().getAge();
+                            return age >= finalMinAge && age <= finalMaxAge;
+                        })
+                        .collect(Collectors.toList());
                 break;
             case 4:
                 filteredApplications = allApplications;
