@@ -5,11 +5,11 @@ public enum FlatType {
     THREEROOM(3, "Three Room Flat");
 
     private final int numberOfRooms;
-    private final String price;
+    private final String description;
 
     FlatType(int numberOfRooms, String description) {
         this.numberOfRooms = numberOfRooms;
-        this.price = description;
+        this.description = description;
     }
 
     public int getNumberOfRooms() {
@@ -17,7 +17,7 @@ public enum FlatType {
     }
 
     public String getDescription() {
-        return price;
+        return description;
     }
 }
 

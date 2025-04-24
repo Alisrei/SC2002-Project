@@ -4,12 +4,16 @@ import java.util.List;
 public class BTOFlats {
     private int twoRoomFlats;
     private int threeRoomFlats;
+    private int twoRoomPrice;
+    private int threeRoomPrice;
     private List<String> availableFlats; // Stores unit numbers
 
     //constructor
-    public BTOFlats(int twoRoomFlats, int threeRoomFlats) {
+    public BTOFlats(int twoRoomFlats, int threeRoomFlats, int TwoP, int ThreeP) {
         this.twoRoomFlats = twoRoomFlats;
         this.threeRoomFlats = threeRoomFlats;
+        this.twoRoomPrice = TwoP;
+        this.threeRoomPrice = ThreeP;
         this.availableFlats = new ArrayList<>();
 
         // Automatically generate unit numbers
@@ -27,11 +31,14 @@ public class BTOFlats {
     //getters
     public int getTwoRoomFlats() {return twoRoomFlats;}
     public int getThreeRoomFlats() {return threeRoomFlats;}
+    public int getTwoRoomPrice() {return twoRoomPrice;}
+    public int getThreeRoomPrice() {return threeRoomPrice;}
     public List<String> getAvailableFlats() {return availableFlats;}
     //setters
     public void setTwoRoomFlats(int twos){this.twoRoomFlats = twos;}
     public void setThreeRoomFlats(int threes){this.threeRoomFlats = threes;}
-
+    public void setTwoRoomPrice(int twoRoomPrice) {this.twoRoomPrice = twoRoomPrice;}
+    public void setThreeRoomPrice(int threeRoomPrice) {this.threeRoomPrice = threeRoomPrice;}
 
     //flat booking
     public boolean bookFlat(String unitNumber) {

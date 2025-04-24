@@ -103,19 +103,24 @@ public class testMain {
                 for (int i = 0; i < data.length; i++) {
                     data[i] = data[i].trim().replace("\"", "");
                 }
-                // Parse flat types and counts
+
+                // Parse flat types, counts and prices
                 List<FlatType> flatTypes = new ArrayList<>();
                 int twoRoomFlats = 0;
                 int threeRoomFlats = 0;
+                int twoRoomPrice = 0;
+                int threeRoomPrice = 0;
 
                 if (data[2].equalsIgnoreCase("2-Room")) {
                     flatTypes.add(FlatType.TWOROOM);
                     twoRoomFlats = Integer.parseInt(data[3]);
+                    twoRoomPrice = Integer.parseInt(data[4]);
                 }
 
                 if (data[5].equalsIgnoreCase("3-Room")) {
                     flatTypes.add(FlatType.THREEROOM);
                     threeRoomFlats = Integer.parseInt(data[6]);
+                    threeRoomPrice = Integer.parseInt(data[7]);
                 }
 
                 // Parse dates
@@ -136,9 +141,21 @@ public class testMain {
                     continue;
                 }
 
-                // Create project
-                BTOProject project = new BTOProject(data[0], data[1], openDate, closeDate, manager, flatTypes, twoRoomFlats, threeRoomFlats);
+                // Create project with prices
+                BTOProject project = new BTOProject(
+                        data[0], // project name
+                        data[1], // neighborhood
+                        openDate,
+                        closeDate,
+                        manager,
+                        flatTypes,
+                        twoRoomFlats,
+                        threeRoomFlats,
+                        twoRoomPrice,
+                        threeRoomPrice
+                );
                 manager.addProject(project);
+
                 // Assign officers
                 if (data.length > 12 && !data[12].isEmpty()) {
                     String[] officerNames = data[12].split(",");
@@ -410,13 +427,13 @@ public class testMain {
                 if (project.getFlatTypes().contains(FlatType.TWOROOM)) {
                     type1 = "2-Room";
                     count1 = String.valueOf(project.getFlats().getTwoRoomFlats());
-                    price1 = ""; // Empty since price isn't stored in BTOProject
+                    price1 = String.valueOf(project.getFlats().getTwoRoomPrice());
                 }
 
                 if (project.getFlatTypes().contains(FlatType.THREEROOM)) {
                     type2 = "3-Room";
                     count2 = String.valueOf(project.getFlats().getThreeRoomFlats());
-                    price2 = ""; // Empty since price isn't stored in BTOProject
+                    price2 = String.valueOf(project.getFlats().getThreeRoomPrice());
                 }
 
                 // Prepare officer names
@@ -912,17 +929,24 @@ public class testMain {
                                             }
                                             int TwoR = 0;
                                             int ThreeR = 0;
+                                            int TwoP = 0;
+                                            int ThreeP = 0;
                                                 if(FT.contains(FlatType.TWOROOM)){
                                                     System.out.println("Enter number of two room flats:");
                                                     TwoR = sc.nextInt();
+                                                    sc.nextLine();
+                                                    System.out.println("Enter the price of two room flats");
+                                                    TwoP = sc.nextInt();
                                                     sc.nextLine();
                                                 }
                                                 if(FT.contains(FlatType.THREEROOM)){
                                                     System.out.println("Enter number of three room flats:");
                                                     ThreeR = sc.nextInt();
                                                     sc.nextLine();
+                                                    System.out.println("Enter the price of two room flats");
+                                                    sc.nextLine();
                                                 }
-                                            currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR);
+                                            currentManager.createProject(PN,N,Sdate,Edate,FT,TwoR,ThreeR,TwoP,ThreeP);
                                             projects.add(currentManager.getProjects().get(currentManager.getProjects().size()-1));
                                             break;
                                         case 3:
@@ -930,7 +954,7 @@ public class testMain {
                                             boolean editing = true;
                                             while(editing){
                                                 System.out.println("Enter choice:");
-                                                System.out.println("1. Edit project name\n2. Edit neighbourhood\n3. Edit start and end dates\n4. Edit room types\n5. Set visibility\n6. Exit");
+                                                System.out.println("1. Edit project name\n2. Edit neighbourhood\n3. Edit start and end dates\n4. Edit room types\n5. Edit room prices\n6. Set visibility\n7. Exit");
                                                 int EC = sc.nextInt();
                                                 sc.nextLine();
                                                 switch (EC){
@@ -954,7 +978,7 @@ public class testMain {
                                                         currentManager.editProject(P,NSdate,NEdate);
                                                         break;
                                                     case 4:
-                                                        System.out.println("Select flat types availble:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
+                                                        System.out.println("Select flat types available:\n1. Two room only\n2. Three room only\n3. Both two and three Rooms");
                                                         int NFC = sc.nextInt();
                                                         sc.nextLine();
                                                         List<FlatType> NFT = new ArrayList<>();
@@ -994,6 +1018,21 @@ public class testMain {
                                                         break;
                                                         //might not want to edit this
                                                     case 5:
+                                                        int NT2P = 0;
+                                                        int NT3P = 0;
+                                                        if (P.getFlatTypes().contains(FlatType.TWOROOM)){
+                                                            System.out.println("Enter price of two room flats:");
+                                                            NT2P = sc.nextInt();
+                                                            sc.nextLine();
+                                                        }
+                                                        if (P.getFlatTypes().contains(FlatType.THREEROOM)){
+                                                            System.out.println("Enter price of three room flats:");
+                                                            NT3P = sc.nextInt();
+                                                            sc.nextLine();
+                                                        }
+                                                        currentManager.editProject(P,NT2P,NT3P);
+                                                        break;
+                                                    case 6:
                                                         System.out.println("Select visibility option:\n1. On\n2. Off");
                                                         int VC = sc.nextInt();
                                                         sc.nextLine();
@@ -1016,7 +1055,7 @@ public class testMain {
                                                         }
                                                         currentManager.editProject(P,v);
                                                         break;
-                                                    case 6:
+                                                    case 7:
                                                         editing = false;
                                                         System.out.println("Exit successful");
                                                         break;

@@ -19,7 +19,7 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
 
     //project management
     public void createProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
-                              LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats) {
+                              LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats, int twoP, int threeP) {
         boolean inApplicationPeriod = false;
         for(BTOProject P : this.projects){
             inApplicationPeriod = P.isWithinApplicationPeriod(LocalDate.now());
@@ -28,7 +28,7 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             System.out.println("currently in application period for another project, unable to create new project");
             return;
         }
-        BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats);
+        BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats, twoP, threeP);
         projects.add(newProject);
         System.out.println("Project " + projectName + " created successfully.");
     }
@@ -52,6 +52,11 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         project.getFlats().setThreeRoomFlats(threeRoomFlats);
         System.out.println("Project flat types updated successfully.");
     }//do we need this?
+    public void editProject(BTOProject project, int TwoP, int ThreeP){
+        project.getFlats().setTwoRoomPrice(TwoP);
+        project.getFlats().setThreeRoomFlats(ThreeP);
+        System.out.println("Project prices updated successfully.");
+    }
     public void editProject(BTOProject project, boolean v) {
         project.setVisibility(v);
         System.out.print("Project visibility set to:");

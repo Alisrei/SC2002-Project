@@ -23,7 +23,7 @@ public class BTOProject {
     //constructor
     public BTOProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                       LocalDate applicationCloseDate, HDBManager managerInCharge,
-                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats)
+                      List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats,int twoP, int threeP)
     {
         this.projectName = projectName;
         this.neighborhood = neighborhood;
@@ -31,7 +31,7 @@ public class BTOProject {
         this.applicationCloseDate = applicationCloseDate;
         this.managerInCharge = managerInCharge;
         this.flatTypes = flatTypes;
-        this.flats = new BTOFlats(twoRoomFlats, threeRoomFlats);
+        this.flats = new BTOFlats(twoRoomFlats, threeRoomFlats,twoP,threeP);
         this.assignedOfficers = new ArrayList<>();
         this.applications = new ArrayList<>();
         this.registrations = new ArrayList<>();
@@ -98,12 +98,14 @@ public class BTOProject {
         );
 
 
-        // Display total flats based on available types
+        // Display total flats and price based on available types
         if (this.flatTypes.contains(FlatType.TWOROOM)) {
             System.out.println("Total 2-Room Flats: " + flats.getTwoRoomFlats());
+            System.out.println("Two room flat price:" + this.flats.getTwoRoomPrice());
         }
         if (this.flatTypes.contains(FlatType.THREEROOM)) {
             System.out.println("Total 3-Room Flats: " + flats.getThreeRoomFlats());
+            System.out.println("Three room flat price:" + this.flats.getThreeRoomPrice());
         }
 
         flats.displayAvailableFlats();
