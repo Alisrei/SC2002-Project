@@ -847,7 +847,8 @@ public class testMain {
                                     currentOfficer.handleFlatBooking();
                                     break;
                                 case 6:
-                                    //booking receipt
+                                    currentOfficer.generateReceipt();
+                                    break;
                                 case 7:
                                     System.out.println("Select choice by number:");
                                     officerEnquiryMenu();
@@ -965,6 +966,7 @@ public class testMain {
                                             break;
                                         case 3:
                                             BTOProject P = currentManager.getProject();
+                                            if(P == null){break;}
                                             boolean editing = true;
                                             while(editing){
                                                 System.out.println("Enter choice:");

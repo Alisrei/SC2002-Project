@@ -276,14 +276,40 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
         return assignedProject != null && assignedProject.equals(project);
     }
     
-    public void generateReceipt(Applicant applicant, BTOFlats Flat, BTOProject project) {
+    public void generateReceipt() {
+        Scanner sc =new Scanner(System.in);
+        List<Application> BA = new ArrayList<>();
+        int i = 1;
+        if(this.assignedProject.getApplications().isEmpty()){
+            System.out.println("no Applications available");
+            return;
+        }
+        System.out.println("select booked application to generate receipt");
+        boolean found = false;
+        for (Application A: this.assignedProject.getApplications()){
+            if(A.getStatus()==ApplicationStatus.BOOKED){
+                System.out.print(i+":");
+                A.displayApplication();
+                BA.add(A);
+                i += 1;
+                found = true;
+            }
+        }
+        if(!found){
+            System.out.println("No booked applications available");
+            return;
+        }
+        int choice = sc.nextInt();
+        sc.nextLine();
+        Application A = BA.get(choice-1);
         System.out.println("----- Booking Receipt -----");
-        System.out.println("Applicant Name: " + applicant.getName());
-        System.out.println("NRIC: " + applicant.getNric());
-        System.out.println("Age: " + applicant.getAge());
-        System.out.println("Marital Status: " + (applicant.isMarried() ? "Married" : "Single"));
-        System.out.println("Project Name: " + project.getProjectName());
-        System.out.println("\n---------------------------");
+        System.out.println("Applicant Name: " + A.getApplicant().getName());
+        System.out.println("NRIC: " + A.getApplicant().getNric());
+        System.out.println("Age: " + A.getApplicant().getAge());
+        System.out.println("Marital Status: " + (A.getApplicant().isMarried() ? "Married" : "Single"));
+        System.out.println("Project Name: " + A.getProject().getProjectName());
+        System.out.println("Booked Room: " + A.getBookedUnit());
+        System.out.println("---------------------------");
     }
 }
     
