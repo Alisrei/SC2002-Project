@@ -79,6 +79,14 @@ public class BTOProject {
             return false;
         }
     }
+    public boolean removeOfficer(HDBOfficer officer) {
+        if (assignedOfficers.contains(officer)) {
+            assignedOfficers.remove(officer);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     //view proj
