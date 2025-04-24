@@ -7,6 +7,12 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * BTOManagementSystem is a system for managing the data related to BTO (Build-To-Order) projects, applications, 
+ * registrations, and other related entities like applicants, officers, managers, and enquiries. This class handles 
+ * the loading and saving of data from and to CSV files and manages the relationships between various entities in the 
+ * system.
+ */
 public class BTOManagementSystem {
     public static List<Applicant> applicants = new ArrayList<>();
     public static List<HDBManager> managers = new ArrayList<>();
@@ -15,7 +21,13 @@ public class BTOManagementSystem {
     public static List<Application> applications = new ArrayList<>();
     public static List<Registration> registrations = new ArrayList<>();
     public static List<Enquiry> enquiries = new ArrayList<>();
-    //load csvs into lists
+
+    /**
+     * Loads applicant data from the specified CSV file and stores it in the applicants list.
+     * The CSV file should contain data in the format: Name, NRIC, Age, Marital Status, Password
+     * 
+     * @param filename The path to the CSV file containing applicant data.
+     */
     private static void loadApplicants(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -39,6 +51,13 @@ public class BTOManagementSystem {
             System.err.println("Error reading applicants file: " + e.getMessage());
         }
     }
+
+    /**
+     * Loads manager data from the specified CSV file and stores it in the managers list.
+     * The CSV file should contain data in the format: Name, NRIC, Age, Marital Status, Password
+     * 
+     * @param filename The path to the CSV file containing manager data.
+     */
     private static void loadManagers(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -62,6 +81,13 @@ public class BTOManagementSystem {
             System.err.println("Error reading managers file: " + e.getMessage());
         }
     }
+
+    /**
+     * Loads officer data from the specified CSV file and stores it in the officers list.
+     * The CSV file should contain data in the format: Name, NRIC, Age, Marital Status, Password
+     * 
+     * @param filename The path to the CSV file containing officer data.
+     */
     private static void loadOfficers(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -85,6 +111,14 @@ public class BTOManagementSystem {
             System.err.println("Error reading officers file: " + e.getMessage());
         }
     }
+
+    /**
+     * Loads project data from the specified CSV file and stores it in the projects list.
+     * The CSV file should contain data including project name, neighborhood, available flat types, prices, and 
+     * officer assignments.
+     * 
+     * @param filename The path to the CSV file containing project data.
+     */
     private static void loadProjects(String filename) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/M/yy");
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -180,6 +214,13 @@ public class BTOManagementSystem {
             System.err.println("Error parsing project data: " + e.getMessage());
         }
     }
+
+    /**
+     * Loads application data from the specified CSV file and stores it in the applications list.
+     * The CSV file should contain data in the format: ApplicationID, NRIC, ProjectName, Status, FlatType, BookedUnit, WithdrawalRequested
+     * 
+     * @param filename The path to the CSV file containing application data.
+     */
     private static void loadApplications(String filename){
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -243,6 +284,13 @@ public class BTOManagementSystem {
         } catch (IOException e) {
             System.err.println("Error reading applications file: " + e.getMessage());
         }}
+
+    /**
+     * Loads registration data from the specified CSV file and stores it in the registrations list.
+     * The CSV file should contain data in the format: RegistrationID, OfficerNRIC, ProjectName, Accepted
+     * 
+     * @param filename The path to the CSV file containing registration data.
+     */
     private static void loadRegistrations(String filename){
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
         String line;
@@ -299,6 +347,13 @@ public class BTOManagementSystem {
         System.err.println("Error reading registrations file: " + e.getMessage());
     }
     }
+
+    /**
+     * Loads enquiry data from the specified CSV file and stores it in the enquiries list.
+     * The CSV file should contain data in the format: EnquiryID, ApplicantNRIC, ProjectName, EnquiryText, Reply
+     * 
+     * @param filename The path to the CSV file containing enquiry data.
+     */
     private static void loadEnquiries(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -348,7 +403,12 @@ public class BTOManagementSystem {
         }
     }
 
-    //save lists to csvs
+    /**
+     * Saves the list of applicants to a CSV file.
+     * The CSV file will have the following columns: Name, NRIC, Age, Marital Status, Password.
+     * 
+     * @param filename The name of the CSV file to save the applicants.
+     */
     private static void saveApplicants(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Write header
@@ -368,6 +428,13 @@ public class BTOManagementSystem {
             System.err.println("Error saving applicants to CSV: " + e.getMessage());
         }
     }
+
+    /**
+     * Saves the list of officers to a CSV file.
+     * The CSV file will have the following columns: Name, NRIC, Age, Marital Status, Password.
+     * 
+     * @param filename The name of the CSV file to save the officers.
+     */
     private static void saveOfficers(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Write header
@@ -387,6 +454,13 @@ public class BTOManagementSystem {
             System.err.println("Error saving officers to CSV: " + e.getMessage());
         }
     }
+    
+    /**
+     * Saves the list of managers to a CSV file.
+     * The CSV file will have the following columns: Name, NRIC, Age, Marital Status, Password.
+     * 
+     * @param filename The name of the CSV file to save the managers.
+     */
     private static void saveManagers(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Write header
@@ -406,6 +480,14 @@ public class BTOManagementSystem {
             System.err.println("Error saving managers to CSV: " + e.getMessage());
         }
     }
+    
+    /**
+     * Saves the list of projects to a CSV file.
+     * The CSV file will include details such as project name, neighborhood, flat types, unit counts, 
+     * selling prices, application open and close dates, and the assigned officers.
+     * 
+     * @param filename The name of the CSV file to save the projects.
+     */
     private static void saveProjects(String filename) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/M/yy");
 
@@ -465,6 +547,14 @@ public class BTOManagementSystem {
             System.err.println("Error saving projects to CSV: " + e.getMessage());
         }
     }
+
+    /**
+     * Saves the list of applications to a CSV file.
+     * The CSV file will include details such as application ID, applicant NRIC, project name, status, 
+     * flat type, booked unit, and withdrawal status.
+     * 
+     * @param filename The name of the CSV file to save the applications.
+     */
     private static void saveApplications(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Write header
@@ -486,6 +576,13 @@ public class BTOManagementSystem {
             System.err.println("Error saving applications to CSV: " + e.getMessage());
         }
     }
+    
+    /**
+     * Saves the list of registrations to a CSV file.
+     * The CSV file will include details such as registration ID, officer NRIC, project name, and acceptance status.
+     * 
+     * @param filename The name of the CSV file to save the registrations.
+     */
     private static void saveRegistrations(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Write header
@@ -504,6 +601,13 @@ public class BTOManagementSystem {
             System.err.println("Error saving registrations to CSV: " + e.getMessage());
         }
     }
+    
+    /**
+     * Saves the list of enquiries to a CSV file.
+     * The CSV file will include details such as enquiry ID, applicant NRIC, project name, enquiry text, and reply.
+     * 
+     * @param filename The name of the CSV file to save the enquiries.
+     */
     private static void saveEnquiries(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // Write header
@@ -524,7 +628,12 @@ public class BTOManagementSystem {
         }
     }
 
-    // Generate HashMap for Applicants
+    /**
+     * Creates a HashMap from a list of applicants, where the key is the NRIC and the value is the password.
+     * 
+     * @param applicants The list of applicants to create the map from.
+     * @return A HashMap with NRIC as the key and password as the value.
+     */
     public static HashMap<String, String> createApplicantMap(List<Applicant> applicants) {
         HashMap<String, String> map = new HashMap<>();
         for (Applicant applicant : applicants) {
@@ -532,8 +641,13 @@ public class BTOManagementSystem {
         }
         return map;
     }
-
-    // Generate HashMap for Officers
+    
+    /**
+     * Creates a HashMap from a list of officers, where the key is the NRIC and the value is the password.
+     * 
+     * @param officers The list of officers to create the map from.
+     * @return A HashMap with NRIC as the key and password as the value.
+     */
     public static HashMap<String, String> createOfficerMap(List<HDBOfficer> officers) {
         HashMap<String, String> map = new HashMap<>();
         for (HDBOfficer officer : officers) {
@@ -541,8 +655,13 @@ public class BTOManagementSystem {
         }
         return map;
     }
-
-    // Generate HashMap for Managers
+    
+    /**
+     * Creates a HashMap from a list of managers, where the key is the NRIC and the value is the password.
+     * 
+     * @param managers The list of managers to create the map from.
+     * @return A HashMap with NRIC as the key and password as the value.
+     */
     public static HashMap<String, String> createManagerMap(List<HDBManager> managers) {
         HashMap<String, String> map = new HashMap<>();
         for (HDBManager manager : managers) {
@@ -550,8 +669,14 @@ public class BTOManagementSystem {
         }
         return map;
     }
-
-    //get applicant from list
+    
+    /**
+     * Retrieves an applicant from a list based on their NRIC.
+     * 
+     * @param applicants The list of applicants to search through.
+     * @param NRIC The NRIC of the applicant to find.
+     * @return The applicant with the matching NRIC, or null if not found.
+     */
     public static Applicant getApplicant(List<Applicant> applicants, String NRIC){
         Applicant X = null;
         for(Applicant applicant : applicants){
@@ -561,7 +686,14 @@ public class BTOManagementSystem {
         }
         return X;
     }
-    //get officer from list
+    
+    /**
+     * Retrieves an officer from a list based on their NRIC.
+     * 
+     * @param officers The list of officers to search through.
+     * @param NRIC The NRIC of the officer to find.
+     * @return The officer with the matching NRIC, or null if not found.
+     */
     public static HDBOfficer getOfficer(List<HDBOfficer> officers, String NRIC){
         HDBOfficer X = null;
         for(HDBOfficer officer : officers){
@@ -571,7 +703,14 @@ public class BTOManagementSystem {
         }
         return X;
     }
-    //get manager from list
+    
+    /**
+     * Retrieves a manager from a list based on their NRIC.
+     * 
+     * @param managers The list of managers to search through.
+     * @param NRIC The NRIC of the manager to find.
+     * @return The manager with the matching NRIC, or null if not found.
+     */
     public static HDBManager getManager(List<HDBManager> managers, String NRIC){
         HDBManager X = null;
         for(HDBManager manager : managers){
@@ -581,7 +720,15 @@ public class BTOManagementSystem {
         }
         return X;
     }
-
+    
+    /**
+     * Authenticates a user by checking the provided NRIC and password against a given database.
+     * 
+     * @param NRIC The NRIC of the user.
+     * @param Password The password of the user.
+     * @param Database The database (HashMap) containing NRIC and password pairs.
+     * @return True if the credentials match, false if the password is incorrect, or null if the NRIC does not exist.
+     */
     public static Boolean authenticate(String NRIC, String Password, HashMap Database){
         // Check if NRIC exists in the map
         if (!Database.containsKey(NRIC)) {
@@ -597,6 +744,10 @@ public class BTOManagementSystem {
             return false;
         }
     }
+    
+    /**
+     * Displays the applicant menu with various options.
+     */
     public static void applicantMenu(){
         System.out.println("""
                 
@@ -611,6 +762,11 @@ public class BTOManagementSystem {
                 8. Change password
                 9. Logout""");
     }
+
+    /**
+     * Displays the menu for applicant-related enquiry options.
+     * This menu allows the applicant to create, view, edit, or delete their enquiries.
+     */
     public static void applicantEnquiryMenu(){
         System.out.println("""
                 
@@ -621,6 +777,12 @@ public class BTOManagementSystem {
                 4. Delete enquiry
                 5. Exit""");
     }
+
+    /**
+     * Displays the main menu for HDB Officer.
+     * This menu allows the officer to manage project registrations, view project details,
+     * manage booking applications, handle flat bookings, generate receipts, and manage enquiries.
+     */
     public static void officerMenu(){
         System.out.println("\n\n1. Register for project team\n" +
                            "2. View current registration status\n" +
@@ -632,6 +794,11 @@ public class BTOManagementSystem {
                            "8. Change password\n" +
                            "9. Logout" );
     }
+
+    /**
+     * Displays the menu for officer-related enquiry options.
+     * This menu allows the officer to view and reply to project enquiries.
+     */
     public static void officerEnquiryMenu(){
         System.out.println("""
                 
@@ -640,6 +807,12 @@ public class BTOManagementSystem {
                 2. reply to enquiry
                 3. Exit""");
     }
+    
+    /**
+     * Displays the main menu for HDB Manager.
+     * This menu allows the manager to manage projects, applications, registrations, and enquiries,
+     * as well as generate reports and change the password.
+     */
     public static void managerMenu(){
         System.out.println("""
                 
@@ -652,6 +825,12 @@ public class BTOManagementSystem {
                 6. Change password
                 7. Logout""");
     }
+
+    /**
+     * Displays the menu for manager-related enquiry options.
+     * This menu allows the manager to view all enquiries, or only those within the projects they manage,
+     * and reply to those enquiries.
+     */
     public static void managerEnquiryMenu() {
         System.out.println("""
                 
@@ -662,6 +841,14 @@ public class BTOManagementSystem {
                 4. Exit""");
     }
 
+    
+    /**
+     * Main method of the program. This method acts as the entry point and controls the flow of the program.
+     * It prompts the user to choose their user type (Applicant, Officer, or Manager), handles user authentication,
+     * and displays the appropriate menu based on the user type. It continues to loop until the program is exited.
+     * 
+     * @param args Command line arguments, not used in this case.
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         loadApplicants("ApplicantList.csv");
