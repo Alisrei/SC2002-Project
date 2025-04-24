@@ -1,23 +1,46 @@
 package SC2002_Assignment;
-import java.util.Scanner;
+
 public class Enquiry {
+    private String Enqid;
     private String mainEnq;
     private String reply;
     private Boolean replied;
     private BTOProject project;
+    private Applicant applicant;
+
+    //constructor
+    public Enquiry(String m,BTOProject p,Applicant A){
+        this.mainEnq = m;
+        this.reply = "no reply yet";
+        this.replied = false;
+        this.project = p;
+        this.applicant = A;
+        this.Enqid = A.getName();
+        p.addEnquiry(this);
+    }
 
     //getters
     public String getMainEnq() {return mainEnq;}
     public String getReply() {return reply;}
     public Boolean getReplied() {return replied;}
     public BTOProject getProject(){return project;}
+    public Applicant getApplicant(){return applicant;}
 
-    public Enquiry(String m,BTOProject p){
-        this.mainEnq = m;
-        this.reply = "no reply yet";
-        this.replied = false;
-        this.project = p;
+    //setters
+    public void setApplicant(Applicant applicant) {this.applicant = applicant;}
+    public void setMainEnq(String mainEnq) {this.mainEnq = mainEnq;}
+    public void setProject(BTOProject project) {this.project = project;}
+    public void setReplied(Boolean replied) {this.replied = replied;}
+    public void setReply(String reply) {this.reply = reply;}
+
+    //view enq
+    public void viewEnq(){
+        System.out.println("Enquiry:" + this.getMainEnq());
+        System.out.println("Reply:" + this.getReply());
+        System.out.println("Project:" + this.getProject().getProjectName());
     }
+
+    //change enq
     public void editEnq(String e){
         if(this.replied == true){
             System.out.println("Unable to edit, enquiry has been replied");
@@ -36,20 +59,10 @@ public class Enquiry {
             System.out.println("Project changed.");
         }
     }
-    public void replyToEnq(String r){
-        this.reply = r;
-        this.replied = true;
-        System.out.println("Enquiry replied.");
-    }
-    public void viewEnq(){
-        System.out.println("Enquiry:" + this.getMainEnq());
-        System.out.println("Reply:" + this.getReply());
-        System.out.println("Project" + this.getProject());
-    }
-
-    public void deleteEnq(){
+    public boolean deleteEnq(){
         if(this.replied == true){
             System.out.println("Unable to delete, enquiry has been replied");
+            return false;
         }
         else{
             this.mainEnq = null;
@@ -57,6 +70,16 @@ public class Enquiry {
             this.replied = null;
             this.project = null;
             System.out.println("Enquiry deleted successfully");
+            return true;
         }
     }
+    public void replyToEnq(String r){
+        this.reply = r;
+        this.replied = true;
+        System.out.println("Enquiry replied.");
+    }
+
+
+
+
 }
