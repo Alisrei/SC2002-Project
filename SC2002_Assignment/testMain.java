@@ -899,7 +899,7 @@ public class testMain {
                             switch (choiceM) {
                                 case 1:
                                     System.out.println("Select choice by number:");
-                                    System.out.println("1. View all projects\n2. Create project\n3. Edit project\n4. Delete project\n5. Exit");
+                                    System.out.println("1. View projects\n2. Create project\n3. Edit project\n4. Delete project\n5. Exit");
                                     int CP = sc.nextInt();
                                     sc.nextLine();
                                     switch (CP) {
@@ -1176,6 +1176,25 @@ public class testMain {
                                     }
                                     break;
                                 case 5:
+                                    System.out.println("select report choice:\n1. Detailed\n2. Filtered");
+                                    int RC = sc.nextInt();
+                                    sc.nextLine();
+                                    boolean selected = false;
+                                    while (!selected){
+                                        switch(RC){
+                                            case 1:
+                                                currentManager.generateDetailedReport(currentManager.getProject());
+                                                selected = true;
+                                                break;
+                                            case 2:
+                                                currentManager.generateFilteredReport(currentManager.getProject());
+                                                selected = true;
+                                                break;
+                                            default:
+                                                System.out.println("invalid choice please try again");
+                                                break;
+                                        }
+                                    }
                                     break;
                                     //generate report
                                 case 6:

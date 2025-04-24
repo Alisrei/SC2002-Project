@@ -101,18 +101,18 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
     }
 
     //view projects
-    public void viewProjects(List<BTOProject> projectsMaster){
-        if (projectsMaster.isEmpty()){
-            System.out.println("no projects yet");
-            return;
-        }
-        int i = 1;
-        for (BTOProject P: projectsMaster){
-            System.out.print(i+".");
-            System.out.println(P.getProjectName());
-            i += 1;
-        }
-    }
+//    public void viewProjects(List<BTOProject> projectsMaster){
+//        if (projectsMaster.isEmpty()){
+//            System.out.println("no projects yet");
+//            return;
+//        }
+//        int i = 1;
+//        for (BTOProject P: projectsMaster){
+//            System.out.print(i+".");
+//            System.out.println(P.getProjectName());
+//            i += 1;
+//        }
+//    }
     public void viewPersornalProjects(){
         int i = 1;
         for (BTOProject P: this.projects){
@@ -359,28 +359,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         P.getEnquiries().get(index).replyToEnq(R);
     }
 
-    //report
-    public void generateReport() {
-        for (BTOProject project : projects) {
-            System.out.println("Project: " + project.getProjectName());
-            project.displayProjectDetails();
-        }
-    }
 
 
-    public void viewMyProjects() {
-        System.out.println("=== Projects Created by " + this.getName() + " ===");
-        BTOProject[] myProjects = null;
-        for (BTOProject p : myProjects) {
-            System.out.println("- " + p.getProjectName());
-        }
-    }
-
-    public List<BTOProject> filterMyProjects(String filterType, String value) {
+    public List<BTOProject> filterMyProjects(List<BTOProject> MPL,String filterType, String value) {
         List<BTOProject> filteredProjects = new ArrayList<>();
 
         // Assuming 'myProjects' is a method or a field that retrieves all the projects
-        Collection<BTOProject> myProjects =this.projects; // Replace this with your actual source
+        Collection<BTOProject> myProjects = MPL; // Replace this with your actual source
 
         if (myProjects == null) {
             return filteredProjects; // Return empty list if source is null
@@ -420,7 +405,7 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
     /**
      * Display filtered projects with a menu interface
      */
-    public void displayFilteredProjects() {
+    public void viewProjects(List<BTOProject> MPL) {
         Scanner sc = new Scanner(System.in);
         
         System.out.println("\n=== Filter My Projects ===");
@@ -440,18 +425,18 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             case 1:
                 System.out.print("Enter project name to search: ");
                 String name = sc.nextLine();
-                filtered = filterMyProjects("name", name);
+                filtered = filterMyProjects(MPL,"name", name);
                 break;
             case 2:
                 System.out.print("Enter neighborhood: ");
                 String neighborhood = sc.nextLine();
-                filtered = filterMyProjects("neighborhood", neighborhood);
+                filtered = filterMyProjects(MPL,"neighborhood", neighborhood);
                 break;
             case 3:
-                filtered = filterMyProjects("open", null);
+                filtered = filterMyProjects(MPL,"open", null);
                 break;
             case 4:
-                filtered = filterMyProjects(null, null);
+                filtered = filterMyProjects(MPL,null, null);
                 break;
             case 0:
                 return;
@@ -462,7 +447,7 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         
         displayProjectList(filtered);
     }
-    
+
     /**
      * Helper method to display a list of projects
      * @param projectList List of projects to display
@@ -520,31 +505,9 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
     }
 
-    public void generateFilteredReport() {
+    public void generateFilteredReport(BTOProject P) {
         Scanner sc = new Scanner(System.in);
-        
-        // Select a project first
-        System.out.println("\n=== Generate Applicant Report ===");
-        if (projects.isEmpty()) {
-            System.out.println("No projects available.");
-            return;
-        }
-        
-        System.out.println("Select a project:");
-        for (int i = 0; i < projects.size(); i++) {
-            System.out.println((i+1) + ". " + projects.get(i).getProjectName());
-        }
-        
-        System.out.print("Enter project number (0 to cancel): ");
-        int projectChoice = sc.nextInt();
-        sc.nextLine(); // Clear buffer
-        
-        if (projectChoice <= 0 || projectChoice > projects.size()) {
-            System.out.println("Operation cancelled or invalid selection.");
-            return;
-        }
-        
-        BTOProject selectedProject = projects.get(projectChoice - 1);
+        BTOProject selectedProject = P;
         List<Application> allApplications = selectedProject.getApplications();
         
         if (allApplications.isEmpty()) {
@@ -570,15 +533,15 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
                 System.out.print("Enter flat type (TWO_ROOM/THREE_ROOM/etc.): ");
                 String flatTypeStr = sc.nextLine();
                 FlatType flatType = FlatType.valueOf(flatTypeStr.toUpperCase());
-                
+
                 filteredApplications = allApplications.stream()
-                    .filter(app -> app.getFlatTypeBooking() == flatType)
-                    .collect(Collectors.toList());
+                        .filter(app -> app.getFlatTypeBooking() == flatType)
+                        .collect(Collectors.toList());
                 break;
             case 2:
                 System.out.print("Show married applicants? (true/false): ");
                 boolean isMarried = sc.nextBoolean();
-                
+
                 filteredApplications = allApplications.stream()
                     .filter(app -> app.getApplicant().isMarried() == isMarried)
                     .collect(Collectors.toList());

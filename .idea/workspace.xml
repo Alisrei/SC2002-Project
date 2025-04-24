@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ab2704b-4043-4a2a-bf85-608246f1a853" name="Changes" comment="solved some bugs and added manage projects">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/HDBOfficer.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/HDBOfficer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/testMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/testMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/.idea/csv-editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/BTOProject.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/BTOProject.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/HDBManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/HDBManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/testMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/SC2002_Assignment/testMain.class" afterDir="false" />
-    </list>
+    <list default="true" id="9ab2704b-4043-4a2a-bf85-608246f1a853" name="Changes" comment="solved some bugs and added manage projects" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
