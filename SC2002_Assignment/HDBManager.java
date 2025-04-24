@@ -6,49 +6,118 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a HDBManager responsible for managing BTO (Build-To-Order) projects, applications, withdrawals, registrations, and project-related functionalities. 
+ * It extends the User class and implements the ViewProjects, EnquiryReply, and EnquiryView interfaces.
+ */
 public class HDBManager extends User implements ViewProjects,EnquiryReply, EnquiryView{
     private List<BTOProject> projects;
 
-    //constructor
+    /**
+     * Constructor to create a new HDBManager.
+     * 
+     * @param nric The NRIC of the HDBManager.
+     * @param name The name of the HDBManager.
+     * @param password The password for the HDBManager account.
+     * @param age The age of the HDBManager.
+     * @param isMarried Whether the HDBManager is married.
+     */
     public HDBManager(String nric, String name, String password, int age, boolean isMarried) {
         super(nric, name, password, age, isMarried);
         this.projects = new ArrayList<>();
     }
 
+    // Project Management Section
 
-
-    //project management
+    /**
+     * Creates a new BTO project and adds it to the list of projects managed by the HDBManager.
+     * 
+     * @param projectName The name of the BTO project.
+     * @param neighborhood The neighborhood of the BTO project.
+     * @param applicationOpenDate The opening date for the application.
+     * @param applicationCloseDate The closing date for the application.
+     * @param flatTypes List of available flat types in the BTO project.
+     * @param twoRoomFlats The number of two-room flats available in the project.
+     * @param threeRoomFlats The number of three-room flats available in the project.
+     * @param twoP The price for two-room flats.
+     * @param threeP The price for three-room flats.
+     */
     public void createProject(String projectName, String neighborhood, LocalDate applicationOpenDate,
                               LocalDate applicationCloseDate, List<FlatType> flatTypes, int twoRoomFlats, int threeRoomFlats, int twoP, int threeP) {
         BTOProject newProject = new BTOProject(projectName, neighborhood, applicationOpenDate, applicationCloseDate, this, flatTypes, twoRoomFlats, threeRoomFlats, twoP, threeP);
         projects.add(newProject);
         System.out.println("Project " + projectName + " created successfully.");
     }
+
+    /**
+     * Edits the name of a BTO project.
+     * 
+     * @param project The BTO project to be edited.
+     * @param newName The new name for the project.
+     */
     public void editProjectname(BTOProject project, String newName) {
         project.setProjectName(newName);
         System.out.println("project name changed successfully");
         }
+
+    /**
+     * Edits the neighborhood of a BTO project.
+     * 
+     * @param project The BTO project to be edited.
+     * @param newNeighborhood The new neighborhood for the project.
+     */
     public void editProject(BTOProject project, String newNeighborhood) {
         project.setNeighborhood(newNeighborhood);
         System.out.println("project neighbourhood changed successfully");
         }
+    
+    /**
+     * Edits the application dates of a BTO project.
+     * 
+     * @param project The BTO project to be edited.
+     * @param newApplicationOpenDate The new application open date.
+     * @param newApplicationCloseDate The new application close date.
+     */
     public void editProject(BTOProject project, LocalDate newApplicationOpenDate, LocalDate newApplicationCloseDate) {
         project.setApplicationOpenDate(newApplicationOpenDate);
         project.setApplicationCloseDate(newApplicationCloseDate);
         System.out.println("application open and close dates changed successfully");
-
     }
+
+    /**
+     * Edits the flat types and available flat counts of a BTO project.
+     * 
+     * @param project The BTO project to be edited.
+     * @param newFlatTypes The new list of flat types.
+     * @param twoRoomFlats The new number of two-room flats available.
+     * @param threeRoomFlats The new number of three-room flats available.
+     */
     public void editProject(BTOProject project, List<FlatType> newFlatTypes, int twoRoomFlats, int threeRoomFlats) {
         project.setFlatTypes(newFlatTypes);
         project.getFlats().setTwoRoomFlats(twoRoomFlats);
         project.getFlats().setThreeRoomFlats(threeRoomFlats);
         System.out.println("Project flat types updated successfully.");
-    }//do we need this?
+    }
+
+    /**
+     * Edits the prices of flats in a BTO project.
+     * 
+     * @param project The BTO project to be edited.
+     * @param TwoP The new price for two-room flats.
+     * @param ThreeP The new price for three-room flats.
+     */
     public void editProject(BTOProject project, int TwoP, int ThreeP){
         project.getFlats().setTwoRoomPrice(TwoP);
         project.getFlats().setThreeRoomFlats(ThreeP);
         System.out.println("Project prices updated successfully.");
     }
+
+    /**
+     * Edits the visibility of a BTO project.
+     * 
+     * @param project The BTO project to be edited.
+     * @param v The visibility status, either true (visible) or false (invisible).
+     */
     public void editProject(BTOProject project, boolean v) {
         project.setVisibility(v);
         System.out.print("Project visibility set to:");
@@ -59,6 +128,12 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             System.out.println("Off");
         }
     }
+
+    /**
+     * Deletes a BTO project from the list of managed projects.
+     * 
+     * @param project The BTO project to be deleted.
+     */
     public void deleteProject(BTOProject project) {
         if(project.deletable()){
             projects.remove(project);
@@ -73,12 +148,31 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             System.out.println("Project " + project.getProjectName() + " deleted successfully.");
             project.setProjectName(null);
         }
-
     }
+
+    /**
+     * Adds a BTO project to the list of managed projects.
+     * 
+     * @param p The BTO project to be added.
+     */
     public void addProject(BTOProject p){
         this.projects.add(p);
     }
-    public List<BTOProject> getProjects(){return this.projects;}
+
+    /**
+     * Retrieves the list of all BTO projects managed by the HDBManager.
+     * 
+     * @return A list of BTO projects managed by the HDBManager.
+     */
+    public List<BTOProject> getProjects() {
+        return this.projects;
+    }
+
+    /**
+     * Retrieves a specific project managed by the HDBManager.
+     * 
+     * @return A BTO project managed by the HDBManager, or null if no project is available.
+     */
     public BTOProject getProject(){
         if(this.projects.isEmpty()){
             System.out.println("No managed projects");
@@ -92,19 +186,11 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         return projects.get(choice-1);
     }
 
-    //view projects
-//    public void viewProjects(List<BTOProject> projectsMaster){
-//        if (projectsMaster.isEmpty()){
-//            System.out.println("no projects yet");
-//            return;
-//        }
-//        int i = 1;
-//        for (BTOProject P: projectsMaster){
-//            System.out.print(i+".");
-//            System.out.println(P.getProjectName());
-//            i += 1;
-//        }
-//    }
+    // View Projects Section
+
+    /**
+     * Displays the list of personal projects managed by the HDBManager.
+     */
     public void viewPersornalProjects(){
         int i = 1;
         for (BTOProject P: this.projects){
@@ -114,10 +200,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
     }
 
+    // Applications Section
 
-
-
-    //applications func
+    /**
+     * Displays the list of applications for a specific BTO project.
+     * 
+     * @param P The BTO project whose applications will be displayed.
+     */
     public void viewApplications(BTOProject P){
         if(P == null){
             return;
@@ -133,6 +222,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             i += 1;
         }
     }
+
+    /**
+     * Displays a list of pending applications for a specific BTO project.
+     * 
+     * @param P The BTO project whose pending applications will be displayed.
+     * @return A list of pending applications for the specified BTO project.
+     */
     public List<Application> viewPendingApplications(BTOProject P){
         if(P == null){
             return null;
@@ -159,6 +255,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
         return PA;
     }
+
+    /**
+     * Retrieves a specific pending application for a BTO project.
+     * 
+     * @param P The BTO project whose pending application will be retrieved.
+     * @return A pending application for the specified BTO project.
+     */
     public Application getApplication(BTOProject P){
         if(P.getApplications().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
@@ -168,6 +271,10 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         sc.nextLine();
         return PA.get(choice-1);
     }
+
+    /**
+     * Approves a pending application for a BTO project if flats are available.
+     */
     public void approveApplication() {
         Application A = this.getApplication(this.getProject());
         if(A == null){
@@ -184,7 +291,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
     }
 
-    //withdrawals func
+    /**
+     * Views the pending withdrawals for a specific BTO project.
+     * Displays the applications that have requested withdrawal.
+     * 
+     * @param P The BTO project to check for pending withdrawals.
+     * @return A list of applications with pending withdrawals, or null if none are found.
+     */
     public List<Application> viewPendingWithdrawals(BTOProject P){
         if(P == null){
             return null;
@@ -210,6 +323,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
         return PW;
     }
+    
+    /**
+     * Prompts the user to select an application with a pending withdrawal.
+     * 
+     * @param P The BTO project to get the withdrawal applications from.
+     * @return The selected application with a pending withdrawal.
+     */
     public Application getWithdrawals(BTOProject P){
         if(P.getApplications().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
@@ -219,6 +339,11 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         sc.nextLine();
         return PW.get(choice-1);
     }
+    
+    /**
+     * Manages the withdrawal process for an application.
+     * Allows the withdrawal to be approved or rejected.
+     */
     public void  manageWithdrawals(){
         Scanner sc = new Scanner(System.in);
         Application W = this.getWithdrawals(this.getProject());
@@ -244,8 +369,12 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
                 break;
         }
     }
-
-    //Registration func
+    
+    /**
+     * Displays all the registrations for a specific BTO project.
+     * 
+     * @param P The BTO project to view registrations for.
+     */
     public void viewRegistrations(BTOProject P){
         if(P == null){
             return;
@@ -261,6 +390,12 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             i += 1;
         }
     }
+    
+    /**
+     * Displays all unaccepted registrations for a specific BTO project.
+     * 
+     * @param P The BTO project to view unaccepted registrations for.
+     */
     public void viewUnacceptedRegistrations(BTOProject P){
         if(P == null){
             return;
@@ -285,6 +420,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             System.out.println("1. No pending Withdrawals in project");
         }
     }
+    
+    /**
+     * Prompts the user to select an unaccepted registration for a BTO project.
+     * 
+     * @param P The BTO project to get the unaccepted registrations from.
+     * @return The selected unaccepted registration.
+     */
     public Registration getRegistrations(BTOProject P){
         if(P.getRegistrations().isEmpty()){return null;}
         Scanner sc = new Scanner(System.in);
@@ -294,6 +436,11 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         sc.nextLine();
         return P.getRegistrations().get(choice-1);
     }
+    
+    /**
+     * Approves a registration for an officer to be added to a BTO project.
+     * Removes the registration from the project's list once approved.
+     */
     public void approveRegistration() {
         Registration R = this.getRegistrations(this.getProject());
         if(R == null){
@@ -311,8 +458,13 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
     }
 
-
-    //enq func
+    /**
+     * Gets the index of an enquiry from a specific BTO project.
+     * Displays all the enquiries in the project and prompts the user to select one.
+     * 
+     * @param P The BTO project from which to select an enquiry.
+     * @return The index of the selected enquiry.
+     */
     public int getEnquiryIndex(BTOProject P){
         Scanner sc = new Scanner(System.in);
         int i = 1;
@@ -326,16 +478,34 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         sc.nextLine();
         return choice-1;
     }
+    
+    /**
+     * Displays all the enquiries for a list of BTO projects.
+     * 
+     * @param AllEnquiries List of enquiries to display.
+     */
     public void viewAllEnquiries(List<Enquiry> AllEnquiries){
         for (Enquiry enquiry : AllEnquiries) {
             enquiry.viewEnq();
         }
     }
+    
+    /**
+     * Displays all the enquiries for the current BTO project.
+     */
     public void viewEnquiries() {
         for (Enquiry enquiry : this.getProject().getEnquiries()) {
             enquiry.viewEnq();
         }
     }
+    
+    /**
+     * Replies to a specific enquiry from the project.
+     * Ensures the enquiry hasn't been replied to yet before allowing a response.
+     * 
+     * @param index The index of the enquiry to reply to.
+     * @param P The BTO project where the enquiry exists.
+     */
     public void replyEnquiry(int index,BTOProject P) {
         if (index < 0 || index >= P.getEnquiries().size()) {
             System.out.println("Invalid enquiry index.");
@@ -351,8 +521,15 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         P.getEnquiries().get(index).replyToEnq(R);
     }
 
-
-
+    /**
+     * Filters the BTO projects based on a given filter type and value.
+     * Supports filtering by project name, neighborhood, and open status.
+     * 
+     * @param MPL List of all BTO projects to filter.
+     * @param filterType The type of filter (e.g., "name", "neighborhood", "open").
+     * @param value The value to match the filter against.
+     * @return A list of filtered BTO projects.
+     */
     public List<BTOProject> filterMyProjects(List<BTOProject> MPL,String filterType, String value) {
         List<BTOProject> filteredProjects = new ArrayList<>();
 
@@ -398,7 +575,10 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
     }
 
     /**
-     * Display filtered projects with a menu interface
+     * Displays a menu to filter and view the user's projects based on different criteria.
+     * Allows filtering by project name, neighborhood, or open status.
+     * 
+     * @param MPL List of BTO projects to be filtered and displayed.
      */
     public void viewProjects(List<BTOProject> MPL) {
         Scanner sc = new Scanner(System.in);
@@ -444,8 +624,9 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
     }
 
     /**
-     * Helper method to display a list of projects
-     * @param projectList List of projects to display
+     * Helper method to display a list of filtered projects.
+     * 
+     * @param projectList List of projects to display.
      */
     private void displayProjectList(List<BTOProject> projectList) {
         if (projectList.isEmpty()) {
@@ -460,10 +641,12 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             i++;
         }
     }
-    
+
     /**
-     * Generate a detailed report of applicants for a specific project
-     * @param project The project to generate report for
+     * Generates a detailed applicant report for a specific project.
+     * Displays applicant names, flat type, age, and marital status.
+     * 
+     * @param project The project to generate the report for.
      */
     public void generateDetailedReport(BTOProject project) {
         if (project == null) {
@@ -500,6 +683,11 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         }
     }
 
+    /**
+     * Generates a filtered report based on the selected criteria (flat type, marital status, or age range).
+     * 
+     * @param P The BTO project to generate the filtered report for.
+     */
     public void generateFilteredReport(BTOProject P) {
         Scanner sc = new Scanner(System.in);
         BTOProject selectedProject = P;
@@ -610,11 +798,12 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
             exportReportToFile(selectedProject, filteredApplications);
         }
     }
-    
+
     /**
-     * Display a filtered report of applications
-     * @param project The selected project
-     * @param applications Filtered list of applications
+     * Displays the filtered report of applicants for a project.
+     * 
+     * @param project The selected project.
+     * @param applications The filtered list of applications.
      */
     private void displayFilteredReport(BTOProject project, List<Application> applications) {
         if (applications.isEmpty()) {
@@ -645,9 +834,10 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
     }
     
     /**
-     * Export a report to a file (implementation would depend on your file I/O handling)
-     * @param project The selected project
-     * @param applications Filtered list of applications
+     * Exports the filtered report of applications to a CSV file.
+     * 
+     * @param project The selected project.
+     * @param applications The filtered list of applications to export.
      */
     private void exportReportToFile(BTOProject project, List<Application> applications) {
         System.out.println("Exporting report to file 'report_" + project.getProjectName() + ".csv'");
