@@ -539,6 +539,9 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         if (myProjects == null) {
             return filteredProjects; // Return empty list if source is null
         }
+        if (filterType == null){
+            filterType =" ";
+        }
 
         switch (filterType.toLowerCase()) {
             case "name":
@@ -562,9 +565,6 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
                                 (now.isEqual(p.getApplicationOpenDate()) || now.isAfter(p.getApplicationOpenDate())) &&
                                 (now.isBefore(p.getApplicationCloseDate()) || now.isEqual(p.getApplicationCloseDate())))
                         .collect(Collectors.toList());
-                break;
-            case null:
-                filteredProjects = new ArrayList<>(myProjects); // If no valid filter, return all
                 break;
             default:
                 filteredProjects = new ArrayList<>(myProjects); // If no valid filter, return all
