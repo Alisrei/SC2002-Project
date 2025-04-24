@@ -1,0 +1,3 @@
+applicationId,applicantNric,projectName,status,flatType,bookedUnit,withdrawalRequested
+John,S1234567A,Acacia Breeze,SUCCESSFUL,,,false
+Rachel,S3456789E,Acacia Breeze,BOOKED,TWOROOM,2R-101,false

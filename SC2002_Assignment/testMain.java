@@ -1,11 +1,10 @@
 package SC2002_Assignment;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class testMain {
     public static List<Applicant> applicants = new ArrayList<>();
@@ -163,9 +162,352 @@ public class testMain {
             System.err.println("Error parsing project data: " + e.getMessage());
         }
     }
-    private static void loadApplications(String filename){}
-    private static void loadRegistrations(String filename){}
-//  private static void loadEnquiries(String filename){to be implemented}
+    private static void loadApplications(String filename){DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/M/yy");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean firstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue; // Skip header
+                }
+
+                String[] data = line.split(",");
+
+                // Find applicant by NRIC
+                Applicant applicant = null;
+                for (Applicant a : applicants) {
+                    if (a.getNric().equals(data[1])) {
+                        applicant = a;
+                        break;
+                    }
+                }
+
+                // Find project by name
+                BTOProject project = null;
+                for (BTOProject p : projects) {
+                    if (p.getProjectName().equals(data[2])) {
+                        project = p;
+                        break;
+                    }
+                }
+
+                if (applicant == null || project == null) {
+                    System.err.println("Applicant or project not found for application: " + data[0]);
+                    continue;
+                }
+
+                // Create application
+                Application application = new Application(data[0], applicant, project);
+
+                // Set additional fields if available
+                if (data.length > 3) {
+                    application.setStatus(ApplicationStatus.valueOf(data[3]));
+
+                    if (data.length > 4 && !data[4].isEmpty()) {
+                        application.setFlatTypeBooking(FlatType.valueOf(data[4]));
+                    }
+
+                    if (data.length > 5 && !data[5].isEmpty()) {
+                        application.setBookedUnit(data[5]);
+                    }
+
+                    if (data.length > 6 && !data[6].isEmpty()) {
+                        application.setWithdrawalRequested(Boolean.parseBoolean(data[6]));
+                    }
+                }
+
+                // Link to applicant and project
+                applicant.setApplication(application);
+                applications.add(application);
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading applications file: " + e.getMessage());
+        }}
+    private static void loadRegistrations(String filename){
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        String line;
+        boolean firstLine = true;
+
+        while ((line = br.readLine()) != null) {
+            if (firstLine) {
+                firstLine = false;
+                continue; // Skip header
+            }
+
+            String[] data = line.split(",");
+
+            // Find officer by NRIC
+            HDBOfficer officer = null;
+            for (HDBOfficer o : officers) {
+                if (o.getNric().equals(data[1])) {
+                    officer = o;
+                    break;
+                }
+            }
+
+            // Find project by name
+            BTOProject project = null;
+            for (BTOProject p : projects) {
+                if (p.getProjectName().equals(data[2])) {
+                    project = p;
+                    break;
+                }
+            }
+
+            if (officer == null || project == null) {
+                System.err.println("Officer or project not found for registration: " + data[0]);
+                continue;
+            }
+
+            // Create registration
+            Registration registration = new Registration(data[0], officer, project);
+
+            // Set acceptance status if available
+            if (data.length > 3) {
+                registration.setAccepted(Boolean.parseBoolean(data[3]));
+
+                // If accepted, link officer to project
+                if (registration.getAccepted()) {
+                    project.addOfficer(officer);
+                    officer.setAssignedProject(project);
+                    officer.setRegistration(registration);
+                }
+            }
+
+            registrations.add(registration);
+        }
+    } catch (IOException e) {
+        System.err.println("Error reading registrations file: " + e.getMessage());
+    }
+    }
+    private static void loadEnquiries(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean firstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue; // Skip header
+                }
+
+                String[] data = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1); // Handle quoted text
+
+                // Find applicant by NRIC
+                Applicant applicant = getApplicant(applicants, data[1]);
+                // Find project by name
+                BTOProject project = projects.stream()
+                        .filter(p -> p.getProjectName().equals(data[2]))
+                        .findFirst()
+                        .orElse(null);
+
+                if (applicant == null || project == null) {
+                    System.err.println("Skipping enquiry - applicant or project not found");
+                    continue;
+                }
+
+                // Create enquiry (trim quotes if present)
+                String enquiryText = data[3].replace("\"", "");
+                Enquiry enquiry = new Enquiry(enquiryText, project, applicant);
+
+                // Handle reply (column 4)
+                if (data.length > 4) {
+                    String reply = data[4].replace("\"", "");
+                    if (!reply.equalsIgnoreCase("no reply yet")) {
+                        enquiry.setReply(reply);
+                        enquiry.setReplied(true);
+                    }
+                    // For "no reply yet", we keep the default values
+                }
+
+                // Link to applicant and project
+                applicant.getEnquiries().add(enquiry);
+                enquiries.add(enquiry);
+                project.addEnquiry(enquiry); // Ensure project also gets the enquiry
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading enquiries file: " + e.getMessage());
+        }
+    }
+
+    //save lists to csvs
+    private static void saveApplicants(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header
+            writer.println("Name,NRIC,Age,Marital Status,Password");
+
+            // Write each applicant
+            for (Applicant applicant : applicants) {
+                writer.println(String.format("%s,%s,%d,%s,%s",
+                        applicant.getName(),
+                        applicant.getNric(),
+                        applicant.getAge(),
+                        applicant.isMarried() ? "Married" : "Single",
+                        applicant.getPassword()
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving applicants to CSV: " + e.getMessage());
+        }
+    }
+    private static void saveOfficers(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header
+            writer.println("Name,NRIC,Age,Marital Status,Password");
+
+            // Write each officer
+            for (HDBOfficer officer : officers) {
+                writer.println(String.format("%s,%s,%d,%s,%s",
+                        officer.getName(),
+                        officer.getNric(),
+                        officer.getAge(),
+                        officer.isMarried() ? "Married" : "Single",
+                        officer.getPassword()
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving officers to CSV: " + e.getMessage());
+        }
+    }
+    private static void saveManagers(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header
+            writer.println("Name,NRIC,Age,Marital Status,Password");
+
+            // Write each manager
+            for (HDBManager manager : managers) {
+                writer.println(String.format("%s,%s,%d,%s,%s",
+                        manager.getName(),
+                        manager.getNric(),
+                        manager.getAge(),
+                        manager.isMarried() ? "Married" : "Single",
+                        manager.getPassword()
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving managers to CSV: " + e.getMessage());
+        }
+    }
+    private static void saveProjects(String filename) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/M/yy");
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header matching your ProjectList.csv
+            writer.println("Project Name,Neighborhood,Type 1,Number of units for Type 1,Selling price for Type 1," +
+                    "Type 2,Number of units for Type 2,Selling price for Type 2," +
+                    "Application opening date,Application closing date,Manager,Officer Slot,Officer");
+
+            // Write each project
+            for (BTOProject project : projects) {
+                // Prepare flat type information
+                String type1 = "";
+                String count1 = "";
+                String price1 = "";
+                String type2 = "";
+                String count2 = "";
+                String price2 = "";
+
+                if (project.getFlatTypes().contains(FlatType.TWOROOM)) {
+                    type1 = "2-Room";
+                    count1 = String.valueOf(project.getFlats().getTwoRoomFlats());
+                    price1 = ""; // Empty since price isn't stored in BTOProject
+                }
+
+                if (project.getFlatTypes().contains(FlatType.THREEROOM)) {
+                    type2 = "3-Room";
+                    count2 = String.valueOf(project.getFlats().getThreeRoomFlats());
+                    price2 = ""; // Empty since price isn't stored in BTOProject
+                }
+
+                // Prepare officer names
+                String officerNames = project.getAssignedOfficers().stream()
+                        .map(HDBOfficer::getName)
+                        .collect(Collectors.joining(","));
+
+                // Calculate officer slot (current officers/max officers)
+                int officerSlot = project.getAssignedOfficers().size();
+
+                writer.println(String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,\"%s\"",
+                        project.getProjectName(),
+                        project.getNeighborhood(),
+                        type1,
+                        count1,
+                        price1,
+                        type2,
+                        count2,
+                        price2,
+                        project.getApplicationOpenDate().format(dateFormatter),
+                        project.getApplicationCloseDate().format(dateFormatter),
+                        project.getManagerInCharge().getName(),
+                        officerSlot,
+                        officerNames
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving projects to CSV: " + e.getMessage());
+        }
+    }
+    private static void saveApplications(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header
+            writer.println("applicationId,applicantNric,projectName,status,flatType,bookedUnit,withdrawalRequested");
+
+            // Write each application
+            for (Application app : applications) {
+                writer.println(String.format("%s,%s,%s,%s,%s,%s,%s",
+                        app.getApplicationId(),
+                        app.getApplicant().getNric(),
+                        app.getProject().getProjectName(),
+                        app.getStatus(),
+                        app.getFlatTypeBooking() != null ? app.getFlatTypeBooking().name() : "",
+                        app.getBookedUnit() != null ? app.getBookedUnit() : "",
+                        app.getWithdrawalRequested()
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving applications to CSV: " + e.getMessage());
+        }
+    }
+    private static void saveRegistrations(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header
+            writer.println("regId,officerNric,projectName,accepted");
+
+            // Write each registration
+            for (Registration reg : registrations) {
+                writer.println(String.format("%s,%s,%s,%s",
+                        reg.getRegId(),
+                        reg.getOfficer().getNric(),
+                        reg.getProject().getProjectName(),
+                        reg.getAccepted()
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving registrations to CSV: " + e.getMessage());
+        }
+    }
+    private static void saveEnquiries(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            // Write header
+            writer.println("enquiryId,applicantNric,projectName,enquiryText,reply");
+
+            // Write each enquiry (with proper quoting for text fields)
+            for (Enquiry enq : enquiries) {
+                writer.println(String.format("%s,%s,%s,\"%s\",\"%s\"",
+                        "ENQ" + enquiries.indexOf(enq), // Or use enq.getId() if available
+                        enq.getApplicant().getNric(),
+                        enq.getProject().getProjectName(),
+                        enq.getMainEnq().replace("\"", "\"\""), // Escape quotes
+                        enq.getReply().replace("\"", "\"\"")    // Escape quotes
+                ));
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving enquiries to CSV: " + e.getMessage());
+        }
+    }
 
     // Generate HashMap for Applicants
     public static HashMap<String, String> createApplicantMap(List<Applicant> applicants) {
@@ -319,6 +661,9 @@ public class testMain {
         loadManagers("ManagerList.csv");
         loadOfficers("OfficerList.csv");
         loadProjects("ProjectList.csv");
+        loadApplications("ApplicationList.csv");
+        loadRegistrations("RegistrationList.csv");
+        loadEnquiries("EnquiryList.csv");
 
         boolean ProgramOn = true;
         while (ProgramOn) {
@@ -800,6 +1145,14 @@ public class testMain {
                     break;
                 case 4:
                     ProgramOn = false;
+                    saveApplicants("ApplicantList.csv");
+                    saveOfficers("OfficerList.csv");
+                    saveManagers("ManagerList.csv");
+                    saveProjects("ProjectList.csv");
+                    saveApplications("ApplicationList.csv");
+                    saveRegistrations("RegistrationList.csv");
+                    saveEnquiries("EnquiryList.csv");
+                    System.out.println("All data saved successfully");
                     System.out.println("Exiting program, Thank you for your Usage:)");
                     break;
                 default:

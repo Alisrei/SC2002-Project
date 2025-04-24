@@ -18,7 +18,7 @@ public class HDBOfficer extends Applicant implements ViewProjects,EnquiryReply, 
     public Registration getRegistration(){return this.registration;}
     //setters
     public void setAssignedProject(BTOProject assignedProject) {this.assignedProject = assignedProject;}
-
+    public void setRegistration(Registration Registration){this.registration = Registration;}
 
     //officer project duties
     public void registerAsOfficer(BTOProject project) {

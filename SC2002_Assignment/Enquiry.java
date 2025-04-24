@@ -1,6 +1,7 @@
 package SC2002_Assignment;
 
 public class Enquiry {
+    private String Enqid;
     private String mainEnq;
     private String reply;
     private Boolean replied;
@@ -14,6 +15,7 @@ public class Enquiry {
         this.replied = false;
         this.project = p;
         this.applicant = A;
+        this.Enqid = A.getName();
         p.addEnquiry(this);
     }
 
