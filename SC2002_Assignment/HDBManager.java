@@ -262,13 +262,27 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
      * @param P The BTO project whose pending application will be retrieved.
      * @return A pending application for the specified BTO project.
      */
-    public Application getApplication(BTOProject P){
-        if(P.getApplications().isEmpty()){return null;}
+    public Application getApplication(BTOProject P) {
+        if (P == null || P.getApplications().isEmpty()) {
+            return null;
+        }
+
+        List<Application> PA = viewPendingApplications(P);
+        if (PA == null || PA.isEmpty()) {
+            System.out.println("No pending applications available.");
+            return null;
+        }
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Select the application based on number:");
-        List<Application> PA = viewPendingApplications(P);
         int choice = sc.nextInt();
         sc.nextLine();
+
+        if (choice < 1 || choice > PA.size()) {
+            System.out.println("Invalid selection.");
+            return null;
+        }
+
         return PA.get(choice-1);
     }
 
@@ -279,6 +293,10 @@ public class HDBManager extends User implements ViewProjects,EnquiryReply, Enqui
         Application A = this.getApplication(this.getProject());
         if(A == null){
             System.out.println("no applications for the project available");
+            return;
+        }
+        if (A.getStatus() != ApplicationStatus.PENDING) {
+            System.out.println("Application " + A.getApplicationId() + " is already processed with status: " + A.getStatus());
             return;
         }
         if (A.getProject().getFlats().getTwoRoomFlats() + A.getProject().getFlats().getThreeRoomFlats() > 0) {

@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ab2704b-4043-4a2a-bf85-608246f1a853" name="Changes" comment="solved some bugs and added manage projects">
-      <change beforePath="$PROJECT_DIR$/SC2002_Assignment/BTOManagementSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/BTOManagementSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SC2002_Assignment/HDBManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/SC2002_Assignment/HDBManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SC2002-Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SC2002-Project/.idea/workspace.xml" afterDir="false" />
     </list>
